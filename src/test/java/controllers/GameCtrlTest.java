@@ -1,7 +1,8 @@
 package controllers;
 
-import factories.GameFactory;
-import models.Game;
+import factories.BoardFactory;
+import models.Board;
+import models.Piece;
 import models.Player;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,22 +11,28 @@ import static org.mockito.Mockito.*;
 
 public class GameCtrlTest {
     private GameCtrl gameCtrl;
-    private GameFactory gameFactory;
+    private BoardFactory boardFactory;
+    private Board mockBoard;
 
     @Before
     public void setup() {
-        gameFactory = mock(GameFactory.class);
-        gameCtrl = new GameCtrlImpl(gameFactory);
+        boardFactory = mock(BoardFactory.class);
+        mockBoard = mock(Board.class);
+        gameCtrl = new GameCtrlImpl(boardFactory);
+
+        when(boardFactory.createBoard()).thenReturn(mockBoard);
+        gameCtrl.setup();
     }
 
     @Test
     public void shouldBeAbleToSetupAGame() {
-        Player player1 = mock(Player.class);
-        Player player2 = mock(Player.class);
-        Game mockGame = mock(Game.class);
-        when(gameFactory.createGame(player1, player2)).thenReturn(mockGame);
-        
-        gameCtrl.setup(player1, player2);
-        verify(gameFactory).createGame(player1, player2);
+        verify(boardFactory).createBoard();
+    }
+
+    @Test
+    public void shouldAllowAPlayerToPlaceAPieceOnTheBoard() {
+        Player player = mock(Player.class);
+        gameCtrl.setPiece(player);
+        verify(mockBoard).place(anyInt(), anyInt(), any(Piece.class));
     }
 }

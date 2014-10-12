@@ -1,19 +1,24 @@
 package controllers;
 
-import factories.GameFactory;
-import models.Game;
+import factories.BoardFactory;
+import models.Board;
 import models.Player;
 
 public class GameCtrlImpl implements GameCtrl {
-    GameFactory gameFactory;
-    Game game;
+    private BoardFactory boardFactory;
+    private Board board;
 
-    public GameCtrlImpl(GameFactory gameFactory) {
-        this.gameFactory = gameFactory;
+    public GameCtrlImpl(BoardFactory boardFactory) {
+        this.boardFactory = boardFactory;
     }
 
     @Override
-    public void setup(Player player1, Player player2) {
-        game = gameFactory.createGame(player1, player2);
+    public void setup() {
+        board = boardFactory.createBoard();
+    }
+
+    @Override
+    public void setPiece(Player player) {
+        board.place(player.getX(), player.getY(), player.getPiece());
     }
 }
