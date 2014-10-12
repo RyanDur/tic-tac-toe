@@ -19,6 +19,6 @@ public class GameCtrlImpl implements GameCtrl {
 
     @Override
     public void setPiece(Player player) {
-        board.place(player.getX(), player.getY(), player.getPiece());
+        board.place(player.getX(), player.getY(), player);
     }
 }

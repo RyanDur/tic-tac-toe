@@ -2,7 +2,6 @@ package controllers;
 
 import factories.BoardFactory;
 import models.Board;
-import models.Piece;
 import models.Player;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +32,6 @@ public class GameCtrlTest {
     public void shouldAllowAPlayerToPlaceAPieceOnTheBoard() {
         Player player = mock(Player.class);
         gameCtrl.setPiece(player);
-        verify(mockBoard).place(anyInt(), anyInt(), any(Piece.class));
+        verify(mockBoard).place(anyInt(), anyInt(), any(Player.class));
     }
 }
