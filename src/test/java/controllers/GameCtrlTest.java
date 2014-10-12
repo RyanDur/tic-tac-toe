@@ -19,13 +19,13 @@ public class GameCtrlTest {
         mockBoard = mock(Board.class);
         gameCtrl = new GameCtrlImpl(boardFactory);
 
-        when(boardFactory.createBoard()).thenReturn(mockBoard);
+        when(boardFactory.createBoard(anyInt(), anyInt())).thenReturn(mockBoard);
         gameCtrl.setup();
     }
 
     @Test
     public void shouldBeAbleToSetupAGame() {
-        verify(boardFactory).createBoard();
+        verify(boardFactory).createBoard(3,3);
     }
 
     @Test

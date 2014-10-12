@@ -3,5 +3,5 @@ package factories;
 import models.Board;
 
 public interface BoardFactory {
-    Board createBoard();
+    Board createBoard(int height, int width);
 }
