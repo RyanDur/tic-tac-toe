@@ -31,9 +31,12 @@ public class GameCtrlImpl implements GameCtrl {
     private boolean isValid(Player player) {
         int numOfPieces = board.getNumOfPieces();
         boolean result = true;
-
         if(numOfPieces == 0) {
-            if(!player.getPiece().equals("X")) {
+            if(player.getPiece().equals("O")) {
+                result = false;
+            }
+        } else if(numOfPieces % 2 == 0) {
+            if(player.getPiece().equals("O")) {
                 result = false;
             }
         }
