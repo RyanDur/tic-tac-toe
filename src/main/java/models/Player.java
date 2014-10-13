@@ -5,5 +5,5 @@ public interface Player {
 
     int getY();
 
-    Piece getPiece();
+    String getPiece();
 }
