@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.NotVacantException;
 import exceptions.OutOfTurnException;
 import factories.BoardFactory;
 import lang.constants;
@@ -29,6 +30,7 @@ public class GameCtrlTest {
         player = mock(Player.class);
         when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(mockBoard.getNumOfPieces()).thenReturn(0);
+        when(mockBoard.isVacant(anyInt(), anyInt())).thenReturn(true);
         when(boardFactory.createBoard(anyInt(), anyInt())).thenReturn(mockBoard);
         gameCtrl.setup();
     }
@@ -39,26 +41,26 @@ public class GameCtrlTest {
     }
 
     @Test
-    public void shouldAllowAPlayerToPlaceAPieceOnTheBoard() throws OutOfTurnException {
+    public void shouldAllowAPlayerToPlaceAPieceOnTheBoard() throws OutOfTurnException, NotVacantException {
         gameCtrl.setPiece(player);
         verify(mockBoard).place(anyInt(), anyInt(), any(Player.class));
     }
 
     @Test
-    public void shouldAllowForXToGoFirst() throws OutOfTurnException {
+    public void shouldAllowForXToGoFirst() throws OutOfTurnException, NotVacantException {
         gameCtrl.setPiece(player);
         verify(mockBoard).place(anyInt(), anyInt(), any(Player.class));
     }
 
     @Test
-    public void shouldNotAllowForOToGoFirst() throws OutOfTurnException {
+    public void shouldNotAllowForOToGoFirst() throws OutOfTurnException, NotVacantException {
         exception.expect(OutOfTurnException.class);
         when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
         gameCtrl.setPiece(player);
     }
 
     @Test
-    public void shouldNotAllowForOToPlayOutOfTurn() throws OutOfTurnException {
+    public void shouldNotAllowForOToPlayOutOfTurn() throws OutOfTurnException, NotVacantException {
         exception.expect(OutOfTurnException.class);
         gameCtrl.setPiece(player);
         when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
@@ -68,11 +70,18 @@ public class GameCtrlTest {
     }
 
     @Test
-    public void shouldNotAllowForXToPlayOutOfTurn() throws OutOfTurnException {
+    public void shouldNotAllowForXToPlayOutOfTurn() throws OutOfTurnException, NotVacantException {
         exception.expect(OutOfTurnException.class);
         gameCtrl.setPiece(player);
         when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(mockBoard.getNumOfPieces()).thenReturn(1);
+        gameCtrl.setPiece(player);
+    }
+
+    @Test
+    public void shouldNotBeAbleToPlaceAPieceOnASpaceThatHasAlreadyBeenTaken() throws OutOfTurnException, NotVacantException {
+        exception.expect(NotVacantException.class);
+        when(mockBoard.isVacant(anyInt(), anyInt())).thenReturn(false);
         gameCtrl.setPiece(player);
     }
 }

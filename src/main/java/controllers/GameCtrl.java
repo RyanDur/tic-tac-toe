@@ -1,10 +1,11 @@
 package controllers;
 
+import exceptions.NotVacantException;
 import exceptions.OutOfTurnException;
 import models.Player;
 
 public interface GameCtrl {
     void setup();
 
-    void setPiece(Player player) throws OutOfTurnException;
+    void setPiece(Player player) throws OutOfTurnException, NotVacantException;
 }

@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.NotVacantException;
 import exceptions.OutOfTurnException;
 import factories.BoardFactory;
 import lang.constants;
@@ -24,24 +25,27 @@ public class GameCtrlImpl implements GameCtrl {
     }
 
     @Override
-    public void setPiece(Player player) throws OutOfTurnException {
+    public void setPiece(Player player) throws OutOfTurnException, NotVacantException {
         if (!isValid(player)) throw new OutOfTurnException();
+        if (!board.isVacant(player.getX(), player.getY())) throw new NotVacantException();
         board.place(player.getX(), player.getY(), player);
     }
 
     private boolean isValid(Player player) {
         int numOfPieces = board.getNumOfPieces();
+        String piece = player.getPiece();
         boolean result = true;
+
         if(numOfPieces == 0) {
-            if(player.getPiece().equals(constants.GAME_PIECE_TWO)) {
+            if(piece.equals(constants.GAME_PIECE_TWO)) {
                 result = false;
             }
         } else if(numOfPieces % 2 == 0) {
-            if(player.getPiece().equals(constants.GAME_PIECE_TWO)) {
+            if(piece.equals(constants.GAME_PIECE_TWO)) {
                 result = false;
             }
         } else {
-            if(player.getPiece().equals(constants.GAME_PIECE_ONE)) {
+            if(piece.equals(constants.GAME_PIECE_ONE)) {
                 result = false;
             }
         }
