@@ -2,6 +2,7 @@ package controllers;
 
 import exceptions.OutOfTurnException;
 import factories.BoardFactory;
+import lang.constants;
 import models.Board;
 import models.Player;
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class GameCtrlTest {
         mockBoard = mock(Board.class);
         gameCtrl = new GameCtrlImpl(boardFactory);
         player = mock(Player.class);
-        when(player.getPiece()).thenReturn("X");
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(mockBoard.getNumOfPieces()).thenReturn(0);
         when(boardFactory.createBoard(anyInt(), anyInt())).thenReturn(mockBoard);
         gameCtrl.setup();
@@ -34,7 +35,7 @@ public class GameCtrlTest {
 
     @Test
     public void shouldBeAbleToSetupAGame() {
-        verify(boardFactory).createBoard(3,3);
+        verify(boardFactory).createBoard(constants.HEIGHT, constants.WIDTH);
     }
 
     @Test
@@ -52,7 +53,7 @@ public class GameCtrlTest {
     @Test
     public void shouldNotAllowForOToGoFirst() throws OutOfTurnException {
         exception.expect(OutOfTurnException.class);
-        when(player.getPiece()).thenReturn("O");
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
         gameCtrl.setPiece(player);
     }
 
@@ -60,7 +61,7 @@ public class GameCtrlTest {
     public void shouldNotAllowForOToPlayOutOfTurn() throws OutOfTurnException {
         exception.expect(OutOfTurnException.class);
         gameCtrl.setPiece(player);
-        when(player.getPiece()).thenReturn("O");
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
         when(mockBoard.getNumOfPieces()).thenReturn(1, 2);
         gameCtrl.setPiece(player);
         gameCtrl.setPiece(player);
@@ -70,7 +71,7 @@ public class GameCtrlTest {
     public void shouldNotAllowForXToPlayOutOfTurn() throws OutOfTurnException {
         exception.expect(OutOfTurnException.class);
         gameCtrl.setPiece(player);
-        when(player.getPiece()).thenReturn("X");
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(mockBoard.getNumOfPieces()).thenReturn(1);
         gameCtrl.setPiece(player);
     }

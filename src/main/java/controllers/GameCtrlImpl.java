@@ -2,6 +2,7 @@ package controllers;
 
 import exceptions.OutOfTurnException;
 import factories.BoardFactory;
+import lang.constants;
 import models.Board;
 import models.Player;
 
@@ -12,8 +13,8 @@ public class GameCtrlImpl implements GameCtrl {
     private int width;
 
     public GameCtrlImpl(BoardFactory boardFactory) {
-        height = 3;
-        width = 3;
+        height = constants.HEIGHT;
+        width = constants.WIDTH;
         this.boardFactory = boardFactory;
     }
 
@@ -32,15 +33,15 @@ public class GameCtrlImpl implements GameCtrl {
         int numOfPieces = board.getNumOfPieces();
         boolean result = true;
         if(numOfPieces == 0) {
-            if(player.getPiece().equals("O")) {
+            if(player.getPiece().equals(constants.GAME_PIECE_TWO)) {
                 result = false;
             }
         } else if(numOfPieces % 2 == 0) {
-            if(player.getPiece().equals("O")) {
+            if(player.getPiece().equals(constants.GAME_PIECE_TWO)) {
                 result = false;
             }
         } else {
-            if(player.getPiece().equals("X")) {
+            if(player.getPiece().equals(constants.GAME_PIECE_ONE)) {
                 result = false;
             }
         }
