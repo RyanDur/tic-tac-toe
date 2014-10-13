@@ -28,7 +28,7 @@ public class GameCtrlImpl implements GameCtrl {
     public void setPiece(Player player) throws OutOfTurnException, NotVacantException {
         if (!isValid(player)) throw new OutOfTurnException();
         if (!board.isVacant(player.getX(), player.getY())) throw new NotVacantException();
-        board.place(player.getX(), player.getY(), player);
+        board.set(player.getX(), player.getY(), player);
     }
 
     private boolean isValid(Player player) {
