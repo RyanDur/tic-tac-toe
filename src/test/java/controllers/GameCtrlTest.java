@@ -11,6 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 public class GameCtrlTest {
@@ -84,5 +86,13 @@ public class GameCtrlTest {
         exception.expect(NotVacantException.class);
         when(mockBoard.isVacant(anyInt(), anyInt())).thenReturn(false);
         gameCtrl.setPiece(mockPlayer);
+    }
+
+    @Test
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheTopRow() {
+        when(mockBoard.get(0, 0)).thenReturn(mockPlayer);
+        when(mockBoard.get(0, 1)).thenReturn(mockPlayer);
+        when(mockBoard.get(0, 2)).thenReturn(mockPlayer);
+        assertThat(gameCtrl.gameOver(), is(true));
     }
 }

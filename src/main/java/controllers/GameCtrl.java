@@ -8,4 +8,6 @@ public interface GameCtrl {
     void setup();
 
     void setPiece(Player player) throws OutOfTurnException, NotVacantException;
+
+    boolean gameOver();
 }

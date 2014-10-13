@@ -6,4 +6,6 @@ public interface Board {
     int getNumOfPieces();
 
     boolean isVacant(int x, int y);
+
+    Player get(int x, int y);
 }

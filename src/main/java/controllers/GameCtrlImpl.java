@@ -31,6 +31,24 @@ public class GameCtrlImpl implements GameCtrl {
         board.set(player.getX(), player.getY(), player);
     }
 
+    @Override
+    public boolean gameOver() {
+        boolean result = false;
+        int match = 0;
+        for(int x = 0; x < constants.WIDTH-1; x++) {
+            for(int y = 0; y < constants.HEIGHT-1; y++) {
+                if(board.get(x, y) == board.get(x, y+1)) {
+                    match += 1;
+                }
+            }
+            if(match > 1) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
     private boolean isValid(Player player) {
         int numOfPieces = board.getNumOfPieces();
         String piece = player.getPiece();
