@@ -35,18 +35,26 @@ public class GameCtrlImpl implements GameCtrl {
     public boolean gameOver() {
         boolean result = false;
         int match = 0;
-        for(int x = 0; x < constants.WIDTH-1; x++) {
-            for(int y = 0; y < constants.HEIGHT-1; y++) {
-                if(board.get(x, y) == board.get(x, y+1)) {
+        for(int row = 0; row < width; row++) {
+            for(int column = 0; column < height-1; column++) {
+                Player player1 = board.get(row, column);
+                Player player2 = board.get(row, column+1);
+                if(matching(player1, player2)) {
                     match += 1;
                 }
             }
             if(match > 1) {
                 result = true;
                 break;
+            } else {
+                match = 0;
             }
         }
         return result;
+    }
+
+    private boolean matching(Player player1, Player player2) {
+        return player1 != null && player2 != null && player1 == player2;
     }
 
     private boolean isValid(Player player) {
