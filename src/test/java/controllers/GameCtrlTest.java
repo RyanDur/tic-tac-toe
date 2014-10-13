@@ -65,4 +65,13 @@ public class GameCtrlTest {
         gameCtrl.setPiece(player);
         gameCtrl.setPiece(player);
     }
+
+    @Test
+    public void shouldNotAllowForXToPlayOutOfTurn() throws OutOfTurnException {
+        exception.expect(OutOfTurnException.class);
+        gameCtrl.setPiece(player);
+        when(player.getPiece()).thenReturn("X");
+        when(mockBoard.getNumOfPieces()).thenReturn(1);
+        gameCtrl.setPiece(player);
+    }
 }

@@ -39,6 +39,10 @@ public class GameCtrlImpl implements GameCtrl {
             if(player.getPiece().equals("O")) {
                 result = false;
             }
+        } else {
+            if(player.getPiece().equals("X")) {
+                result = false;
+            }
         }
 
         return result;
