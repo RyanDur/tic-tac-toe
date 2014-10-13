@@ -15,73 +15,74 @@ import static org.mockito.Mockito.*;
 
 public class GameCtrlTest {
     private GameCtrl gameCtrl;
-    private BoardFactory boardFactory;
+    private BoardFactory mockBoardFactory;
     private Board mockBoard;
-    private Player player;
+    private Player mockPlayer;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setup() {
-        boardFactory = mock(BoardFactory.class);
+        mockBoardFactory = mock(BoardFactory.class);
         mockBoard = mock(Board.class);
-        gameCtrl = new GameCtrlImpl(boardFactory);
-        player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
+        mockPlayer = mock(Player.class);
+        when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(mockBoard.getNumOfPieces()).thenReturn(0);
         when(mockBoard.isVacant(anyInt(), anyInt())).thenReturn(true);
-        when(boardFactory.createBoard(anyInt(), anyInt())).thenReturn(mockBoard);
+        when(mockBoardFactory.createBoard(anyInt(), anyInt())).thenReturn(mockBoard);
+
+        gameCtrl = new GameCtrlImpl(mockBoardFactory);
         gameCtrl.setup();
     }
 
     @Test
     public void shouldBeAbleToSetupAGame() {
-        verify(boardFactory).createBoard(constants.HEIGHT, constants.WIDTH);
+        verify(mockBoardFactory).createBoard(constants.HEIGHT, constants.WIDTH);
     }
 
     @Test
     public void shouldAllowAPlayerToPlaceAPieceOnTheBoard() throws OutOfTurnException, NotVacantException {
-        gameCtrl.setPiece(player);
+        gameCtrl.setPiece(mockPlayer);
         verify(mockBoard).place(anyInt(), anyInt(), any(Player.class));
     }
 
     @Test
     public void shouldAllowForXToGoFirst() throws OutOfTurnException, NotVacantException {
-        gameCtrl.setPiece(player);
+        gameCtrl.setPiece(mockPlayer);
         verify(mockBoard).place(anyInt(), anyInt(), any(Player.class));
     }
 
     @Test
     public void shouldNotAllowForOToGoFirst() throws OutOfTurnException, NotVacantException {
         exception.expect(OutOfTurnException.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        gameCtrl.setPiece(player);
+        when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        gameCtrl.setPiece(mockPlayer);
     }
 
     @Test
     public void shouldNotAllowForOToPlayOutOfTurn() throws OutOfTurnException, NotVacantException {
         exception.expect(OutOfTurnException.class);
-        gameCtrl.setPiece(player);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        gameCtrl.setPiece(mockPlayer);
+        when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
         when(mockBoard.getNumOfPieces()).thenReturn(1, 2);
-        gameCtrl.setPiece(player);
-        gameCtrl.setPiece(player);
+        gameCtrl.setPiece(mockPlayer);
+        gameCtrl.setPiece(mockPlayer);
     }
 
     @Test
     public void shouldNotAllowForXToPlayOutOfTurn() throws OutOfTurnException, NotVacantException {
         exception.expect(OutOfTurnException.class);
-        gameCtrl.setPiece(player);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
+        gameCtrl.setPiece(mockPlayer);
+        when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(mockBoard.getNumOfPieces()).thenReturn(1);
-        gameCtrl.setPiece(player);
+        gameCtrl.setPiece(mockPlayer);
     }
 
     @Test
     public void shouldNotBeAbleToPlaceAPieceOnASpaceThatHasAlreadyBeenTaken() throws OutOfTurnException, NotVacantException {
         exception.expect(NotVacantException.class);
         when(mockBoard.isVacant(anyInt(), anyInt())).thenReturn(false);
-        gameCtrl.setPiece(player);
+        gameCtrl.setPiece(mockPlayer);
     }
 }
