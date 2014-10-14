@@ -22,7 +22,7 @@ public class BoardInpl implements Board {
 
     @Override
     public boolean isVacant(int x, int y) {
-        return false;
+        return board[x][y] == null;
     }
 
     @Override
