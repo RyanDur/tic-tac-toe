@@ -2,10 +2,10 @@ package models;
 
 import java.util.Arrays;
 
-public class BoardInpl implements Board {
+public class BoardImpl implements Board {
     private final Player[][] board;
 
-    public BoardInpl(int width, int height) {
+    public BoardImpl(int width, int height) {
         board = new Player[width][height];
     }
 

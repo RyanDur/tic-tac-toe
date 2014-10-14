@@ -16,7 +16,7 @@ public class BoardTest {
 
     @Before
     public void setup() {
-        board = new BoardInpl(constants.WIDTH, constants.HEIGHT);
+        board = new BoardImpl(constants.WIDTH, constants.HEIGHT);
         mockPlayer = mock(Player.class);
     }
 
@@ -42,7 +42,7 @@ public class BoardTest {
         board.set(0, 0, mockPlayer);
         assertThat(board.isVacant(0,0), is(false));
     }
-    
+
     @Test
     public void shouldReturnTrueIfSpaceIsVacant() {
         assertThat(board.isVacant(0,0), is(true));
