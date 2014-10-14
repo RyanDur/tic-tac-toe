@@ -183,4 +183,20 @@ public class GameCtrlTest {
         when(mockBoard.get(2, 2)).thenReturn(mockPlayer);
         assertThat(gameCtrl.gameOver(), is(false));
     }
+
+    @Test
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheLeftDiagonal() {
+        when(mockBoard.get(0, 0)).thenReturn(mockPlayer);
+        when(mockBoard.get(1, 1)).thenReturn(mockPlayer);
+        when(mockBoard.get(2, 2)).thenReturn(mockPlayer);
+        assertThat(gameCtrl.gameOver(), is(true));
+    }
+
+    @Test
+    public void shouldNotBeOverIfDiagonalIsFullAndNotMatchingViaTheLeftDiagonal() {
+        when(mockBoard.get(0, 0)).thenReturn(mockPlayer);
+        when(mockBoard.get(1, 2)).thenReturn(mock(Player.class));
+        when(mockBoard.get(2, 2)).thenReturn(mockPlayer);
+        assertThat(gameCtrl.gameOver(), is(false));
+    }
 }

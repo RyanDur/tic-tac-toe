@@ -39,8 +39,10 @@ public class GameCtrlImpl implements GameCtrl {
     private boolean rowsColumns() {
         int matchRow = 0;
         int matchColumn = 0;
+        int matchLeftDiagonal = 0;
 
         for (int row = 0; row < width; row++) {
+            if (matching(board.get(row, row), board.get(row+1, row+1))) matchLeftDiagonal += 1;
             for (int column = 0; column < height; column++) {
                 if (row < width && row(row, column)) matchRow += 1;
                 if (column < height && column(row, column)) matchColumn += 1;
@@ -49,7 +51,8 @@ public class GameCtrlImpl implements GameCtrl {
             matchRow = 0;
             matchColumn = 0;
         }
-
+        if (matchLeftDiagonal == width-1) return true;
+        
         return false;
     }
 
