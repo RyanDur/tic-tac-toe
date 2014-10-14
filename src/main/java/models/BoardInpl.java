@@ -1,13 +1,11 @@
 package models;
 
+import java.util.Arrays;
+
 public class BoardInpl implements Board {
-    private final int height;
-    private final int width;
     private final Player[][] board;
 
     public BoardInpl(int width, int height) {
-        this.width = width;
-        this.height = height;
         board = new Player[width][height];
     }
 
@@ -18,7 +16,8 @@ public class BoardInpl implements Board {
 
     @Override
     public int getNumOfPieces() {
-        return 0;
+        return (int) Arrays.stream(board).flatMap(arr ->
+                Arrays.stream(arr).filter(player -> player != null)).count();
     }
 
     @Override

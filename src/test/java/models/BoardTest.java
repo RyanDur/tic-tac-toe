@@ -19,10 +19,21 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldBeAbleToSetAPlayerOnTheBoard() {
+    public void shouldBeAbleToSetAPieceOnTheBoard() {
         Player mockPlayer = mock(Player.class);
         board.set(1,1,mockPlayer);
         assertThat(board.get(1,1), is(equalTo(mockPlayer)));
     }
-    
+
+    @Test
+    public void shouldKnowTheNumberOfPiecesPlacedOnTheBoard() {
+        Player mockPlayer = mock(Player.class);
+        board.set(0,1,mockPlayer);
+        board.set(1,2,mockPlayer);
+        assertThat(board.getNumOfPieces(), is(equalTo(2)));
+        board.set(2,2,mockPlayer);
+        assertThat(board.getNumOfPieces(), is(equalTo(3)));
+        board.set(0,2,mockPlayer);
+        assertThat(board.getNumOfPieces(), is(equalTo(4)));
+    }
 }
