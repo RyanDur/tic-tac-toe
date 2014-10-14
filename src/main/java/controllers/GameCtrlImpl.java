@@ -39,16 +39,14 @@ public class GameCtrlImpl implements GameCtrl {
     private boolean checkBoardForWin() {
         int matchLeftDiagonal = 0;
         int matchRightDiagonal = 0;
-        boolean result = false;
         for (int row = 0; row < width; row++) {
-            if (row < width-1 && leftDiagonal(row)) matchLeftDiagonal += 1;
-            if (((width-1)-row) != row && rightDiagonal(row)) matchRightDiagonal += 1;
-            result = checkRowColumnForWin(row);
-            if(result) break;
+            if (row < width - 1 && leftDiagonal(row)) matchLeftDiagonal += 1;
+            if (((width - 1) - row) != row && rightDiagonal(row)) matchRightDiagonal += 1;
+            if (matchLeftDiagonal == width - 1  ||
+                matchRightDiagonal == width - 1 ||
+                checkRowColumnForWin(row)) return true;
         }
-        if (matchLeftDiagonal == width-1) result = true;
-        if (matchRightDiagonal == width-1) result = true;
-        return result;
+        return false;
     }
 
     private boolean checkRowColumnForWin(int row) {
@@ -58,19 +56,19 @@ public class GameCtrlImpl implements GameCtrl {
             if (row < width && row(row, column)) matchRow += 1;
             if (column < height && column(row, column)) matchColumn += 1;
         }
-        return matchRow == width-1 || matchColumn == height-1;
+        return matchRow == width - 1 || matchColumn == height - 1;
     }
 
     private boolean rightDiagonal(int row) {
-        return matching(board.get(row, (width-1)-row), board.get(1, 1));
+        return matching(board.get(row, (width - 1) - row), board.get(1, 1));
     }
 
     private boolean leftDiagonal(int row) {
-        return matching(board.get(row, row), board.get(row+1, row+1));
+        return matching(board.get(row, row), board.get(row + 1, row + 1));
     }
 
-    private boolean column(int x, int y) {
-        return matching(board.get(y, x), board.get(y + 1, x));
+    private boolean column(int y, int x) {
+        return matching(board.get(x, y), board.get(x + 1, y));
     }
 
     private boolean row(int x, int y) {
