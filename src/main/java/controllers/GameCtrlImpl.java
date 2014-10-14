@@ -33,27 +33,40 @@ public class GameCtrlImpl implements GameCtrl {
 
     @Override
     public boolean gameOver() {
-        return rowsColumns();
+        return checkBoardForWin();
     }
 
-    private boolean rowsColumns() {
+    private boolean checkBoardForWin() {
+        int matchLeftDiagonal = 0;
+        int matchRightDiagonal = 0;
+        boolean result = false;
+        for (int row = 0; row < width; row++) {
+            if (row < width-1 && leftDiagonal(row)) matchLeftDiagonal += 1;
+            if (((width-1)-row) != row && rightDiagonal(row)) matchRightDiagonal += 1;
+            result = checkRowColumnForWin(row);
+            if(result) break;
+        }
+        if (matchLeftDiagonal == width-1) result = true;
+        if (matchRightDiagonal == width-1) result = true;
+        return result;
+    }
+
+    private boolean checkRowColumnForWin(int row) {
         int matchRow = 0;
         int matchColumn = 0;
-        int matchLeftDiagonal = 0;
-
-        for (int row = 0; row < width; row++) {
-            if (matching(board.get(row, row), board.get(row+1, row+1))) matchLeftDiagonal += 1;
-            for (int column = 0; column < height; column++) {
-                if (row < width && row(row, column)) matchRow += 1;
-                if (column < height && column(row, column)) matchColumn += 1;
-            }
-            if (matchRow == width-1 || matchColumn == height-1) return true;
-            matchRow = 0;
-            matchColumn = 0;
+        for (int column = 0; column < height; column++) {
+            if (row < width && row(row, column)) matchRow += 1;
+            if (column < height && column(row, column)) matchColumn += 1;
         }
-        if (matchLeftDiagonal == width-1) return true;
-        
-        return false;
+        return matchRow == width-1 || matchColumn == height-1;
+    }
+
+    private boolean rightDiagonal(int row) {
+        return matching(board.get(row, (width-1)-row), board.get(1, 1));
+    }
+
+    private boolean leftDiagonal(int row) {
+        return matching(board.get(row, row), board.get(row+1, row+1));
     }
 
     private boolean column(int x, int y) {
