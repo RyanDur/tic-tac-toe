@@ -135,4 +135,52 @@ public class GameCtrlTest {
         when(mockBoard.get(2, 2)).thenReturn(mock(Player.class));
         assertThat(gameCtrl.gameOver(), is(false));
     }
+
+    @Test
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheLeftColumn() {
+        when(mockBoard.get(0, 0)).thenReturn(mockPlayer);
+        when(mockBoard.get(1, 0)).thenReturn(mockPlayer);
+        when(mockBoard.get(2, 0)).thenReturn(mockPlayer);
+        assertThat(gameCtrl.gameOver(), is(true));
+    }
+
+    @Test
+    public void shouldNotBeOverIfColumnIsFullAndNotMatchingViaTheLeftColumn() {
+        when(mockBoard.get(0, 0)).thenReturn(mock(Player.class));
+        when(mockBoard.get(1, 0)).thenReturn(mockPlayer);
+        when(mockBoard.get(2, 0)).thenReturn(mockPlayer);
+        assertThat(gameCtrl.gameOver(), is(false));
+    }
+
+    @Test
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheMiddleColumn() {
+        when(mockBoard.get(0, 1)).thenReturn(mockPlayer);
+        when(mockBoard.get(1, 1)).thenReturn(mockPlayer);
+        when(mockBoard.get(2, 1)).thenReturn(mockPlayer);
+        assertThat(gameCtrl.gameOver(), is(true));
+    }
+
+    @Test
+    public void shouldNotBeOverIfColumnIsFullAndNotMatchingViaTheMiddleColumn() {
+        when(mockBoard.get(0, 1)).thenReturn(mockPlayer);
+        when(mockBoard.get(1, 1)).thenReturn(mockPlayer);
+        when(mockBoard.get(2, 1)).thenReturn(mock(Player.class));
+        assertThat(gameCtrl.gameOver(), is(false));
+    }
+
+    @Test
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheLastColumn() {
+        when(mockBoard.get(0, 2)).thenReturn(mockPlayer);
+        when(mockBoard.get(1, 2)).thenReturn(mockPlayer);
+        when(mockBoard.get(2, 2)).thenReturn(mockPlayer);
+        assertThat(gameCtrl.gameOver(), is(true));
+    }
+
+    @Test
+    public void shouldNotBeOverIfColumnIsFullAndNotMatchingViaTheLastColumn() {
+        when(mockBoard.get(0, 2)).thenReturn(mockPlayer);
+        when(mockBoard.get(1, 2)).thenReturn(mock(Player.class));
+        when(mockBoard.get(2, 2)).thenReturn(mockPlayer);
+        assertThat(gameCtrl.gameOver(), is(false));
+    }
 }

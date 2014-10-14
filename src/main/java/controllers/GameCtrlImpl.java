@@ -33,24 +33,32 @@ public class GameCtrlImpl implements GameCtrl {
 
     @Override
     public boolean gameOver() {
-        boolean result = false;
-        int match = 0;
-        for(int row = 0; row < width; row++) {
-            for(int column = 0; column < height-1; column++) {
-                Player player1 = board.get(row, column);
-                Player player2 = board.get(row, column+1);
-                if(matching(player1, player2)) {
-                    match += 1;
-                }
+        return rowsColumns();
+    }
+
+    private boolean rowsColumns() {
+        int matchRow = 0;
+        int matchColumn = 0;
+
+        for (int row = 0; row < width; row++) {
+            for (int column = 0; column < height; column++) {
+                if (row < width && row(row, column)) matchRow += 1;
+                if (column < height && column(row, column)) matchColumn += 1;
             }
-            if(match > 1) {
-                result = true;
-                break;
-            } else {
-                match = 0;
-            }
+            if (matchRow == width-1 || matchColumn == height-1) return true;
+            matchRow = 0;
+            matchColumn = 0;
         }
-        return result;
+
+        return false;
+    }
+
+    private boolean column(int x, int y) {
+        return matching(board.get(y, x), board.get(y + 1, x));
+    }
+
+    private boolean row(int x, int y) {
+        return matching(board.get(x, y), board.get(x, y + 1));
     }
 
     private boolean matching(Player player1, Player player2) {
@@ -62,16 +70,16 @@ public class GameCtrlImpl implements GameCtrl {
         String piece = player.getPiece();
         boolean result = true;
 
-        if(numOfPieces == 0) {
-            if(piece.equals(constants.GAME_PIECE_TWO)) {
+        if (numOfPieces == 0) {
+            if (piece.equals(constants.GAME_PIECE_TWO)) {
                 result = false;
             }
-        } else if(numOfPieces % 2 == 0) {
-            if(piece.equals(constants.GAME_PIECE_TWO)) {
+        } else if (numOfPieces % 2 == 0) {
+            if (piece.equals(constants.GAME_PIECE_TWO)) {
                 result = false;
             }
         } else {
-            if(piece.equals(constants.GAME_PIECE_ONE)) {
+            if (piece.equals(constants.GAME_PIECE_ONE)) {
                 result = false;
             }
         }
