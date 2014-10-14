@@ -97,6 +97,14 @@ public class GameCtrlTest {
     }
 
     @Test
+    public void shouldNotBeOverIfRowIsFullAndNotMatchingViaTheTopRow() {
+        when(mockBoard.get(0, 0)).thenReturn(mockPlayer);
+        when(mockBoard.get(0, 1)).thenReturn(mock(Player.class));
+        when(mockBoard.get(0, 2)).thenReturn(mockPlayer);
+        assertThat(gameCtrl.gameOver(), is(false));
+    }
+
+    @Test
     public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheMiddleRow() {
         when(mockBoard.get(1, 0)).thenReturn(mockPlayer);
         when(mockBoard.get(1, 1)).thenReturn(mockPlayer);
@@ -105,10 +113,26 @@ public class GameCtrlTest {
     }
 
     @Test
+    public void shouldNotBeOverIfRowIsFullAndNotMatchingViaTheMiddleRow() {
+        when(mockBoard.get(1, 0)).thenReturn(mock(Player.class));
+        when(mockBoard.get(1, 1)).thenReturn(mockPlayer);
+        when(mockBoard.get(1, 2)).thenReturn(mockPlayer);
+        assertThat(gameCtrl.gameOver(), is(false));
+    }
+
+    @Test
     public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheBottomRow() {
         when(mockBoard.get(2, 0)).thenReturn(mockPlayer);
         when(mockBoard.get(2, 1)).thenReturn(mockPlayer);
         when(mockBoard.get(2, 2)).thenReturn(mockPlayer);
         assertThat(gameCtrl.gameOver(), is(true));
+    }
+
+    @Test
+    public void shouldNotBeOverIfRowIsFullAndNotMatchingViaTheBottomRow() {
+        when(mockBoard.get(2, 0)).thenReturn(mockPlayer);
+        when(mockBoard.get(2, 1)).thenReturn(mockPlayer);
+        when(mockBoard.get(2, 2)).thenReturn(mock(Player.class));
+        assertThat(gameCtrl.gameOver(), is(false));
     }
 }
