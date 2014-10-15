@@ -8,4 +8,6 @@ public interface Board {
     boolean isVacant(int x, int y);
 
     Player get(int x, int y);
+
+    boolean winner();
 }

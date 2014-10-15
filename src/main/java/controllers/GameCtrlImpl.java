@@ -10,76 +10,29 @@ import models.Player;
 public class GameCtrlImpl implements GameCtrl {
     private BoardFactory boardFactory;
     private Board board;
-    private int height;
-    private int width;
 
     public GameCtrlImpl(BoardFactory boardFactory) {
-        height = constants.HEIGHT;
-        width = constants.WIDTH;
         this.boardFactory = boardFactory;
     }
 
     @Override
     public void setup() {
-        board = boardFactory.createBoard(height, width);
+        board = boardFactory.createBoard(constants.HEIGHT, constants.WIDTH);
     }
 
     @Override
     public void setPiece(Player player) throws OutOfTurnException, NotVacantException {
-        if (!isValid(player)) throw new OutOfTurnException();
+        if (!isValidTurn(player)) throw new OutOfTurnException();
         if (!board.isVacant(player.getX(), player.getY())) throw new NotVacantException();
         board.set(player.getX(), player.getY(), player);
     }
 
     @Override
     public boolean gameOver() {
-        return checkBoardForWin();
-    }
-
-    private boolean checkBoardForWin() {
-        int matchLeftDiagonal = 0;
-        int matchRightDiagonal = 0;
-        for (int row = 0; row < width; row++) {
-            if (row < width - 1 && leftDiagonal(row)) matchLeftDiagonal += 1;
-            if (((width - 1) - row) != row && rightDiagonal(row)) matchRightDiagonal += 1;
-            if (matchLeftDiagonal == width - 1  ||
-                matchRightDiagonal == width - 1 ||
-                checkRowColumnForWin(row)) return true;
-        }
         return false;
     }
 
-    private boolean checkRowColumnForWin(int row) {
-        int matchRow = 0;
-        int matchColumn = 0;
-        for (int column = 0; column < height; column++) {
-            if (row < width && row(row, column)) matchRow += 1;
-            if (column < height && column(row, column)) matchColumn += 1;
-        }
-        return matchRow == width - 1 || matchColumn == height - 1;
-    }
-
-    private boolean rightDiagonal(int row) {
-        return matching(board.get(row, (width - 1) - row), board.get(1, 1));
-    }
-
-    private boolean leftDiagonal(int row) {
-        return matching(board.get(row, row), board.get(row + 1, row + 1));
-    }
-
-    private boolean column(int y, int x) {
-        return matching(board.get(x, y), board.get(x + 1, y));
-    }
-
-    private boolean row(int x, int y) {
-        return matching(board.get(x, y), board.get(x, y + 1));
-    }
-
-    private boolean matching(Player player1, Player player2) {
-        return player1 != null && player2 != null && player1 == player2;
-    }
-
-    private boolean isValid(Player player) {
+    private boolean isValidTurn(Player player) {
         int numOfPieces = board.getNumOfPieces();
         String piece = player.getPiece();
         boolean result = true;
