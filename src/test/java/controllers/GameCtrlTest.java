@@ -11,6 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 
 public class GameCtrlTest {
@@ -86,4 +88,17 @@ public class GameCtrlTest {
         gameCtrl.setPiece(mockPlayer);
     }
 
+    @Test
+    public void shouldBeAbleToTellIfTheGameIsOverIfThereIsAWinner() {
+        when(mockBoard.winner()).thenReturn(true);
+        when(mockBoard.full()).thenReturn(false);
+        assertThat(gameCtrl.gameOver(), is(true));
+    }
+
+    @Test
+    public void shouldBeAbleToTellIfTheGameIsOverIfTheGameIsADraw() {
+        when(mockBoard.winner()).thenReturn(false);
+        when(mockBoard.full()).thenReturn(true);
+        assertThat(gameCtrl.gameOver(), is(true));
+    }
 }

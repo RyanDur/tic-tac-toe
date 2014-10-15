@@ -29,7 +29,7 @@ public class GameCtrlImpl implements GameCtrl {
 
     @Override
     public boolean gameOver() {
-        return false;
+        return board.winner() || board.full();
     }
 
     private boolean isValidTurn(Player player) {

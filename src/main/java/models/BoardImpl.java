@@ -49,8 +49,8 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public boolean draw() {
-        return getNumOfPieces() == (height*width) && !winner();
+    public boolean full() {
+        return getNumOfPieces() == (height*width);
     }
 
     private boolean checkRowColumnForWin(int row) {

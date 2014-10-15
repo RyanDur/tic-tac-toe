@@ -11,5 +11,5 @@ public interface Board {
 
     boolean winner();
 
-    boolean draw();
+    boolean full();
 }

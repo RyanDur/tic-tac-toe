@@ -191,6 +191,6 @@ public class BoardTest {
         board.set(2, 2, mock(Player.class));
 
         assertThat(board.winner(), is(false));
-        assertThat(board.draw(), is(true));
+        assertThat(board.full(), is(true));
     }
 }
