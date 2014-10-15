@@ -48,6 +48,11 @@ public class BoardImpl implements Board {
         return false;
     }
 
+    @Override
+    public boolean draw() {
+        return getNumOfPieces() == (height*width) && !winner();
+    }
+
     private boolean checkRowColumnForWin(int row) {
         int matchRow = 0;
         int matchColumn = 0;

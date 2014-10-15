@@ -10,4 +10,6 @@ public interface Board {
     Player get(int x, int y);
 
     boolean winner();
+
+    boolean draw();
 }

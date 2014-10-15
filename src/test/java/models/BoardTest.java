@@ -176,4 +176,21 @@ public class BoardTest {
         board.set(2, 0, mock(Player.class));
         assertThat(board.winner(), is(false));
     }
+
+    @Test
+    public void shouldBeAbleToCheckForADraw() {
+        Player player2 = mock(Player.class);
+        board.set(0, 0, mockPlayer);
+        board.set(0, 1, player2);
+        board.set(0, 2, mockPlayer);
+        board.set(1, 0, mockPlayer);
+        board.set(1, 1, player2);
+        board.set(1, 2, mockPlayer);
+        board.set(2, 0, mock(Player.class));
+        board.set(2, 1, mockPlayer);
+        board.set(2, 2, mock(Player.class));
+
+        assertThat(board.winner(), is(false));
+        assertThat(board.draw(), is(true));
+    }
 }
