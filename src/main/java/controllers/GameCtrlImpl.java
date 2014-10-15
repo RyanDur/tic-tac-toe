@@ -10,6 +10,7 @@ import models.Player;
 public class GameCtrlImpl implements GameCtrl {
     private BoardFactory boardFactory;
     private Board board;
+    private Player current;
 
     public GameCtrlImpl(BoardFactory boardFactory) {
         this.boardFactory = boardFactory;
@@ -24,12 +25,18 @@ public class GameCtrlImpl implements GameCtrl {
     public void setPiece(Player player) throws OutOfTurnException, NotVacantException {
         if (!isValidTurn(player)) throw new OutOfTurnException();
         if (!board.isVacant(player.getX(), player.getY())) throw new NotVacantException();
+        current = player;
         board.set(player.getX(), player.getY(), player);
     }
 
     @Override
     public boolean gameOver() {
         return board.winner() || board.full();
+    }
+
+    @Override
+    public Player getWinner() {
+        return current;
     }
 
     private boolean isValidTurn(Player player) {

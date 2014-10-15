@@ -13,6 +13,7 @@ import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.*;
 
 public class GameCtrlTest {
@@ -100,5 +101,26 @@ public class GameCtrlTest {
         when(mockBoard.winner()).thenReturn(false);
         when(mockBoard.full()).thenReturn(true);
         assertThat(gameCtrl.gameOver(), is(true));
+    }
+
+    @Test
+    public void shouldBeAbleToGetTheWinner() throws OutOfTurnException, NotVacantException {
+        Player player2 = mock(Player.class);
+        when(mockBoard.winner()).thenReturn(true);
+        when(mockBoard.full()).thenReturn(false);
+        when(mockBoard.getNumOfPieces()).thenReturn(0,1,2,3,4);
+        when(player2.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        when(mockPlayer.getX()).thenReturn(0);
+        when(mockPlayer.getY()).thenReturn(0, 1, 2);
+        when(player2.getX()).thenReturn(2);
+        when(player2.getY()).thenReturn(0, 1, 2);
+
+        gameCtrl.setPiece(mockPlayer);
+        gameCtrl.setPiece(player2);
+        gameCtrl.setPiece(mockPlayer);
+        gameCtrl.setPiece(player2);
+        gameCtrl.setPiece(mockPlayer);
+
+        assertThat(gameCtrl.getWinner(), is(equalTo(mockPlayer)));
     }
 }

@@ -10,4 +10,6 @@ public interface GameCtrl {
     void setPiece(Player player) throws OutOfTurnException, NotVacantException;
 
     boolean gameOver();
+
+    Player getWinner();
 }
