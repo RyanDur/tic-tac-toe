@@ -1,7 +1,7 @@
 package models;
 
 public interface Board {
-    void set(int x, int y, Player player);
+    void set(Player player);
 
     int getNumOfPieces();
 

@@ -16,9 +16,9 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public void set(int x, int y, Player player) {
-        board[(x * width) + y] = player;
-        if (isWinner(x, y, player)) {
+    public void set(Player player) {
+        board[(player.getX() * width) + player.getY()] = player;
+        if (isWinner(player)) {
             winner = true;
         }
     }
@@ -48,35 +48,37 @@ public class BoardImpl implements Board {
         return getNumOfPieces() == (height * width);
     }
 
-    private boolean isWinner(int x, int y, Player player) {
-        boolean result = row(x, player) || column(y, player);
-        if (!result && diagonallyPlaced(x, y)) {
+    private boolean isWinner(Player player) {
+        boolean result = row(player) || column(player);
+        if (!result && diagonallyPlaced(player)) {
             result = leftDiagonal(player) || rightDiagonal(player);
         }
         return result;
     }
 
-    private boolean diagonallyPlaced(int x, int y) {
-        return center(x, y) || topLeft(x, y) || bottomRight(x, y) || bottomLeft(x, y) || topRight(x, y);
+    private boolean diagonallyPlaced(Player player) {
+        return center(player) || topLeft(player) || bottomRight(player) || bottomLeft(player) || topRight(player);
     }
 
-    private boolean topRight(int x, int y) {
-        return x == width - 1 && y == 0;
+    private boolean topRight(Player player) {
+        return player.getX() == width - 1 && player.getY() == 0;
     }
 
-    private boolean bottomLeft(int x, int y) {
-        return x == 0 && y == width - 1;
+    private boolean bottomLeft(Player player) {
+        return player.getX() == 0 && player.getY() == width - 1;
     }
 
-    private boolean bottomRight(int x, int y) {
-        return x == width - 1 && y == width - 1;
+    private boolean bottomRight(Player player) {
+        return player.getX() == width - 1 && player.getY() == width - 1;
     }
 
-    private boolean topLeft(int x, int y) {
-        return x == 0 && y == 0;
+    private boolean topLeft(Player player) {
+        return player.getX() == 0 && player.getY() == 0;
     }
 
-    private boolean center(int x, int y) {
+    private boolean center(Player player) {
+        int x = player.getX();
+        int y = player.getY();
         return x > 0 && x < width - 1 && y > 0 && y < width - 1;
     }
 
@@ -90,13 +92,13 @@ public class BoardImpl implements Board {
                 filter(i -> get(i, i) == player).count();
     }
 
-    private boolean column(int y, Player player) {
+    private boolean column(Player player) {
         return width == IntStream.range(0, width).
-                filter(i -> get(i, y) == player).count();
+                filter(i -> get(i, player.getY()) == player).count();
     }
 
-    private boolean row(int x, Player player) {
+    private boolean row(Player player) {
         return width == IntStream.range(0, width).
-                filter(i -> get(x, i) == player).count();
+                filter(i -> get(player.getX(), i) == player).count();
     }
 }

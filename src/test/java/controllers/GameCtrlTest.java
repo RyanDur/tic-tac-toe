@@ -47,13 +47,13 @@ public class GameCtrlTest {
     @Test
     public void shouldAllowAPlayerToPlaceAPieceOnTheBoard() throws OutOfTurnException, NotVacantException {
         gameCtrl.setPiece(mockPlayer);
-        verify(mockBoard).set(anyInt(), anyInt(), any(Player.class));
+        verify(mockBoard).set(any(Player.class));
     }
 
     @Test
     public void shouldAllowForXToGoFirst() throws OutOfTurnException, NotVacantException {
         gameCtrl.setPiece(mockPlayer);
-        verify(mockBoard).set(anyInt(), anyInt(), any(Player.class));
+        verify(mockBoard).set(any(Player.class));
     }
 
     @Test

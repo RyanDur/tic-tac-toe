@@ -29,7 +29,7 @@ public class GameCtrlImpl implements GameCtrl {
         if (!isValidTurn(player)) throw new OutOfTurnException();
         if (!board.isVacant(player.getX(), player.getY())) throw new NotVacantException();
         current = player;
-        board.set(player.getX(), player.getY(), player);
+        board.set(player);
     }
 
     @Override
