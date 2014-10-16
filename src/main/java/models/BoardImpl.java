@@ -47,14 +47,42 @@ public class BoardImpl implements Board {
         return getNumOfPieces() == (height * width);
     }
 
-    private boolean isWinner(int x, int y, Player player) {        
-        return row(x, player) || column(y, player) || leftDiagonal(player) || rightDiagonal(player);
+    private boolean isWinner(int x, int y, Player player) {
+        boolean result = row(x, player) || column(y, player);
+        if (!result && diagonallyPlaced(x, y)) {
+            result = leftDiagonal(player) || rightDiagonal(player);
+        }
+        return result;
+    }
+
+    private boolean diagonallyPlaced(int x, int y) {
+        return center(x, y) || topLeft(x, y) || bottomRight(x, y) || bottomLeft(x, y) || topRight(x, y);
+    }
+
+    private boolean topRight(int x, int y) {
+        return x == width - 1 && y == 0;
+    }
+
+    private boolean bottomLeft(int x, int y) {
+        return x == 0 && y == width - 1;
+    }
+
+    private boolean bottomRight(int x, int y) {
+        return x == width - 1 && y == width - 1;
+    }
+
+    private boolean topLeft(int x, int y) {
+        return x == 0 && y == 0;
+    }
+
+    private boolean center(int x, int y) {
+        return x > 0 && x < width - 1 && y > 0 && y < width - 1;
     }
 
     private boolean rightDiagonal(Player player) {
         int count = 0;
-        for(int i = width-1; i < board.length; i += width-1) {
-            if(board[i] == player) {
+        for (int i = width - 1; i < board.length; i += width - 1) {
+            if (board[i] == player) {
                 count++;
             } else {
                 break;
@@ -65,8 +93,8 @@ public class BoardImpl implements Board {
 
     private boolean leftDiagonal(Player player) {
         int count = 0;
-        for(int i = 0; i < board.length; i += width+1) {
-            if(board[i] == player) {
+        for (int i = 0; i < board.length; i += width + 1) {
+            if (board[i] == player) {
                 count++;
             } else {
                 break;
@@ -77,8 +105,8 @@ public class BoardImpl implements Board {
 
     private boolean column(int y, Player player) {
         int count = 0;
-        for(int i = 0; i < width; i++) {
-            if(board[(i * width) + y] == player) {
+        for (int i = 0; i < width; i++) {
+            if (board[(i * width) + y] == player) {
                 count++;
             } else {
                 break;
@@ -89,8 +117,8 @@ public class BoardImpl implements Board {
 
     private boolean row(int x, Player player) {
         int count = 0;
-        for(int y = (x * width); y < (width+ (x * width)); y++) {
-            if(board[y] == player) {
+        for (int y = (x * width); y < (width + (x * width)); y++) {
+            if (board[y] == player) {
                 count++;
             } else {
                 break;
