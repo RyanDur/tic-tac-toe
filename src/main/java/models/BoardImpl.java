@@ -3,35 +3,38 @@ package models;
 import java.util.Arrays;
 
 public class BoardImpl implements Board {
-    private final Player[][] board;
+    private final Player[] board;
     private final int height;
     private final int width;
+    private boolean winner;
 
     public BoardImpl(int height, int width) {
         this.height = height;
         this.width = width;
-        board = new Player[height][width];
+        board = new Player[height * width];
     }
 
     @Override
     public void set(int x, int y, Player player) {
-        board[x][y] = player;
+        board[(x * width) + y] = player;
+        if(isWinner(x, y)) {
+            winner = true;
+        }
     }
 
     @Override
     public int getNumOfPieces() {
-        return (int) Arrays.stream(board).flatMap(arr ->
-                Arrays.stream(arr).filter(player -> player != null)).count();
+        return (int) Arrays.stream(board).filter(player -> player != null).count();
     }
 
     @Override
     public boolean isVacant(int x, int y) {
-        return board[x][y] == null;
+        return board[(x * width) + y] == null;
     }
 
     @Override
     public Player get(int x, int y) {
-        return board[x][y];
+        return board[(x * width) + y];
     }
 
     @Override
@@ -51,6 +54,10 @@ public class BoardImpl implements Board {
     @Override
     public boolean full() {
         return getNumOfPieces() == (height*width);
+    }
+
+    private boolean isWinner(int x, int y) {
+        return false;
     }
 
     private boolean checkRowColumnForWin(int row) {
