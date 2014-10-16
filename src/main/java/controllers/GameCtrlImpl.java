@@ -11,6 +11,7 @@ public class GameCtrlImpl implements GameCtrl {
     private BoardFactory boardFactory;
     private Board board;
     private Player current;
+    private Player winner;
 
     public GameCtrlImpl(BoardFactory boardFactory) {
         this.boardFactory = boardFactory;
@@ -31,12 +32,14 @@ public class GameCtrlImpl implements GameCtrl {
 
     @Override
     public boolean gameOver() {
-        return board.winner() || board.full();
+        boolean won = board.winner();
+        if (won) winner = current;
+        return  won || board.full();
     }
 
     @Override
     public Player getWinner() {
-        return current;
+        return winner;
     }
 
     private boolean isValidTurn(Player player) {
