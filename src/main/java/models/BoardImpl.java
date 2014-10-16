@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class BoardImpl implements Board {
     private final Player[] board;
@@ -80,50 +81,22 @@ public class BoardImpl implements Board {
     }
 
     private boolean rightDiagonal(Player player) {
-        int count = 0;
-        for (int i = width - 1; i < board.length; i += width - 1) {
-            if (board[i] == player) {
-                count++;
-            } else {
-                break;
-            }
-        }
-        return count == width;
+        return width == IntStream.range(0, width).
+                filter(i -> get(i, (width - 1) - i) == player).count();
     }
 
     private boolean leftDiagonal(Player player) {
-        int count = 0;
-        for (int i = 0; i < board.length; i += width + 1) {
-            if (board[i] == player) {
-                count++;
-            } else {
-                break;
-            }
-        }
-        return count == width;
+        return width == IntStream.range(0, width).
+                filter(i -> get(i, i) == player).count();
     }
 
     private boolean column(int y, Player player) {
-        int count = 0;
-        for (int i = 0; i < width; i++) {
-            if (board[(i * width) + y] == player) {
-                count++;
-            } else {
-                break;
-            }
-        }
-        return count == width;
+        return width == IntStream.range(0, width).
+                filter(i -> get(i, y) == player).count();
     }
 
     private boolean row(int x, Player player) {
-        int count = 0;
-        for (int y = (x * width); y < (width + (x * width)); y++) {
-            if (board[y] == player) {
-                count++;
-            } else {
-                break;
-            }
-        }
-        return count == width;
+        return width == IntStream.range(0, width).
+                filter(i -> get(x, i) == player).count();
     }
 }
