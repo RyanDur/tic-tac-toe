@@ -7,10 +7,9 @@ import java.util.stream.IntStream;
 public class BoardImpl implements Board {
     private final Player[] board;
     private final int side;
-    private boolean winner;
+    private Player winner;
 
     public BoardImpl(int side) {
-
         this.side = side;
         board = new Player[side * side];
     }
@@ -18,7 +17,7 @@ public class BoardImpl implements Board {
     @Override
     public void set(Player player) {
         board[(player.getX() * side) + player.getY()] = player;
-        if (isWinner(player)) winner = true;
+        if (isWinner(player)) winner = player;
     }
 
     @Override
@@ -37,7 +36,7 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public boolean winner() {
+    public Player getWinner() {
         return winner;
     }
 

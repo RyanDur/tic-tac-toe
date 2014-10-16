@@ -70,7 +70,7 @@ public class BoardTest {
         board.set(mockPlayer);
         when(mockPlayer.getY()).thenReturn(2);
         board.set(mockPlayer);
-        Assert.assertThat(board.winner(), is(true));
+        Assert.assertThat(board.getWinner(), is(mockPlayer));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class BoardTest {
         board.set(player2);
         when(mockPlayer.getY()).thenReturn(2);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(equalTo(false)));
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class BoardTest {
         board.set(mockPlayer);
         when(mockPlayer.getY()).thenReturn(2);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(equalTo(true)));
+        assertThat(board.getWinner(), is(equalTo(mockPlayer)));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class BoardTest {
         board.set(mockPlayer);
         when(mockPlayer.getY()).thenReturn(2);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(equalTo(false)));
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class BoardTest {
         board.set(mockPlayer);
         when(mockPlayer.getY()).thenReturn(2);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(equalTo(true)));
+        assertThat(board.getWinner(), is(equalTo(mockPlayer)));
     }
 
     @Test
@@ -131,7 +131,7 @@ public class BoardTest {
         when(player2.getX()).thenReturn(2);
         when(player2.getY()).thenReturn(2);
         board.set(player2);
-        assertThat(board.winner(), is(equalTo(false)));
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class BoardTest {
         board.set(mockPlayer);
         when(mockPlayer.getX()).thenReturn(2);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(equalTo(true)));
+        assertThat(board.getWinner(), is(equalTo(mockPlayer)));
     }
 
     @Test
@@ -153,7 +153,7 @@ public class BoardTest {
         board.set(mockPlayer);
         when(mockPlayer.getX()).thenReturn(2);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(equalTo(false)));
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
@@ -165,7 +165,7 @@ public class BoardTest {
         board.set(mockPlayer);
         when(mockPlayer.getX()).thenReturn(2);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(equalTo(true)));
+        assertThat(board.getWinner(), is(equalTo(mockPlayer)));
     }
 
     @Test
@@ -178,7 +178,7 @@ public class BoardTest {
         when(player2.getX()).thenReturn(2);
         when(player2.getY()).thenReturn(1);
         board.set(player2);
-        assertThat(board.winner(), is(equalTo(false)));
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
@@ -190,7 +190,7 @@ public class BoardTest {
         board.set(mockPlayer);
         when(mockPlayer.getX()).thenReturn(2);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(equalTo(true)));
+        assertThat(board.getWinner(), is(equalTo(mockPlayer)));
     }
 
     @Test
@@ -203,7 +203,7 @@ public class BoardTest {
         board.set(player2);
         when(mockPlayer.getX()).thenReturn(2);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(equalTo(false)));
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
@@ -217,7 +217,7 @@ public class BoardTest {
         when(mockPlayer.getX()).thenReturn(2);
         when(mockPlayer.getY()).thenReturn(2);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(true));
+        assertThat(board.getWinner(), is(mockPlayer));
     }
 
     @Test
@@ -231,7 +231,7 @@ public class BoardTest {
         when(mockPlayer.getX()).thenReturn(2);
         when(mockPlayer.getY()).thenReturn(2);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(false));
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
@@ -245,7 +245,7 @@ public class BoardTest {
         when(mockPlayer.getX()).thenReturn(2);
         when(mockPlayer.getY()).thenReturn(0);
         board.set(mockPlayer);
-        assertThat(board.winner(), is(true));
+        assertThat(board.getWinner(), is(mockPlayer));
     }
 
     @Test
@@ -259,7 +259,7 @@ public class BoardTest {
         when(player2.getX()).thenReturn(2);
         when(player2.getY()).thenReturn(0);
         board.set(player2);
-        assertThat(board.winner(), is(false));
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
@@ -292,7 +292,7 @@ public class BoardTest {
         when(player2.getY()).thenReturn(2);
         board.set(player2);
 
-        assertThat(board.winner(), is(false));
+        assertThat(board.getWinner(), is(equalTo(null)));
         assertThat(board.full(), is(true));
     }
 }

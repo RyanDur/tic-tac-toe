@@ -9,7 +9,7 @@ public interface Board {
 
     Player get(int x, int y);
 
-    boolean winner();
+    Player getWinner();
 
     boolean full();
 }

@@ -91,21 +91,21 @@ public class GameCtrlTest {
 
     @Test
     public void shouldBeAbleToTellIfTheGameIsOverIfThereIsAWinner() {
-        when(mockBoard.winner()).thenReturn(true);
+        when(mockBoard.getWinner()).thenReturn(mockPlayer);
         when(mockBoard.full()).thenReturn(false);
         assertThat(gameCtrl.gameOver(), is(true));
     }
 
     @Test
     public void shouldBeAbleToTellIfTheGameIsOverIfTheGameIsADraw() {
-        when(mockBoard.winner()).thenReturn(false);
+        when(mockBoard.getWinner()).thenReturn(null);
         when(mockBoard.full()).thenReturn(true);
         assertThat(gameCtrl.gameOver(), is(true));
     }
 
     @Test
     public void shouldBeAbleToGetTheWinner() throws OutOfTurnException, NotVacantException {
-        when(mockBoard.winner()).thenReturn(true);
+        when(mockBoard.getWinner()).thenReturn(mockPlayer);
         when(mockBoard.full()).thenReturn(false);
         gameCtrl.setPiece(mockPlayer);
         gameCtrl.gameOver();
@@ -114,21 +114,9 @@ public class GameCtrlTest {
 
     @Test
     public void shouldNotBeAWinnerIfThereIsADraw() throws OutOfTurnException, NotVacantException {
-        when(mockBoard.winner()).thenReturn(false);
         when(mockBoard.full()).thenReturn(true);
         gameCtrl.setPiece(mockPlayer);
         gameCtrl.gameOver();
-        assertThat(gameCtrl.getWinner(), equalTo(null));
-    }
-
-    @Test
-    public void shouldBeNoWinnerIfStartingANewGame() throws OutOfTurnException, NotVacantException {
-        when(mockBoard.winner()).thenReturn(true);
-        when(mockBoard.full()).thenReturn(false);
-        gameCtrl.setPiece(mockPlayer);
-        gameCtrl.gameOver();
-        assertThat(gameCtrl.getWinner(), is(equalTo(mockPlayer)));
-        gameCtrl.setup();
         assertThat(gameCtrl.getWinner(), equalTo(null));
     }
 }
