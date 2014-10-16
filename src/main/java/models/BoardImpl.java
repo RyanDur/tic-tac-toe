@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Arrays;
+import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 
 public class BoardImpl implements Board {
@@ -18,9 +19,7 @@ public class BoardImpl implements Board {
     @Override
     public void set(Player player) {
         board[(player.getX() * width) + player.getY()] = player;
-        if (isWinner(player)) {
-            winner = true;
-        }
+        if (isWinner(player)) winner = true;
     }
 
     @Override
@@ -49,15 +48,24 @@ public class BoardImpl implements Board {
     }
 
     private boolean isWinner(Player player) {
-        boolean result = row(player) || column(player);
-        if (!result && diagonallyPlaced(player)) {
-            result = leftDiagonal(player) || rightDiagonal(player);
+        boolean result = check(row(player)) || check(column(player));
+        if (!result) {
+            if (leftDiagonallyPlaced(player)) {
+                result = check(leftDiagonal(player));
+            }
+            if (rightDiagonallyPlaced(player)) {
+                result = check(rightDiagonal(player));
+            }
         }
         return result;
     }
 
-    private boolean diagonallyPlaced(Player player) {
-        return center(player) || topLeft(player) || bottomRight(player) || bottomLeft(player) || topRight(player);
+    private boolean leftDiagonallyPlaced(Player player) {
+        return center(player) || topLeft(player) || bottomRight(player);
+    }
+
+    private boolean rightDiagonallyPlaced(Player player) {
+        return center(player) || bottomLeft(player) || topRight(player);
     }
 
     private boolean topRight(Player player) {
@@ -82,23 +90,24 @@ public class BoardImpl implements Board {
         return x > 0 && x < width - 1 && y > 0 && y < width - 1;
     }
 
-    private boolean rightDiagonal(Player player) {
+    private boolean check(IntPredicate predicate) {
         return width == IntStream.range(0, width).
-                filter(i -> get(i, (width - 1) - i) == player).count();
+                filter(predicate).count();
     }
 
-    private boolean leftDiagonal(Player player) {
-        return width == IntStream.range(0, width).
-                filter(i -> get(i, i) == player).count();
+    private IntPredicate rightDiagonal(Player player) {
+        return i -> get(i, (width - 1) - i) == player;
     }
 
-    private boolean column(Player player) {
-        return width == IntStream.range(0, width).
-                filter(i -> get(i, player.getY()) == player).count();
+    private IntPredicate leftDiagonal(Player player) {
+        return i -> get(i, i) == player;
     }
 
-    private boolean row(Player player) {
-        return width == IntStream.range(0, width).
-                filter(i -> get(player.getX(), i) == player).count();
+    private IntPredicate column(Player player) {
+        return i -> get(i, player.getY()) == player;
+    }
+
+    private IntPredicate row(Player player) {
+        return i -> get(player.getX(), i) == player;
     }
 }
