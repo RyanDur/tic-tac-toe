@@ -17,7 +17,7 @@ public class BoardImpl implements Board {
     @Override
     public void set(int x, int y, Player player) {
         board[(x * width) + y] = player;
-        if(isWinner(x, y)) {
+        if (isWinner(x, y, player)) {
             winner = true;
         }
     }
@@ -39,54 +39,63 @@ public class BoardImpl implements Board {
 
     @Override
     public boolean winner() {
-        int matchLeftDiagonal = 0;
-        int matchRightDiagonal = 0;
-        for (int row = 0; row < width; row++) {
-            if (row < width - 1 && leftDiagonal(row)) matchLeftDiagonal += 1;
-            if (((width - 1) - row) != row && rightDiagonal(row)) matchRightDiagonal += 1;
-            if (matchLeftDiagonal == width - 1  ||
-                    matchRightDiagonal == width - 1 ||
-                    checkRowColumnForWin(row)) return true;
-        }
-        return false;
+        return winner;
     }
 
     @Override
     public boolean full() {
-        return getNumOfPieces() == (height*width);
+        return getNumOfPieces() == (height * width);
     }
 
-    private boolean isWinner(int x, int y) {
-        return false;
+    private boolean isWinner(int x, int y, Player player) {        
+        return row(x, player) || column(y, player) || leftDiagonal(player) || rightDiagonal(player);
     }
 
-    private boolean checkRowColumnForWin(int row) {
-        int matchRow = 0;
-        int matchColumn = 0;
-        for (int column = 0; column < height-1; column++) {
-            if (row < width && row(row, column)) matchRow += 1;
-            if (column(row, column)) matchColumn += 1;
+    private boolean rightDiagonal(Player player) {
+        int count = 0;
+        for(int i = width-1; i < board.length; i += width-1) {
+            if(board[i] == player) {
+                count++;
+            } else {
+                break;
+            }
         }
-        return matchRow == width - 1 || matchColumn == height - 1;
+        return count == width;
     }
 
-    private boolean rightDiagonal(int row) {
-        return matching(get(row, (width - 1) - row), get(1, 1));
+    private boolean leftDiagonal(Player player) {
+        int count = 0;
+        for(int i = 0; i < board.length; i += width+1) {
+            if(board[i] == player) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count == width;
     }
 
-    private boolean leftDiagonal(int row) {
-        return matching(get(row, row), get(row + 1, row + 1));
+    private boolean column(int y, Player player) {
+        int count = 0;
+        for(int i = 0; i < width; i++) {
+            if(board[(i * width) + y] == player) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count == width;
     }
 
-    private boolean column(int y, int x) {
-        return matching(get(x, y), get(x + 1, y));
-    }
-
-    private boolean row(int x, int y) {
-        return matching(get(x, y), get(x, y + 1));
-    }
-
-    private boolean matching(Player player1, Player player2) {
-        return player1 != null && player2 != null && player1 == player2;
+    private boolean row(int x, Player player) {
+        int count = 0;
+        for(int y = (x * width); y < (width+ (x * width)); y++) {
+            if(board[y] == player) {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count == width;
     }
 }
