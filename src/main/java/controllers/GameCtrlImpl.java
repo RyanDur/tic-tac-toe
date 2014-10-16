@@ -19,6 +19,8 @@ public class GameCtrlImpl implements GameCtrl {
 
     @Override
     public void setup() {
+        current = null;
+        winner = null;
         board = boardFactory.createBoard(constants.HEIGHT, constants.WIDTH);
     }
 

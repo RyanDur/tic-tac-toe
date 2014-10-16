@@ -108,7 +108,7 @@ public class GameCtrlTest {
         when(mockBoard.winner()).thenReturn(true);
         when(mockBoard.full()).thenReturn(false);
         gameCtrl.setPiece(mockPlayer);
-
+        gameCtrl.gameOver();
         assertThat(gameCtrl.getWinner(), is(equalTo(mockPlayer)));
     }
 
@@ -117,7 +117,18 @@ public class GameCtrlTest {
         when(mockBoard.winner()).thenReturn(false);
         when(mockBoard.full()).thenReturn(true);
         gameCtrl.setPiece(mockPlayer);
+        gameCtrl.gameOver();
+        assertThat(gameCtrl.getWinner(), equalTo(null));
+    }
 
+    @Test
+    public void shouldBeNoWinnerIfStartingANewGame() throws OutOfTurnException, NotVacantException {
+        when(mockBoard.winner()).thenReturn(true);
+        when(mockBoard.full()).thenReturn(false);
+        gameCtrl.setPiece(mockPlayer);
+        gameCtrl.gameOver();
+        assertThat(gameCtrl.getWinner(), is(equalTo(mockPlayer)));
+        gameCtrl.setup();
         assertThat(gameCtrl.getWinner(), equalTo(null));
     }
 }
