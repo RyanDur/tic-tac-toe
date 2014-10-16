@@ -33,7 +33,7 @@ public class GameCtrlTest {
         when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(mockBoard.getNumOfPieces()).thenReturn(0);
         when(mockBoard.isVacant(anyInt(), anyInt())).thenReturn(true);
-        when(mockBoardFactory.createBoard(anyInt(), anyInt())).thenReturn(mockBoard);
+        when(mockBoardFactory.createBoard(anyInt())).thenReturn(mockBoard);
 
         gameCtrl = new GameCtrlImpl(mockBoardFactory);
         gameCtrl.setup();
@@ -41,7 +41,7 @@ public class GameCtrlTest {
 
     @Test
     public void shouldBeAbleToSetupAGame() {
-        verify(mockBoardFactory).createBoard(constants.HEIGHT, constants.WIDTH);
+        verify(mockBoardFactory).createBoard(constants.SIDE);
     }
 
     @Test

@@ -19,7 +19,7 @@ public class BoardTest {
 
     @Before
     public void setup() {
-        board = new BoardImpl(constants.HEIGHT, constants.WIDTH);
+        board = new BoardImpl(constants.SIDE);
         mockPlayer = mock(Player.class);
         player2 = mock(Player.class);
     }
