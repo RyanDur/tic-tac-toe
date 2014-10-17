@@ -9,7 +9,5 @@ public interface Player {
 
     String getPiece();
 
-    void setX(int coordinate) throws OutOfBoundsException;
-
-    void setY(int coordinate) throws OutOfBoundsException;
+    void setCoordinates(int x, int y) throws OutOfBoundsException;
 }

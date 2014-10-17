@@ -29,44 +29,40 @@ public class PlayerTest {
     }
 
     @Test
-    public void shouldBeAbleToSetAnXCoordinate() throws OutOfBoundsException {
+    public void shouldBeAbleToSetXCoordinate() throws OutOfBoundsException {
         int coordinate = 2;
-        player.setX(coordinate);
+        player.setCoordinates(coordinate, coordinate);
         assertThat(player.getX(), is(equalTo(coordinate)));
     }
 
     @Test
     public void shouldNotBeAbleToSetAnXCoordinateLargerThanTheConfinesOfTheBoard() throws OutOfBoundsException {
         exception.expect(OutOfBoundsException.class);
-        int coordinate = 5;
-        player.setX(coordinate);
+        player.setCoordinates(5, 1);
     }
 
     @Test
     public void shouldNotBeAbleToSetAnXCoordinateLessThanTheConfinesOfTheBoard() throws OutOfBoundsException {
         exception.expect(OutOfBoundsException.class);
-        int coordinate = -1;
-        player.setX(coordinate);
+        player.setCoordinates(-1, 2);
     }
 
     @Test
     public void shouldBeAbleToSetAYCoordinate() throws OutOfBoundsException {
         int coordinate = 1;
-        player.setY(coordinate);
+        player.setCoordinates(coordinate, coordinate);
         assertThat(player.getY(), is(equalTo(coordinate)));
     }
 
     @Test
     public void shouldNotBeAbleToSetAnYCoordinateLargerThanTheConfinesOfTheBoard() throws OutOfBoundsException {
         exception.expect(OutOfBoundsException.class);
-        int coordinate = 4;
-        player.setY(coordinate);
+        player.setCoordinates(2, 4);
     }
 
     @Test
     public void shouldNotBeAbleToSetAnYCoordinateLessThanTheConfinesOfTheBoard() throws OutOfBoundsException {
         exception.expect(OutOfBoundsException.class);
-        int coordinate = -2;
-        player.setY(coordinate);
+        player.setCoordinates(2, -2);
     }
 }

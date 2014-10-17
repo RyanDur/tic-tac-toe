@@ -30,14 +30,9 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public void setX(int coordinate) throws OutOfBoundsException {
-        if(coordinate >= boundary || coordinate < 0) throw new OutOfBoundsException();
-        x = coordinate;
-    }
-
-    @Override
-    public void setY(int coordinate) throws OutOfBoundsException {
-        if(coordinate >= boundary || coordinate < 0) throw new OutOfBoundsException();
-        y = coordinate;
+    public void setCoordinates(int x, int y) throws OutOfBoundsException {
+        if(x >= boundary || x < 0 || y >= boundary || y < 0) throw new OutOfBoundsException();
+        this.x = x;
+        this.y = y;
     }
 }
