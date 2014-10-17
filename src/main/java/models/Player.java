@@ -6,4 +6,8 @@ public interface Player {
     int getY();
 
     String getPiece();
+
+    void setX(int coordinate);
+
+    void setY(int coordinate);
 }

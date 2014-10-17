@@ -3,6 +3,8 @@ package models;
 public class PlayerImpl implements Player {
 
     private final String piece;
+    private int x;
+    private int y;
 
     public PlayerImpl(String gamePiece) {
         piece = gamePiece;
@@ -10,16 +12,26 @@ public class PlayerImpl implements Player {
 
     @Override
     public int getX() {
-        return 0;
+        return x;
     }
 
     @Override
     public int getY() {
-        return 0;
+        return y;
     }
 
     @Override
     public String getPiece() {
         return piece;
+    }
+
+    @Override
+    public void setX(int coordinate) {
+        x = coordinate;
+    }
+
+    @Override
+    public void setY(int coordinate) {
+        y = coordinate;
     }
 }

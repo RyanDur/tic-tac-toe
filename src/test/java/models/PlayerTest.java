@@ -21,4 +21,18 @@ public class PlayerTest {
     public void shouldHaveAGamePiece() {
         assertThat(player.getPiece(), is(equalTo(constants.GAME_PIECE_ONE)));
     }
+
+    @Test
+    public void shouldBeAbleToSetAnXCoordinate() {
+        int coordinate = 2;
+        player.setX(coordinate);
+        assertThat(player.getX(), is(equalTo(coordinate)));
+    }
+
+    @Test
+    public void shouldBeAbleToSetAYCoordinate() {
+        int coordinate = 1;
+        player.setY(coordinate);
+        assertThat(player.getY(), is(equalTo(coordinate)));
+    }
 }
