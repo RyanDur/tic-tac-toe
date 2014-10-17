@@ -1,5 +1,8 @@
 package models;
 
+import exceptions.OutOfBoundsException;
+import lang.constants;
+
 public class PlayerImpl implements Player {
 
     private final String piece;
@@ -26,7 +29,8 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public void setX(int coordinate) {
+    public void setX(int coordinate) throws OutOfBoundsException {
+        if(coordinate >= constants.SIDE || coordinate < 0) throw new OutOfBoundsException();
         x = coordinate;
     }
 

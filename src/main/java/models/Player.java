@@ -1,5 +1,7 @@
 package models;
 
+import exceptions.OutOfBoundsException;
+
 public interface Player {
     int getX();
 
@@ -7,7 +9,7 @@ public interface Player {
 
     String getPiece();
 
-    void setX(int coordinate);
+    void setX(int coordinate) throws OutOfBoundsException;
 
     void setY(int coordinate);
 }
