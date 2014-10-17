@@ -1,15 +1,16 @@
 package models;
 
 import exceptions.OutOfBoundsException;
-import lang.constants;
 
 public class PlayerImpl implements Player {
 
     private final String piece;
+    private final int boundary;
     private int x;
     private int y;
 
-    public PlayerImpl(String gamePiece) {
+    public PlayerImpl(String gamePiece, int boundary) {
+        this.boundary = boundary;
         piece = gamePiece;
     }
 
@@ -30,12 +31,13 @@ public class PlayerImpl implements Player {
 
     @Override
     public void setX(int coordinate) throws OutOfBoundsException {
-        if(coordinate >= constants.SIDE || coordinate < 0) throw new OutOfBoundsException();
+        if(coordinate >= boundary || coordinate < 0) throw new OutOfBoundsException();
         x = coordinate;
     }
 
     @Override
-    public void setY(int coordinate) {
+    public void setY(int coordinate) throws OutOfBoundsException {
+        if(coordinate >= boundary || coordinate < 0) throw new OutOfBoundsException();
         y = coordinate;
     }
 }

@@ -11,5 +11,5 @@ public interface Player {
 
     void setX(int coordinate) throws OutOfBoundsException;
 
-    void setY(int coordinate);
+    void setY(int coordinate) throws OutOfBoundsException;
 }

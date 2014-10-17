@@ -20,7 +20,7 @@ public class PlayerTest {
 
     @Before
     public void setup() {
-        player = new PlayerImpl(constants.GAME_PIECE_ONE);
+        player = new PlayerImpl(constants.GAME_PIECE_ONE, constants.SIDE);
     }
 
     @Test
@@ -50,9 +50,23 @@ public class PlayerTest {
     }
 
     @Test
-    public void shouldBeAbleToSetAYCoordinate() {
+    public void shouldBeAbleToSetAYCoordinate() throws OutOfBoundsException {
         int coordinate = 1;
         player.setY(coordinate);
         assertThat(player.getY(), is(equalTo(coordinate)));
+    }
+
+    @Test
+    public void shouldNotBeAbleToSetAnYCoordinateLargerThanTheConfinesOfTheBoard() throws OutOfBoundsException {
+        exception.expect(OutOfBoundsException.class);
+        int coordinate = 4;
+        player.setY(coordinate);
+    }
+
+    @Test
+    public void shouldNotBeAbleToSetAnYCoordinateLessThanTheConfinesOfTheBoard() throws OutOfBoundsException {
+        exception.expect(OutOfBoundsException.class);
+        int coordinate = -2;
+        player.setY(coordinate);
     }
 }
