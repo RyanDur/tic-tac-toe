@@ -2,9 +2,9 @@ package controllers;
 
 import exceptions.NotVacantException;
 import exceptions.OutOfTurnException;
-import factories.BoardFactory;
+import factories.GameFactory;
 import lang.constants;
-import models.Board;
+import models.Game;
 import models.Player;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,8 +18,8 @@ import static org.mockito.Mockito.*;
 
 public class GameCtrlTest {
     private GameCtrl gameCtrl;
-    private BoardFactory mockBoardFactory;
-    private Board mockBoard;
+    private GameFactory mockBoardFactory;
+    private Game mockBoard;
     private Player mockPlayer;
 
     @Rule
@@ -27,13 +27,12 @@ public class GameCtrlTest {
 
     @Before
     public void setup() {
-        mockBoardFactory = mock(BoardFactory.class);
-        mockBoard = mock(Board.class);
+        mockBoardFactory = mock(GameFactory.class);
+        mockBoard = mock(Game.class);
         mockPlayer = mock(Player.class);
         when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(mockBoard.getNumOfPieces()).thenReturn(0);
-        when(mockBoard.isVacant(anyInt(), anyInt())).thenReturn(true);
-        when(mockBoardFactory.createBoard(anyInt())).thenReturn(mockBoard);
+        when(mockBoardFactory.createGame(anyInt())).thenReturn(mockBoard);
 
         gameCtrl = new GameCtrlImpl(mockBoardFactory);
         gameCtrl.setup();
@@ -41,7 +40,7 @@ public class GameCtrlTest {
 
     @Test
     public void shouldBeAbleToSetupAGame() {
-        verify(mockBoardFactory).createBoard(constants.SIDE);
+        verify(mockBoardFactory).createGame(constants.SIDE);
     }
 
     @Test
@@ -79,13 +78,6 @@ public class GameCtrlTest {
         gameCtrl.setPiece(mockPlayer);
         when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(mockBoard.getNumOfPieces()).thenReturn(1);
-        gameCtrl.setPiece(mockPlayer);
-    }
-
-    @Test
-    public void shouldNotBeAbleToPlaceAPieceOnASpaceThatHasAlreadyBeenTaken() throws OutOfTurnException, NotVacantException {
-        exception.expect(NotVacantException.class);
-        when(mockBoard.isVacant(anyInt(), anyInt())).thenReturn(false);
         gameCtrl.setPiece(mockPlayer);
     }
 

@@ -1,9 +1,12 @@
 package models;
 
+import exceptions.NotVacantException;
 import lang.constants;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -11,29 +14,35 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class BoardTest {
+public class GameTest {
 
-    private Board board;
+    private Game board;
     private Player mockPlayer;
     private Player player2;
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     @Before
     public void setup() {
-        board = new BoardImpl(constants.SIDE);
+        board = new GameImpl(constants.SIDE);
         mockPlayer = mock(Player.class);
         player2 = mock(Player.class);
     }
 
     @Test
-    public void shouldBeAbleToSetAPieceOnTheBoard() {
-        when(mockPlayer.getX()).thenReturn(1);
+    public void shouldNotBeAbleToSetAPlayerOnASpotAlreadyTaken() throws NotVacantException {
+        exception.expect(NotVacantException.class);
+        when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(1);
         board.set(mockPlayer);
-        assertThat(board.get(1,1), is(equalTo(mockPlayer)));
+        when(mockPlayer.getX()).thenReturn(0);
+        when(mockPlayer.getY()).thenReturn(1);
+        board.set(mockPlayer);
     }
 
     @Test
-    public void shouldKnowTheNumberOfPiecesPlacedOnTheBoard() {
+    public void shouldKnowTheNumberOfPiecesPlacedOnTheBoard() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(1);
         board.set(mockPlayer);
@@ -52,18 +61,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldReturnFalseIfSpaceIsNotVacant() {
-        board.set(mockPlayer);
-        assertThat(board.isVacant(0,0), is(false));
-    }
-
-    @Test
-    public void shouldReturnTrueIfSpaceIsVacant() {
-        assertThat(board.isVacant(0,0), is(true));
-    }
-
-    @Test
-    public void shouldBeAbleToGetTheWinnerWhenThereIsAWinnerViaTheTopRow() {
+    public void shouldBeAbleToGetTheWinnerWhenThereIsAWinnerViaTheTopRow() throws NotVacantException {
         when(mockPlayer.getY()).thenReturn(0);
         board.set(mockPlayer);
         when(mockPlayer.getY()).thenReturn(1);
@@ -74,7 +72,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldNotBeOverIfRowIsFullAndNotMatchingViaTheTopRow() {
+    public void shouldNotBeOverIfRowIsFullAndNotMatchingViaTheTopRow() throws NotVacantException {
         when(mockPlayer.getY()).thenReturn(0);
         board.set(mockPlayer);
         when(player2.getY()).thenReturn(1);
@@ -85,7 +83,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheMiddleRow() {
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheMiddleRow() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(1);
         when(mockPlayer.getY()).thenReturn(0);
         board.set(mockPlayer);
@@ -97,7 +95,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldNotBeOverIfRowIsFullAndNotMatchingViaTheMiddleRow() {
+    public void shouldNotBeOverIfRowIsFullAndNotMatchingViaTheMiddleRow() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(1);
         when(player2.getX()).thenReturn(1);
         when(player2.getY()).thenReturn(0);
@@ -110,7 +108,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheBottomRow() {
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheBottomRow() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(2);
         when(mockPlayer.getY()).thenReturn(0);
         board.set(mockPlayer);
@@ -122,7 +120,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldNotBeOverIfRowIsFullAndNotMatchingViaTheBottomRow() {
+    public void shouldNotBeOverIfRowIsFullAndNotMatchingViaTheBottomRow() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(2);
         when(mockPlayer.getY()).thenReturn(0);
         board.set(mockPlayer);
@@ -135,7 +133,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheLeftColumn() {
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheLeftColumn() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         board.set(mockPlayer);
         when(mockPlayer.getX()).thenReturn(1);
@@ -146,7 +144,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldNotBeOverIfColumnIsFullAndNotMatchingViaTheLeftColumn() {
+    public void shouldNotBeOverIfColumnIsFullAndNotMatchingViaTheLeftColumn() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         board.set(player2);
         when(mockPlayer.getX()).thenReturn(1);
@@ -157,7 +155,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheMiddleColumn() {
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheMiddleColumn() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(1);
         board.set(mockPlayer);
@@ -169,7 +167,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldNotBeOverIfColumnIsFullAndNotMatchingViaTheMiddleColumn() {
+    public void shouldNotBeOverIfColumnIsFullAndNotMatchingViaTheMiddleColumn() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(1);
         board.set(mockPlayer);
@@ -182,7 +180,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheLastColumn() {
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheLastColumn() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(2);
         board.set(mockPlayer);
@@ -194,7 +192,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldNotBeOverIfColumnIsFullAndNotMatchingViaTheLastColumn() {
+    public void shouldNotBeOverIfColumnIsFullAndNotMatchingViaTheLastColumn() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(2);
         board.set(mockPlayer);
@@ -207,7 +205,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheLeftDiagonal() {
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheLeftDiagonal() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(0);
         board.set(mockPlayer);
@@ -221,7 +219,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldNotBeOverIfDiagonalIsFullAndNotMatchingViaTheLeftDiagonal() {
+    public void shouldNotBeOverIfDiagonalIsFullAndNotMatchingViaTheLeftDiagonal() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(0);
         board.set(mockPlayer);
@@ -235,7 +233,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheRightDiagonal() {
+    public void shouldBeAbleToCheckIfAGameIsOverWhenThereIsAWinnerViaTheRightDiagonal() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(2);
         board.set(mockPlayer);
@@ -249,7 +247,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldNotGetAFalseNegativeWinDependingOnOrderOfPlacement() {
+    public void shouldNotGetAFalseNegativeWinDependingOnOrderOfPlacement() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(0);
         board.set(mockPlayer);
@@ -266,7 +264,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldNotBeOverIfDiagonalIsFullAndNotMatchingViaTheRightDiagonal() {
+    public void shouldNotBeOverIfDiagonalIsFullAndNotMatchingViaTheRightDiagonal() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(2);
         board.set(mockPlayer);
@@ -280,7 +278,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldBeAbleToCheckForADraw() {
+    public void shouldBeAbleToCheckForADraw() throws NotVacantException {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(0);
         board.set(mockPlayer);

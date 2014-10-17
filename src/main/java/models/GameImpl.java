@@ -1,38 +1,26 @@
 package models;
 
+import exceptions.NotVacantException;
+
 import java.util.Arrays;
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 
-public class BoardImpl implements Board {
+public class GameImpl implements Game {
     private final Player[] board;
     private final int side;
     private Player winner;
 
-    public BoardImpl(int side) {
+    public GameImpl(int side) {
         this.side = side;
         board = new Player[side * side];
     }
 
     @Override
-    public void set(Player player) {
-        board[(player.getX() * side) + player.getY()] = player;
+    public void set(Player player) throws NotVacantException {
+        if (!vacant(player.getX(), player.getY())) throw new NotVacantException();
+        board[calculate(player.getX(), player.getY())] = player;
         if (isWinner(player)) winner = player;
-    }
-
-    @Override
-    public int getNumOfPieces() {
-        return (int) Arrays.stream(board).filter(player -> player != null).count();
-    }
-
-    @Override
-    public boolean isVacant(int x, int y) {
-        return board[(x * side) + y] == null;
-    }
-
-    @Override
-    public Player get(int x, int y) {
-        return board[(x * side) + y];
     }
 
     @Override
@@ -43,6 +31,23 @@ public class BoardImpl implements Board {
     @Override
     public boolean full() {
         return getNumOfPieces() == (side * side);
+    }
+
+    @Override
+    public int getNumOfPieces() {
+        return (int) Arrays.stream(board).filter(player -> player != null).count();
+    }
+
+    private Player get(int x, int y) {
+        return board[calculate(x, y)];
+    }
+
+    private boolean vacant(int x, int y) {
+        return get(x, y) == null;
+    }
+
+    private int calculate(int x, int y) {
+        return (x * side) + y;
     }
 
     private boolean isWinner(Player player) {

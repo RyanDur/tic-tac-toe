@@ -2,43 +2,42 @@ package controllers;
 
 import exceptions.NotVacantException;
 import exceptions.OutOfTurnException;
-import factories.BoardFactory;
+import factories.GameFactory;
 import lang.constants;
-import models.Board;
+import models.Game;
 import models.Player;
 
 public class GameCtrlImpl implements GameCtrl {
-    private BoardFactory boardFactory;
-    private Board board;
+    private GameFactory gameFactory;
+    private Game game;
 
-    public GameCtrlImpl(BoardFactory boardFactory) {
-        this.boardFactory = boardFactory;
+    public GameCtrlImpl(GameFactory gameFactory) {
+        this.gameFactory = gameFactory;
     }
 
     @Override
     public void setup() {
-        board = boardFactory.createBoard(constants.SIDE);
+        game = gameFactory.createGame(constants.SIDE);
     }
 
     @Override
     public void setPiece(Player player) throws OutOfTurnException, NotVacantException {
-        if (!isValidTurn(player)) throw new OutOfTurnException();
-        if (!board.isVacant(player.getX(), player.getY())) throw new NotVacantException();
-        board.set(player);
+        if (!validTurn(player)) throw new OutOfTurnException();
+        game.set(player);
     }
 
     @Override
     public boolean gameOver() {
-        return board.getWinner() != null || board.full();
+        return game.getWinner() != null || game.full();
     }
 
     @Override
     public Player getWinner() {
-        return board.getWinner();
+        return game.getWinner();
     }
 
-    private boolean isValidTurn(Player player) {
-        int numOfPieces = board.getNumOfPieces();
+    private boolean validTurn(Player player) {
+        int numOfPieces = game.getNumOfPieces();
         String piece = player.getPiece();
         boolean result = true;
 
