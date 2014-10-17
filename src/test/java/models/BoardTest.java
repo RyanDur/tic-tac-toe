@@ -249,6 +249,23 @@ public class BoardTest {
     }
 
     @Test
+    public void shouldNotGetAFalseNegativeWinDependingOnOrderOfPlacement() {
+        when(mockPlayer.getX()).thenReturn(0);
+        when(mockPlayer.getY()).thenReturn(0);
+        board.set(mockPlayer);
+        when(mockPlayer.getX()).thenReturn(0);
+        when(mockPlayer.getY()).thenReturn(2);
+        board.set(mockPlayer);
+        when(mockPlayer.getX()).thenReturn(2);
+        when(mockPlayer.getY()).thenReturn(2);
+        board.set(mockPlayer);
+        when(mockPlayer.getX()).thenReturn(1);
+        when(mockPlayer.getY()).thenReturn(1);
+        board.set(mockPlayer);
+        assertThat(board.getWinner(), is(mockPlayer));
+    }
+
+    @Test
     public void shouldNotBeOverIfDiagonalIsFullAndNotMatchingViaTheRightDiagonal() {
         when(mockPlayer.getX()).thenReturn(0);
         when(mockPlayer.getY()).thenReturn(2);

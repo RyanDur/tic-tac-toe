@@ -47,13 +47,11 @@ public class BoardImpl implements Board {
 
     private boolean isWinner(Player player) {
         boolean result = check(row(player)) || check(column(player));
-        if (!result) {
-            if (leftDiagonallyPlaced(player)) {
-                result = check(leftDiagonal(player));
-            }
-            if (rightDiagonallyPlaced(player)) {
-                result = check(rightDiagonal(player));
-            }
+        if (!result && leftDiagonallyPlaced(player)) {
+            result = check(leftDiagonal(player));
+        }
+        if (!result && rightDiagonallyPlaced(player)) {
+            result = check(rightDiagonal(player));
         }
         return result;
     }
