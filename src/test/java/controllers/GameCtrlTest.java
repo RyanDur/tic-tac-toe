@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 public class GameCtrlTest {
     private GameCtrl gameCtrl;
     private GameFactory mockBoardFactory;
-    private Game mockBoard;
+    private Game mockGame;
     private Player mockPlayer;
 
     @Rule
@@ -28,11 +28,11 @@ public class GameCtrlTest {
     @Before
     public void setup() {
         mockBoardFactory = mock(GameFactory.class);
-        mockBoard = mock(Game.class);
+        mockGame = mock(Game.class);
         mockPlayer = mock(Player.class);
         when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
-        when(mockBoard.getNumOfPieces()).thenReturn(0);
-        when(mockBoardFactory.createGame(anyInt())).thenReturn(mockBoard);
+        when(mockGame.getNumOfPieces()).thenReturn(0);
+        when(mockBoardFactory.createGame(anyInt())).thenReturn(mockGame);
 
         gameCtrl = new GameCtrlImpl(mockBoardFactory);
         gameCtrl.setup();
@@ -46,13 +46,13 @@ public class GameCtrlTest {
     @Test
     public void shouldAllowAPlayerToPlaceAPieceOnTheBoard() throws OutOfTurnException, NotVacantException {
         gameCtrl.setPiece(mockPlayer);
-        verify(mockBoard).set(any(Player.class));
+        verify(mockGame).set(any(Player.class));
     }
 
     @Test
     public void shouldAllowForXToGoFirst() throws OutOfTurnException, NotVacantException {
         gameCtrl.setPiece(mockPlayer);
-        verify(mockBoard).set(any(Player.class));
+        verify(mockGame).set(any(Player.class));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class GameCtrlTest {
         exception.expect(OutOfTurnException.class);
         gameCtrl.setPiece(mockPlayer);
         when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        when(mockBoard.getNumOfPieces()).thenReturn(1, 2);
+        when(mockGame.getNumOfPieces()).thenReturn(1, 2);
         gameCtrl.setPiece(mockPlayer);
         gameCtrl.setPiece(mockPlayer);
     }
@@ -77,28 +77,28 @@ public class GameCtrlTest {
         exception.expect(OutOfTurnException.class);
         gameCtrl.setPiece(mockPlayer);
         when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
-        when(mockBoard.getNumOfPieces()).thenReturn(1);
+        when(mockGame.getNumOfPieces()).thenReturn(1);
         gameCtrl.setPiece(mockPlayer);
     }
 
     @Test
     public void shouldBeAbleToTellIfTheGameIsOverIfThereIsAWinner() {
-        when(mockBoard.getWinner()).thenReturn(mockPlayer);
-        when(mockBoard.full()).thenReturn(false);
+        when(mockGame.getWinner()).thenReturn(mockPlayer);
+        when(mockGame.full()).thenReturn(false);
         assertThat(gameCtrl.gameOver(), is(true));
     }
 
     @Test
     public void shouldBeAbleToTellIfTheGameIsOverIfTheGameIsADraw() {
-        when(mockBoard.getWinner()).thenReturn(null);
-        when(mockBoard.full()).thenReturn(true);
+        when(mockGame.getWinner()).thenReturn(null);
+        when(mockGame.full()).thenReturn(true);
         assertThat(gameCtrl.gameOver(), is(true));
     }
 
     @Test
     public void shouldBeAbleToGetTheWinner() throws OutOfTurnException, NotVacantException {
-        when(mockBoard.getWinner()).thenReturn(mockPlayer);
-        when(mockBoard.full()).thenReturn(false);
+        when(mockGame.getWinner()).thenReturn(mockPlayer);
+        when(mockGame.full()).thenReturn(false);
         gameCtrl.setPiece(mockPlayer);
         gameCtrl.gameOver();
         assertThat(gameCtrl.getWinner(), is(equalTo(mockPlayer)));
@@ -106,9 +106,16 @@ public class GameCtrlTest {
 
     @Test
     public void shouldNotBeAWinnerIfThereIsADraw() throws OutOfTurnException, NotVacantException {
-        when(mockBoard.full()).thenReturn(true);
+        when(mockGame.full()).thenReturn(true);
         gameCtrl.setPiece(mockPlayer);
         gameCtrl.gameOver();
         assertThat(gameCtrl.getWinner(), equalTo(null));
+    }
+
+    @Test
+    public void shouldBeAbleToGetACopyOfTheBoard() {
+        Player[] expected = new Player[constants.SIDE * constants.SIDE];
+        when(mockGame.getBoard()).thenReturn(expected);
+        assertThat(mockGame.getBoard(), is(equalTo(expected)));
     }
 }

@@ -10,4 +10,6 @@ public interface Game {
     Player getWinner();
 
     boolean full();
+
+    Player[] getBoard();
 }

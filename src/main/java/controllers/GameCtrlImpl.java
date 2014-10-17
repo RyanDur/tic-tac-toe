@@ -36,6 +36,11 @@ public class GameCtrlImpl implements GameCtrl {
         return game.getWinner();
     }
 
+    @Override
+    public Player[] getBoard() {
+        return new Player[0];
+    }
+
     private boolean validTurn(Player player) {
         int numOfPieces = game.getNumOfPieces();
         String piece = player.getPiece();

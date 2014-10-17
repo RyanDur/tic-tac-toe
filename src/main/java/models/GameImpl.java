@@ -34,6 +34,11 @@ public class GameImpl implements Game {
     }
 
     @Override
+    public Player[] getBoard() {
+        return Arrays.copyOf(board, board.length);
+    }
+
+    @Override
     public int getNumOfPieces() {
         return (int) Arrays.stream(board).filter(player -> player != null).count();
     }
