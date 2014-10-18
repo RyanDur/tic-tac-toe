@@ -1,0 +1,8 @@
+#menu {
+}
+#title {
+    -fx-background-color: #889499;
+    -fx-padding: 15, 12, 15, 12;
+    -fx-pref-width: 600;
+    -fx-pref-height: 75;
+}
