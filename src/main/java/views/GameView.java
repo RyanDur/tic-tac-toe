@@ -1,5 +1,6 @@
 package views;
 
+import com.google.inject.Inject;
 import controllers.GameCtrl;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
@@ -12,7 +13,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import lang.constants;
 import models.Player;
 
@@ -29,6 +32,7 @@ public class GameView extends Parent {
     private final GridPane grid;
     private Button play;
 
+    @Inject
     public GameView(GameCtrl gameCtrl, PlayerFactory playerFactory) throws IOException {
         BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
         grid = (GridPane) borderPane.getCenter();
@@ -43,6 +47,7 @@ public class GameView extends Parent {
 
     private void setPlay() {
         play.setOnMouseClicked(event -> {
+            clearBoard();
             messages.setText("");
             play.setVisible(false);
             gameCtrl.setup();
@@ -58,6 +63,10 @@ public class GameView extends Parent {
     }
 
     private void fillBoard(Player[] board) {
+        if(gameCtrl.gameOver()) {
+            setGameOverMessage();
+            play.setVisible(true);
+        }
         grid.getChildren().stream().filter(space -> space instanceof Label)
                 .forEach(label -> setSpace(board, (Label) label));
     }
@@ -82,19 +91,25 @@ public class GameView extends Parent {
                     player.setCoordinates(getRow(space), getColumn(space));
                     gameCtrl.setPiece(player);
                     fillBoard(gameCtrl.getBoard());
-                } else {
-                    setGameOverMessage();
-                    play.setVisible(true);
                 }
             } catch (OutOfTurnException | NotVacantException | OutOfBoundsException e) {
-                e.printStackTrace();
+                messages.setText(e.getMessage());
             }
         };
     }
 
+    private void clearBoard() {
+        grid.getChildren().stream().
+                filter(space -> space instanceof Label).
+                forEach(space -> {
+                    Label label = (Label) space;
+                    label.setText("");
+                });
+    }
+
     private void setGameOverMessage() {
         Player winner = gameCtrl.getWinner();
-        if(winner == null) {
+        if (winner == null) {
             messages.setText(constants.DRAW_MESSAGE);
         } else {
             messages.setText(winner.getPiece() + constants.HAS_WON_MESSAGE);
@@ -125,7 +140,8 @@ public class GameView extends Parent {
     }
 
     private Node getNode(Pane pane, String playId) {
-        return pane.getChildren().stream()
-                .filter(node -> node.getId().equals(playId)).collect(Collectors.toList()).get(0);
+        return pane.getChildren().stream().
+                filter(node -> node.getId().equals(playId)).
+                collect(Collectors.toList()).get(0);
     }
 }

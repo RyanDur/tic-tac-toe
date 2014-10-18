@@ -141,10 +141,10 @@ public class GameViewTest extends GuiTest {
 
     @Test
     public void shouldGetAppropriateMessageIfXWins() {
-        when(mockGameCtrl.gameOver()).thenReturn(true);
         when(player1.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(mockGameCtrl.getWinner()).thenReturn(player1);
         click("#" + constants.PLAY_ID);
+        when(mockGameCtrl.gameOver()).thenReturn(false, true);
         click("#cell" + 3);
         verifyThat("#" + constants.MESSAGES_ID, hasText(constants.GAME_PIECE_ONE + constants.HAS_WON_MESSAGE));
     }
@@ -155,35 +155,53 @@ public class GameViewTest extends GuiTest {
         when(mockGameCtrl.getWinner()).thenReturn(player2);
         click("#" + constants.PLAY_ID);
         click("#cell" + 3);
-        when(mockGameCtrl.gameOver()).thenReturn(true);
+        when(mockGameCtrl.gameOver()).thenReturn(false, true);
         click("#cell" + 4);
         verifyThat("#" + constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
     }
 
     @Test
     public void shouldMakePlayButtonVisibleWhenGameOver() {
-        when(mockGameCtrl.gameOver()).thenReturn(true);
         click("#" + constants.PLAY_ID);
+        when(mockGameCtrl.gameOver()).thenReturn(false, true);
         click("#cell" + 3);
         verifyThat("#" + constants.PLAY_ID, hasText("Play"));
     }
 
     @Test
     public void shouldRemoveMessageForNewGame() {
-        when(mockGameCtrl.gameOver()).thenReturn(true);
         click("#" + constants.PLAY_ID);
+        when(mockGameCtrl.gameOver()).thenReturn(false, true);
         click("#cell" + 3);
+        when(mockGameCtrl.gameOver()).thenReturn(false);
         click("#" + constants.PLAY_ID);
         verifyThat("#messages", hasText(""));
     }
 
     @Test
     public void shouldDisplayDrawIfNoWinner() {
-        when(mockGameCtrl.gameOver()).thenReturn(true);
-        when(mockGameCtrl.getWinner()).thenReturn(null);
         click("#" + constants.PLAY_ID);
+        when(mockGameCtrl.gameOver()).thenReturn(false, true);
+        when(mockGameCtrl.getWinner()).thenReturn(null);
         click("#cell" + 3);
         verifyThat("#" + constants.MESSAGES_ID, hasText(constants.DRAW_MESSAGE));
+    }
+
+    @Test
+    public void shouldResetBoardWhenClickPlayBoardAfterGameIsOver() {
+        String piece1 = "X";
+        int x = 1;
+        int y = 0;
+        String cell = "#cell" + calc(x, y);
+        when(player1.getPiece()).thenReturn(piece1);
+        board[calc(x, y)] = player1;
+        click("#" + constants.PLAY_ID);
+        when(mockGameCtrl.gameOver()).thenReturn(false, true);
+        when(mockGameCtrl.getBoard()).thenReturn(board);
+        click(cell);
+        when(mockGameCtrl.getBoard()).thenReturn(new Player[constants.SIDE * constants.SIDE]);
+        click("#" + constants.PLAY_ID);
+        verifyThat(cell, hasText(""));
     }
 
     private int calc(int x, int y) {

@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.inject.Inject;
 import exceptions.NotVacantException;
 import exceptions.OutOfTurnException;
 import factories.GameFactory;
@@ -11,6 +12,7 @@ public class GameCtrlImpl implements GameCtrl {
     private GameFactory gameFactory;
     private Game game;
 
+    @Inject
     public GameCtrlImpl(GameFactory gameFactory) {
         this.gameFactory = gameFactory;
     }
@@ -38,7 +40,7 @@ public class GameCtrlImpl implements GameCtrl {
 
     @Override
     public Player[] getBoard() {
-        return new Player[0];
+        return game.getBoard();
     }
 
     private boolean validTurn(Player player) {
