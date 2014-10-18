@@ -131,6 +131,13 @@ public class GameViewTest extends GuiTest {
         order.verify(mockGameCtrl).getBoard();
     }
 
+    @Test
+    public void shouldMakeThePlayButtonInvisibleAfterClicked() {
+        exception.expect(NoNodesVisibleException.class);
+        click("#" + constants.PLAY_ID);
+        click("#" + constants.PLAY_ID);
+    }
+
     private int calc(int x, int y) {
         return (x * constants.SIDE) + y;
     }
