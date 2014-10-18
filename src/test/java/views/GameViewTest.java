@@ -52,7 +52,7 @@ public class GameViewTest extends GuiTest {
         int x = 1;
         int y = 1;
         String piece = "X";
-        String id = "#" + x + "," + y;
+        String id = "#cell" + calc(x, y);
         board[calc(x, y)] = player1;
         when(player1.getPiece()).thenReturn(piece);
         when(mockGameCtrl.getBoard()).thenReturn(board);
@@ -69,8 +69,8 @@ public class GameViewTest extends GuiTest {
         int y2 = 2;
         String piece1 = "X";
         String piece2 = "O";
-        String id1 = "#" + x1 + "," + y1;
-        String id2 = "#" + x2 + "," + y2;
+        String id1 = "#cell" + calc(x1, y1);
+        String id2 = "#cell" + calc(x2, y2);
         board[calc(x1, y1)] = player1;
         when(player1.getPiece()).thenReturn(piece1);
         when(player2.getPiece()).thenReturn(piece2);
@@ -91,8 +91,8 @@ public class GameViewTest extends GuiTest {
         int y2 = 2;
         String piece1 = "X";
         String piece2 = "O";
-        String id1 = "#" + x1 + "," + y1;
-        String id2 = "#" + x2 + "," + y2;
+        String id1 = "#cell" + calc(x1, y1);
+        String id2 = "#cell" + calc(x2, y2);
         board[calc(x1, y1)] = player1;
         when(player1.getPiece()).thenReturn(piece1);
         when(player2.getPiece()).thenReturn(piece2);

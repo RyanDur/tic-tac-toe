@@ -5,11 +5,12 @@ import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import factories.PlayerFactory;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -42,18 +43,22 @@ public class GameView extends Parent {
     }
 
     private void fillBoard(Player[] board) {
-        for (int y = 0; y < constants.SIDE; y++) {
-            for (int x = 0; x < constants.SIDE; x++) {
-                Labeled space = (Label) grid.getChildren().get(calc(x, y));
-                String id = x + "," + y;
-                space.setId(id);
-                Player player = board[(x * constants.SIDE) + y];
-                if (player == null) {
-                    space.setOnMouseClicked(setPiece(x, y));
-                } else {
-                    space.setText(player.getPiece());
-                }
-            }
+        ObservableList<Node> spaces = grid.getChildren();
+        for(int space = 0; space < spaces.size()-1; space++) {
+            setSpace(board[space], (Label) spaces.get(space), space);
+        }
+    }
+
+    private void setSpace(Player player, Label label, int space) {
+        label.setId("cell" + space);
+        Integer row = GridPane.getRowIndex(label);
+        Integer column = GridPane.getColumnIndex(label);
+        if (row == null) row = 0;
+        if (column == null) column = 0;
+        if (player == null) {
+            label.setOnMouseClicked(setPiece(row, column));
+        } else {
+            label.setText(player.getPiece());
         }
     }
 
@@ -79,9 +84,5 @@ public class GameView extends Parent {
             currentPlayer = player1;
         }
         return currentPlayer;
-    }
-
-    private int calc(int x, int y) {
-        return (x * constants.SIDE) + y;
     }
 }
