@@ -6,12 +6,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="game" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="615.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane id="game" fx:id="game" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="615.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <top>
         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="messages" alignment="CENTER" prefHeight="49.0" prefWidth="427.0" text="Label" textAlignment="CENTER" />
-                <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="120.0" text="Play" />
+                <Label id="messages" fx:id="messages" alignment="CENTER" prefHeight="49.0" prefWidth="427.0" text="Label" textAlignment="CENTER" />
+                <Button id="play" mnemonicParsing="false" prefHeight="50.0" prefWidth="120.0" text="Play" />
             </children>
             <padding>
                 <Insets right="20.0" />
@@ -34,15 +34,15 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
             <children>
-                <Label fx:id="cell1" prefHeight="199.0" prefWidth="198.0" />
-                <Label GridPane.columnIndex="1" />
-                <Label GridPane.columnIndex="2" />
-                <Label GridPane.rowIndex="1" />
-                <Label GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Label GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                <Label GridPane.rowIndex="2" />
-                <Label GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <Label GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <Label id="cell0" fx:id="cell1" prefHeight="199.0" prefWidth="198.0" />
+                <Label id="cell1" GridPane.columnIndex="1" />
+                <Label id="cell2" GridPane.columnIndex="2" />
+                <Label id="cell3" GridPane.rowIndex="1" />
+                <Label id="cell4" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label id="cell5" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <Label id="cell6" GridPane.rowIndex="2" />
+                <Label id="cell7" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label id="cell8" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             </children>
         </GridPane>
     </center>

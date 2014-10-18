@@ -7,8 +7,11 @@ import factories.PlayerFactory;
 import javafx.scene.Parent;
 import lang.constants;
 import models.Player;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
+import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
 import java.io.IOException;
 
@@ -24,6 +27,9 @@ public class GameViewTest extends GuiTest {
     private Player player2;
     private GameCtrl mockGameCtrl;
     private Player[] board;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Override
     protected Parent getRootNode() {
@@ -43,12 +49,8 @@ public class GameViewTest extends GuiTest {
     }
 
     @Test
-    public void shouldHaveABoardThatReflectsTheBoardForTheGame() {
-        verifyThat("#board", contains(board.length, ".label"));
-    }
-
-    @Test
     public void shouldBeAbleToChooseAPlaceOnTheBoard() throws OutOfTurnException, NotVacantException {
+        click("#" + constants.PLAY_ID);
         int x = 1;
         int y = 1;
         String piece = "X";
@@ -63,6 +65,7 @@ public class GameViewTest extends GuiTest {
 
     @Test
     public void shouldMakeSureToAlternateBetweenPlayers() throws OutOfTurnException, NotVacantException {
+        click("#" + constants.PLAY_ID);
         int x1 = 1;
         int y1 = 1;
         int x2 = 2;
@@ -85,6 +88,7 @@ public class GameViewTest extends GuiTest {
 
     @Test
     public void shouldMakeSureTheSpacesAreNotChangedByClickIfGameOver() throws OutOfTurnException, NotVacantException {
+        click("#" + constants.PLAY_ID);
         int x1 = 1;
         int y1 = 1;
         int x2 = 2;
@@ -104,6 +108,18 @@ public class GameViewTest extends GuiTest {
         board[calc(x2, y2)] = player2;
         click(id2);
         verify(mockGameCtrl, never()).setPiece(player2);
+    }
+
+    @Test
+    public void shouldNotHaveAVisibleBoardOnOpen() {
+        exception.expect(NoNodesVisibleException.class);
+        find("#board");
+    }
+
+    @Test
+    public void shouldBeGivenABoardWhenPushThePlayButton() {
+        click("#" + constants.PLAY_ID);
+        verifyThat("#game", contains("#board"));
     }
 
     private int calc(int x, int y) {

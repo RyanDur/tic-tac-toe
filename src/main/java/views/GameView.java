@@ -5,15 +5,15 @@ import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import factories.PlayerFactory;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import lang.constants;
 import models.Player;
 
@@ -26,15 +26,30 @@ public class GameView extends Parent {
     private Player player2;
     private Player currentPlayer;
     private final GridPane grid;
+    private final BorderPane borderPane;
+    private Button play;
 
     public GameView(GameCtrl gameCtrl, PlayerFactory playerFactory) throws IOException {
-        BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
+        borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
         grid = (GridPane) borderPane.getCenter();
+        grid.setVisible(false);
         this.gameCtrl = gameCtrl;
         this.playerFactory = playerFactory;
         this.getChildren().add(borderPane);
-        fillBoard(gameCtrl.getBoard());
-        setPlayers();
+        setPlay();
+    }
+
+    private void setPlay() {
+        HBox header = (HBox) borderPane.getTop();
+        header.getChildren().stream()
+                .filter(node -> node.getId().equals(constants.PLAY_ID))
+                .forEach(node -> play = (Button) node);
+
+        play.setOnMouseClicked(event -> {
+            grid.setVisible(true);
+            fillBoard(gameCtrl.getBoard());
+            setPlayers();
+        });
     }
 
     private void setPlayers() {
@@ -43,31 +58,28 @@ public class GameView extends Parent {
     }
 
     private void fillBoard(Player[] board) {
-        ObservableList<Node> spaces = grid.getChildren();
-        for(int space = 0; space < spaces.size()-1; space++) {
-            setSpace(board[space], (Label) spaces.get(space), space);
-        }
+        grid.getChildren().stream().filter(space -> space instanceof Label)
+                .forEach(label -> setSpace(board, (Label) label));
     }
 
-    private void setSpace(Player player, Label label, int space) {
-        label.setId("cell" + space);
-        Integer row = GridPane.getRowIndex(label);
-        Integer column = GridPane.getColumnIndex(label);
-        if (row == null) row = 0;
-        if (column == null) column = 0;
+    private void setSpace(Player[] board, Label label) {
+        int position = calc(getRow(label), getColumn(label));
+        Player player = board[position];
         if (player == null) {
-            label.setOnMouseClicked(setPiece(row, column));
+            label.setOnMouseClicked(setPiece());
         } else {
             label.setText(player.getPiece());
         }
     }
 
-    private EventHandler<MouseEvent> setPiece(int x, int y) {
+    private EventHandler<MouseEvent> setPiece() {
         return mouseEvent -> {
             try {
+                System.out.println();
                 if (!gameCtrl.gameOver()) {
+                    Label space = (Label) mouseEvent.getSource();
                     Player player = getCurrentPlayer();
-                    player.setCoordinates(x, y);
+                    player.setCoordinates(getRow(space), getColumn(space));
                     gameCtrl.setPiece(player);
                     fillBoard(gameCtrl.getBoard());
                 }
@@ -84,5 +96,21 @@ public class GameView extends Parent {
             currentPlayer = player1;
         }
         return currentPlayer;
+    }
+
+    private int calc(int row, int column) {
+        return (row * constants.SIDE) + column;
+    }
+
+    private int getColumn(Label label) {
+        Integer column = GridPane.getColumnIndex(label);
+        if (column == null) column = 0;
+        return column;
+    }
+
+    private int getRow(Label label) {
+        Integer row = GridPane.getRowIndex(label);
+        if (row == null) row = 0;
+        return row;
     }
 }
