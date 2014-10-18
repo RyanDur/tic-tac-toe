@@ -74,22 +74,31 @@ public class GameView extends Parent {
 
     private EventHandler<MouseEvent> setPiece() {
         return mouseEvent -> {
-            Player player = getCurrentPlayer();
             try {
                 System.out.println();
                 if (!gameCtrl.gameOver()) {
                     Label space = (Label) mouseEvent.getSource();
+                    Player player = getCurrentPlayer();
                     player.setCoordinates(getRow(space), getColumn(space));
                     gameCtrl.setPiece(player);
                     fillBoard(gameCtrl.getBoard());
                 } else {
-                    messages.setText(player.getPiece() + constants.HAS_WON_MESSAGE);
+                    setGameOverMessage();
                     play.setVisible(true);
                 }
             } catch (OutOfTurnException | NotVacantException | OutOfBoundsException e) {
                 e.printStackTrace();
             }
         };
+    }
+
+    private void setGameOverMessage() {
+        Player winner = gameCtrl.getWinner();
+        if(winner == null) {
+            messages.setText(constants.DRAW_MESSAGE);
+        } else {
+            messages.setText(winner.getPiece() + constants.HAS_WON_MESSAGE);
+        }
     }
 
     private Player getCurrentPlayer() {

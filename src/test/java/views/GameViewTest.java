@@ -143,6 +143,7 @@ public class GameViewTest extends GuiTest {
     public void shouldGetAppropriateMessageIfXWins() {
         when(mockGameCtrl.gameOver()).thenReturn(true);
         when(player1.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
+        when(mockGameCtrl.getWinner()).thenReturn(player1);
         click("#" + constants.PLAY_ID);
         click("#cell" + 3);
         verifyThat("#" + constants.MESSAGES_ID, hasText(constants.GAME_PIECE_ONE + constants.HAS_WON_MESSAGE));
@@ -151,6 +152,7 @@ public class GameViewTest extends GuiTest {
     @Test
     public void shouldGetAppropriateMessageIfOWins() {
         when(player2.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        when(mockGameCtrl.getWinner()).thenReturn(player2);
         click("#" + constants.PLAY_ID);
         click("#cell" + 3);
         when(mockGameCtrl.gameOver()).thenReturn(true);
@@ -173,6 +175,15 @@ public class GameViewTest extends GuiTest {
         click("#cell" + 3);
         click("#" + constants.PLAY_ID);
         verifyThat("#messages", hasText(""));
+    }
+
+    @Test
+    public void shouldDisplayDrawIfNoWinner() {
+        when(mockGameCtrl.gameOver()).thenReturn(true);
+        when(mockGameCtrl.getWinner()).thenReturn(null);
+        click("#" + constants.PLAY_ID);
+        click("#cell" + 3);
+        verifyThat("#" + constants.MESSAGES_ID, hasText(constants.DRAW_MESSAGE));
     }
 
     private int calc(int x, int y) {
