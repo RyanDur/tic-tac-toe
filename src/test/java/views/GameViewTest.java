@@ -17,6 +17,7 @@ import org.mockito.InOrder;
 import java.io.IOException;
 
 import static org.loadui.testfx.Assertions.verifyThat;
+import static org.loadui.testfx.controls.Commons.hasText;
 import static org.loadui.testfx.controls.impl.ContainsNodesMatcher.contains;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -136,6 +137,42 @@ public class GameViewTest extends GuiTest {
         exception.expect(NoNodesVisibleException.class);
         click("#" + constants.PLAY_ID);
         click("#" + constants.PLAY_ID);
+    }
+
+    @Test
+    public void shouldGetAppropriateMessageIfXWins() {
+        when(mockGameCtrl.gameOver()).thenReturn(true);
+        when(player1.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
+        click("#" + constants.PLAY_ID);
+        click("#cell" + 3);
+        verifyThat("#" + constants.MESSAGES_ID, hasText(constants.GAME_PIECE_ONE + constants.HAS_WON_MESSAGE));
+    }
+
+    @Test
+    public void shouldGetAppropriateMessageIfOWins() {
+        when(player2.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        click("#" + constants.PLAY_ID);
+        click("#cell" + 3);
+        when(mockGameCtrl.gameOver()).thenReturn(true);
+        click("#cell" + 4);
+        verifyThat("#" + constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+    }
+
+    @Test
+    public void shouldMakePlayButtonVisibleWhenGameOver() {
+        when(mockGameCtrl.gameOver()).thenReturn(true);
+        click("#" + constants.PLAY_ID);
+        click("#cell" + 3);
+        verifyThat("#" + constants.PLAY_ID, hasText("Play"));
+    }
+
+    @Test
+    public void shouldRemoveMessageForNewGame() {
+        when(mockGameCtrl.gameOver()).thenReturn(true);
+        click("#" + constants.PLAY_ID);
+        click("#cell" + 3);
+        click("#" + constants.PLAY_ID);
+        verifyThat("#messages", hasText(""));
     }
 
     private int calc(int x, int y) {

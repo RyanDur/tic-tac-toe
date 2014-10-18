@@ -10,7 +10,7 @@
     <top>
         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Label id="messages" fx:id="messages" alignment="CENTER" prefHeight="49.0" prefWidth="427.0" text="Label" textAlignment="CENTER" />
+                <Label id="messages" fx:id="messages" alignment="CENTER" prefHeight="49.0" prefWidth="427.0" textAlignment="CENTER" />
                 <Button id="play" mnemonicParsing="false" prefHeight="50.0" prefWidth="120.0" text="Play" />
             </children>
             <padding>

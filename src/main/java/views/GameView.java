@@ -7,45 +7,43 @@ import exceptions.OutOfTurnException;
 import factories.PlayerFactory;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import lang.constants;
 import models.Player;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 public class GameView extends Parent {
     private final GameCtrl gameCtrl;
     private final PlayerFactory playerFactory;
+    private final Label messages;
     private Player player1;
     private Player player2;
     private Player currentPlayer;
     private final GridPane grid;
-    private final BorderPane borderPane;
     private Button play;
 
     public GameView(GameCtrl gameCtrl, PlayerFactory playerFactory) throws IOException {
-        borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
+        BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
         grid = (GridPane) borderPane.getCenter();
         grid.setVisible(false);
         this.gameCtrl = gameCtrl;
         this.playerFactory = playerFactory;
         this.getChildren().add(borderPane);
+        play = (Button) getNode((Pane) borderPane.getTop(), constants.PLAY_ID);
+        messages = (Label) getNode((Pane) borderPane.getTop(), constants.MESSAGES_ID);
         setPlay();
     }
 
     private void setPlay() {
-        HBox header = (HBox) borderPane.getTop();
-        header.getChildren().stream()
-                .filter(node -> node.getId().equals(constants.PLAY_ID))
-                .forEach(node -> play = (Button) node);
-
         play.setOnMouseClicked(event -> {
+            messages.setText("");
             play.setVisible(false);
             gameCtrl.setup();
             grid.setVisible(true);
@@ -76,14 +74,17 @@ public class GameView extends Parent {
 
     private EventHandler<MouseEvent> setPiece() {
         return mouseEvent -> {
+            Player player = getCurrentPlayer();
             try {
                 System.out.println();
                 if (!gameCtrl.gameOver()) {
                     Label space = (Label) mouseEvent.getSource();
-                    Player player = getCurrentPlayer();
                     player.setCoordinates(getRow(space), getColumn(space));
                     gameCtrl.setPiece(player);
                     fillBoard(gameCtrl.getBoard());
+                } else {
+                    messages.setText(player.getPiece() + constants.HAS_WON_MESSAGE);
+                    play.setVisible(true);
                 }
             } catch (OutOfTurnException | NotVacantException | OutOfBoundsException e) {
                 e.printStackTrace();
@@ -104,15 +105,18 @@ public class GameView extends Parent {
         return (row * constants.SIDE) + column;
     }
 
-    private int getColumn(Label label) {
-        Integer column = GridPane.getColumnIndex(label);
-        if (column == null) column = 0;
-        return column;
+    private int getColumn(Node node) {
+        Integer column = GridPane.getColumnIndex(node);
+        return column == null ? 0 : column;
     }
 
-    private int getRow(Label label) {
-        Integer row = GridPane.getRowIndex(label);
-        if (row == null) row = 0;
-        return row;
+    private int getRow(Node node) {
+        Integer row = GridPane.getRowIndex(node);
+        return row == null ? 0 : row;
+    }
+
+    private Node getNode(Pane pane, String playId) {
+        return pane.getChildren().stream()
+                .filter(node -> node.getId().equals(playId)).collect(Collectors.toList()).get(0);
     }
 }
