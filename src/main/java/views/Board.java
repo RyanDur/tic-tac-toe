@@ -15,8 +15,7 @@ import models.Player;
 public class Board extends Parent {
 
     private final GameCtrl gameCtrl;
-    private final GridPane grid;
-    private final Label label;
+    private GridPane grid;
     private final Player player1;
     private final Player player2;
     private Player currentPlayer;
@@ -28,8 +27,6 @@ public class Board extends Parent {
         this.gameCtrl = gameCtrl;
         grid = new GridPane();
         grid.setId(constants.BOARD_ID);
-        label = new Label();
-        GridPane.setConstraints(label, constants.SIDE, constants.SIDE);
         fillBoard(gameCtrl.getBoard());
         this.getChildren().add(grid);
     }
@@ -42,8 +39,8 @@ public class Board extends Parent {
                 space.setId(id);
                 final int finalY = y;
                 final int finalX = x;
-                Player player = board[(x*constants.SIDE)+y];
-                if(player == null) {
+                Player player = board[(x * constants.SIDE) + y];
+                if (player == null) {
                     space.setOnMouseClicked(mouseEvent -> {
                         try {
                             setPiece(finalX, finalY);
@@ -62,10 +59,12 @@ public class Board extends Parent {
 
     private void setPiece(int x, int y) throws OutOfBoundsException {
         try {
-            Player player = getCurrentPlayer();
-            player.setCoordinates(x, y);
-            gameCtrl.setPiece(player);
-            fillBoard(gameCtrl.getBoard());
+            if (!gameCtrl.gameOver()) {
+                Player player = getCurrentPlayer();
+                player.setCoordinates(x, y);
+                gameCtrl.setPiece(player);
+                fillBoard(gameCtrl.getBoard());
+            }
         } catch (OutOfTurnException | NotVacantException e) {
             e.printStackTrace();
         }
