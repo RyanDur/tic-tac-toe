@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.exceptions.NoNodesVisibleException;
+import org.mockito.InOrder;
 
 import java.io.IOException;
 
@@ -120,6 +121,14 @@ public class GameViewTest extends GuiTest {
     public void shouldBeGivenABoardWhenPushThePlayButton() {
         click("#" + constants.PLAY_ID);
         verifyThat("#game", contains("#board"));
+    }
+
+    @Test
+    public void shouldSetupTheGameBeforeGettingTheBoard() {
+        click("#" + constants.PLAY_ID);
+        InOrder order = inOrder(mockGameCtrl);
+        order.verify(mockGameCtrl).setup();
+        order.verify(mockGameCtrl).getBoard();
     }
 
     private int calc(int x, int y) {

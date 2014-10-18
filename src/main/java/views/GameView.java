@@ -46,6 +46,7 @@ public class GameView extends Parent {
                 .forEach(node -> play = (Button) node);
 
         play.setOnMouseClicked(event -> {
+            gameCtrl.setup();
             grid.setVisible(true);
             fillBoard(gameCtrl.getBoard());
             setPlayers();
