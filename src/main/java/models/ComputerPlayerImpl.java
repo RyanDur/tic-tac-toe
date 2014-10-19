@@ -17,9 +17,6 @@ public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
     public void setBoard(Player[] players) throws OutOfBoundsException {
         StrategyGame strategyGame = strategyGameFactory.createStrategyGame(boundary, players);
         if(strategyGame.boardEmpty()) setCoordinates(boundary-1, boundary-1);
-        else {
-            Player player = strategyGame.getBestMove(this);
-            setCoordinates(player.getX(), player.getY());
-        }
+        else strategyGame.setBestMove(this);
     }
 }

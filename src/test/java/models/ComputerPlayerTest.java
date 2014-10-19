@@ -37,10 +37,9 @@ public class ComputerPlayerTest {
     }
 
     @Test
-    public void shouldGetBestMove() throws OutOfBoundsException {
+    public void shouldSetBestMove() throws OutOfBoundsException {
         when(strategyGame.boardEmpty()).thenReturn(false);
-        when(strategyGame.getBestMove(computer)).thenReturn(computer);
         computer.setBoard(players);
-        verify(strategyGame).getBestMove(computer);
+        verify(strategyGame).setBestMove(computer);
     }
 }
