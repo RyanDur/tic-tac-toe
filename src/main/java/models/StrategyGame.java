@@ -1,9 +1,16 @@
 package models;
 
+import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
+
+import java.util.Optional;
+
 public interface StrategyGame extends Game {
     boolean boardEmpty();
 
-    boolean winningMove(int row, int column);
+    Optional<Integer> findWinningMove(ComputerPlayer player);
 
-    boolean losingMove(int row, int column, Player opponent);
+    Optional<Integer> findLosingMove(Player opponent);
+
+    Optional<Integer> getBestMove(ComputerPlayer player, Player opponent) throws NotVacantException, OutOfBoundsException;
 }
