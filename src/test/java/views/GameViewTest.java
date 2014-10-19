@@ -176,7 +176,7 @@ public class GameViewTest extends GuiTest {
         click("#cell" + 3);
         when(mockGameCtrl.gameOver()).thenReturn(false);
         click("#" + constants.PLAY_ID);
-        verifyThat("#messages", hasText(""));
+        verifyThat("#messages", hasText(constants.EMPTY));
     }
 
     @Test
@@ -202,7 +202,7 @@ public class GameViewTest extends GuiTest {
         click(cell);
         when(mockGameCtrl.getBoard()).thenReturn(new Player[constants.SIDE * constants.SIDE]);
         click("#" + constants.PLAY_ID);
-        verifyThat(cell, hasText(""));
+        verifyThat(cell, hasText(constants.EMPTY));
     }
 
     @Test
@@ -223,7 +223,7 @@ public class GameViewTest extends GuiTest {
         click("#cell" + 3);
         verifyThat("#" + constants.MESSAGES_ID, hasText(constants.NOT_VACANT_MESSAGE));
         click("#cell" + 4);
-        verifyThat("#" + constants.MESSAGES_ID, hasText(""));
+        verifyThat("#" + constants.MESSAGES_ID, hasText(constants.EMPTY));
     }
 
     @Test
@@ -237,7 +237,7 @@ public class GameViewTest extends GuiTest {
         verifyThat("#" + constants.MESSAGES_ID, hasText(constants.NOT_VACANT_MESSAGE));
         doThrow(new OutOfTurnException()).when(mockGameCtrl).setPiece(player1);
         click("#cell" + 4);
-        verifyThat("#" + constants.MESSAGES_ID, hasText(""));
+        verifyThat("#" + constants.MESSAGES_ID, hasText(constants.EMPTY));
     }
 
     private int calc(int x, int y) {

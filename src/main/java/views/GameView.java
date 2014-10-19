@@ -48,7 +48,7 @@ public class GameView extends Parent {
     private void setPlay() {
         play.setOnMouseClicked(event -> {
             clearBoard();
-            messages.setText("");
+            messages.setText(constants.EMPTY);
             play.setVisible(false);
             gameCtrl.setup();
             grid.setVisible(true);
@@ -84,7 +84,7 @@ public class GameView extends Parent {
     private EventHandler<MouseEvent> setPiece() {
         return mouseEvent -> {
             try {
-                messages.setText("");
+                messages.setText(constants.EMPTY);
                 if (!gameCtrl.gameOver()) {
                     Label space = (Label) mouseEvent.getSource();
                     Player player = getCurrentPlayer();
@@ -104,7 +104,7 @@ public class GameView extends Parent {
                 filter(space -> space instanceof Label).
                 forEach(space -> {
                     Label label = (Label) space;
-                    label.setText("");
+                    label.setText(constants.EMPTY);
                 });
     }
 
