@@ -204,6 +204,15 @@ public class GameViewTest extends GuiTest {
         verifyThat(cell, hasText(""));
     }
 
+    @Test
+    public void shouldShowAppropriateMessageIfAPlayerTriesToTakeATakenSpace() throws OutOfTurnException, NotVacantException {
+        doThrow(new NotVacantException()).when(mockGameCtrl).setPiece(any(Player.class));
+        click("#" + constants.PLAY_ID);
+        when(mockGameCtrl.gameOver()).thenReturn(false);
+        click("#cell" + 3);
+        verifyThat("#" + constants.MESSAGES_ID, hasText(constants.NOT_VACANT_MESSAGE));
+    }
+
     private int calc(int x, int y) {
         return (x * constants.SIDE) + y;
     }
