@@ -213,6 +213,18 @@ public class GameViewTest extends GuiTest {
         verifyThat("#" + constants.MESSAGES_ID, hasText(constants.NOT_VACANT_MESSAGE));
     }
 
+    @Test
+    public void shouldRemoveAnyMessageWhenAPlayerChoosesASpace() throws OutOfTurnException, NotVacantException {
+        click("#" + constants.PLAY_ID);
+        when(mockGameCtrl.gameOver()).thenReturn(false);
+        click("#cell" + 3);
+        doThrow(new NotVacantException()).doNothing().when(mockGameCtrl).setPiece(any(Player.class));
+        click("#cell" + 3);
+        verifyThat("#" + constants.MESSAGES_ID, hasText(constants.NOT_VACANT_MESSAGE));
+        click("#cell" + 4);
+        verifyThat("#" + constants.MESSAGES_ID, hasText(""));
+    }
+
     private int calc(int x, int y) {
         return (x * constants.SIDE) + y;
     }

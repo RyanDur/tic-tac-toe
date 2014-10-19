@@ -84,7 +84,7 @@ public class GameView extends Parent {
     private EventHandler<MouseEvent> setPiece() {
         return mouseEvent -> {
             try {
-                System.out.println();
+                messages.setText("");
                 if (!gameCtrl.gameOver()) {
                     Label space = (Label) mouseEvent.getSource();
                     Player player = getCurrentPlayer();
