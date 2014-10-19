@@ -7,7 +7,7 @@ import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 
 public class GameImpl implements Game {
-    private final Player[] board;
+    private Player[] board;
     private final int side;
     private Player winner;
 
@@ -115,5 +115,9 @@ public class GameImpl implements Game {
 
     private IntPredicate row(Player player) {
         return i -> get(player.getX(), i) == player;
+    }
+
+    protected void setBoard(Player[] players) {
+        board = players;
     }
 }
