@@ -93,6 +93,7 @@ public class GameView extends Parent {
                     fillBoard(gameCtrl.getBoard());
                 }
             } catch (OutOfTurnException | NotVacantException | OutOfBoundsException e) {
+                currentPlayer = getLastPlayer();
                 messages.setText(e.getMessage());
             }
         };
@@ -123,6 +124,10 @@ public class GameView extends Parent {
             currentPlayer = player1;
         }
         return currentPlayer;
+    }
+
+    private Player getLastPlayer() {
+        return getCurrentPlayer();
     }
 
     private int calc(int row, int column) {

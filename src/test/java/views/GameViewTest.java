@@ -32,6 +32,7 @@ public class GameViewTest extends GuiTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
+    private PlayerFactory mockPlayerFactory;
 
     @Override
     protected Parent getRootNode() {
@@ -40,7 +41,7 @@ public class GameViewTest extends GuiTest {
         player2 = mock(Player.class);
         mockGameCtrl = mock(GameCtrl.class);
         when(mockGameCtrl.getBoard()).thenReturn(new Player[constants.SIDE * constants.SIDE]);
-        PlayerFactory mockPlayerFactory = mock(PlayerFactory.class);
+        mockPlayerFactory = mock(PlayerFactory.class);
         when(mockPlayerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1, player2);
         try {
             return new GameView(mockGameCtrl, mockPlayerFactory);
@@ -221,6 +222,20 @@ public class GameViewTest extends GuiTest {
         doThrow(new NotVacantException()).doNothing().when(mockGameCtrl).setPiece(any(Player.class));
         click("#cell" + 3);
         verifyThat("#" + constants.MESSAGES_ID, hasText(constants.NOT_VACANT_MESSAGE));
+        click("#cell" + 4);
+        verifyThat("#" + constants.MESSAGES_ID, hasText(""));
+    }
+
+    @Test
+    public void shouldNotLetTheWrongPlayerChooseASpaceWhenItIsNotThereTurn() throws OutOfTurnException, NotVacantException {
+        click("#" + constants.PLAY_ID);
+        when(mockPlayerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1, player2);
+        when(mockGameCtrl.gameOver()).thenReturn(false);
+        click("#cell" + 3);
+        doThrow(new NotVacantException()).doNothing().when(mockGameCtrl).setPiece(player2);
+        click("#cell" + 3);
+        verifyThat("#" + constants.MESSAGES_ID, hasText(constants.NOT_VACANT_MESSAGE));
+        doThrow(new OutOfTurnException()).when(mockGameCtrl).setPiece(player1);
         click("#cell" + 4);
         verifyThat("#" + constants.MESSAGES_ID, hasText(""));
     }
