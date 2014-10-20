@@ -68,7 +68,7 @@ public class ComputerPlayerTest {
         Player player2 = new PlayerImpl(constants.GAME_PIECE_TWO, constants.SIDE);
         when(strategyGame.findWinningMove(computer)).thenReturn(Optional.empty());
         when(strategyGame.findLosingMove(player2)).thenReturn(Optional.empty());
-        when(strategyGame.getBestMove(computer, player2)).thenReturn(Optional.of(7));
+        when(strategyGame.findBestMove(computer, player2)).thenReturn(Optional.of(7));
         board[3] = player2;
         computer.setBoard(board);
         computer.calculateBestMove();

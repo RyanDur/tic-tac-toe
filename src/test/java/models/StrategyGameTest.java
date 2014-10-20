@@ -1,5 +1,7 @@
 package models;
 
+import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
 import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,5 +52,15 @@ public class StrategyGameTest {
         board[5] = human;
 
         assertThat(strategyGame.findLosingMove(human), is(equalTo(Optional.of(3))));
+    }
+
+    @Test
+    public void shouldBeAbleToFindTheBestMove() throws NotVacantException, OutOfBoundsException {
+        Player computer = mock(ComputerPlayer.class);
+        Player human = mock(Player.class);
+        board[8] = computer;
+        board[4] = human;
+
+        assertThat(strategyGame.findBestMove(computer, human), is(equalTo(Optional.of(3))));
     }
 }

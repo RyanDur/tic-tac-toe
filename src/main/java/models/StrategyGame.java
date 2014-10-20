@@ -12,5 +12,5 @@ public interface StrategyGame extends Game {
 
     Optional<Integer> findLosingMove(Player opponent);
 
-    Optional<Integer> getBestMove(ComputerPlayer player, Player opponent) throws NotVacantException, OutOfBoundsException;
+    Optional<Integer> findBestMove(Player player, Player opponent) throws NotVacantException, OutOfBoundsException;
 }

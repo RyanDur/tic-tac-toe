@@ -36,37 +36,53 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
 
     @Override
     public Optional<Integer> findLosingMove(Player opponent) {
-        return find(getBoard(), losingMove(opponent));
+        return findWinningMove(opponent);
     }
 
     @Override
-    public Optional<Integer> getBestMove(ComputerPlayer player, Player opponent) throws NotVacantException, OutOfBoundsException {
-        List<StrategyGame> games = generatePossibleMoves(getBoard(), player);
+    public Optional<Integer> findBestMove(Player player, Player opponent) throws NotVacantException, OutOfBoundsException {
+        List<Player[]> games = generatePossibleMoves(getBoard(), player, opponent);
         List<Integer> vacancies = getVacancies(getBoard());
-        List<Integer> weights = games.stream().map(game -> getWeight(game.getBoard(), player, opponent)).collect(Collectors.toList());
-        vacancies.get(findMaxIndex(weights));
+        List<Integer> weights = games.stream().map(game -> getWeight(game, player, opponent, true)).collect(Collectors.toList());
+        System.out.println(weights);
+        System.out.println(vacancies.get(findMaxIndex(weights)));
         return null;
     }
 
-    private Integer getWeight(Player[] board, Player player, Player opponent) {
-        int result = 0;
-        try {
-            List<StrategyGame> games;
-            games = generatePossibleMoves(board, player);
-            for (StrategyGame game : games) {
-                if (game.getWinner() == this) result += 1;
-                else if (game.getWinner() == opponent) result += -1;
+    private int playerCount(Player[] board) {
+        return (int) Arrays.stream(board).filter(player -> player != null).count();
+    }
 
-                if (player instanceof ComputerPlayer) {
-                    result += getWeight(getBoard(), player, opponent);
-                } else {
-                    result += getWeight(getBoard(), player, opponent);
-                }
+    private Integer getWeight(Player[] board, Player player, Player opponent, boolean maximizingPlayer) {
+        boolean winPresent = winPresent(board, player, opponent);
+        int bestValue = 0;
+        if(playerCount(board) == (boundary * boundary) || winPresent) {
+            if(winPresent) {
+                if (player instanceof ComputerPlayer) return 1;
+                else return -1;
             }
-        } catch (OutOfBoundsException | NotVacantException e) {
-            e.printStackTrace();
+            return 0;
         }
-        return result;
+        if(maximizingPlayer) {
+            for(Player[] game : generatePossibleMoves(board, player, opponent)) {
+                int val = getWeight(game, player, opponent, false);
+                bestValue = Math.max(bestValue, val);
+            }
+            return bestValue;
+        } else {
+            for(Player[] game : generatePossibleMoves(board, player, opponent)) {
+                int val = getWeight(game, player, opponent, true);
+                bestValue = Math.max(bestValue, val);
+            }
+            return bestValue;
+        }
+    }
+
+    private boolean winPresent(Player[] board, Player player, Player opponent) {
+        boolean present = false;
+        if(find(board, winningMove(player)).isPresent()) present = true;
+        else if (find(board, winningMove(opponent)).isPresent()) present = true;
+        return present;
     }
 
     private int findMaxIndex(List<Integer> list) {
@@ -81,10 +97,6 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
         return index;
     }
 
-    private Predicate<Integer> losingMove(Player opponent) {
-        return vacancy -> losingMove(vacancy, opponent);
-    }
-
     private Predicate<Integer> winningMove(Player player) {
         return vacancy -> win(vacancy, player);
     }
@@ -95,14 +107,13 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
                 findFirst();
     }
 
-    private List<StrategyGame> generatePossibleMoves(Player[] board, Player player) throws OutOfBoundsException, NotVacantException {
-        List<StrategyGame> games = new ArrayList<>();
+    private List<Player[]> generatePossibleMoves(Player[] board, Player player, Player opponent) {
+        List<Player[]> games = new ArrayList<>();
         for (Integer vacancy : getVacancies(board)) {
-            StrategyGame game = new StrategyGameImpl(boundary, Arrays.copyOf(board, board.length));
-            player.setCoordinates(calcRow(vacancy), calcColumn(vacancy));
-            game.set(player);
-            games.add(game);
-
+            Player[] copy = Arrays.copyOf(board, board.length);
+            if(playerCount(board) % 2 == 0) copy[vacancy] = player;
+            else copy[vacancy] = opponent;
+            games.add(copy);
         }
         return games;
     }
@@ -119,15 +130,9 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
         return isWinner(player, vacancy);
     }
 
-    private boolean losingMove(int vacancy, Player opponent) {
-        board = getBoard();
-        board[vacancy] = opponent;
-        return isWinner(opponent, vacancy);
-    }
-
     private boolean isWinner(Player player, int vacancy) {
         boolean result = check(row(player, calcRow(vacancy))) ||
-                check(column(player,calcColumn(vacancy)));
+                check(column(player, calcColumn(vacancy)));
         if (!result && leftDiagonallyPlaced(vacancy)) {
             result = check(leftDiagonal(player));
         }
