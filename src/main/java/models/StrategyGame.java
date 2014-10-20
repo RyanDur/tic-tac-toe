@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface StrategyGame extends Game {
     boolean boardEmpty();
 
-    Optional<Integer> findWinningMove(ComputerPlayer player);
+    Optional<Integer> findWinningMove(Player player);
 
     Optional<Integer> findLosingMove(Player opponent);
 
