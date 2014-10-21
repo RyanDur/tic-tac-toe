@@ -67,11 +67,9 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
 
     @Override
     public Optional<Integer> findBestMove(Player player, Player opponent) throws NotVacantException, OutOfBoundsException {
-        List<StrategyGame> playersMoves = generatePossibleMoves(player, vacancies);
-        playersMoves.stream().
-                filter(possibleWin(player)).
-                forEach(board -> board.setWeight(getWeight(board, player, opponent)));
-        return Optional.of(playersMoves.stream().
+        Stream<StrategyGame> wins = filterWins(this, player);
+                wins.forEach(board -> board.setWeight(getWeight(board, player, opponent)));
+        return Optional.of(wins.
                 max((game1, game2) -> game1.getWeight() - game2.getWeight()).
                 get().
                 getSpace());
@@ -79,19 +77,16 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
 
     private int getWeight(StrategyGame game, Player player, Player opponent) {
         int result = 0;
-            System.out.println(filter(game, opponent, possibleWin(opponent)).count());
+            System.out.println(filterWins(game, opponent).count());
 //                forEach(board -> board.setWeight(getWeight(board, player, opponent)));
         return result;
     }
 
-    private Stream<StrategyGame> filter(StrategyGame game, Player player, Predicate<StrategyGame> predicate) {
+    private Stream<StrategyGame> filterWins(StrategyGame game, Player player) {
         return generatePossibleMoves(player, getVacancies(game.getBoard())).stream().
-                filter(predicate);
+                filter(board -> board.findWinningMove(player).isPresent());
     }
 
-    private Predicate<StrategyGame> possibleWin(Player player) {
-        return board -> board.findWinningMove(player).isPresent();
-    }
 
     private List<StrategyGame> generatePossibleMoves(Player player, List<Integer> vacancies) {
         List<StrategyGame> games = new ArrayList<>();
