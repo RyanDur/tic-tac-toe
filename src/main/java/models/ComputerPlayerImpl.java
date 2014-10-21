@@ -33,10 +33,10 @@ public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
     public void calculateBestMove() throws OutOfBoundsException, NotVacantException {
         if (strategyGame.boardEmpty()) setCoordinates(boundary - 1, boundary - 1);
         else {
-            Optional<Integer> found = strategyGame.findWinningMove(this);
+            Optional<Integer[]> found = strategyGame.findWinningMove(this);
             if (!found.isPresent()) found = strategyGame.findWinningMove(getOpponent());
             if (!found.isPresent()) found = strategyGame.findBestMove(this, getOpponent());
-            found.ifPresent(setVacancy());
+            found.ifPresent(setMove());
         }
     }
 
@@ -46,26 +46,13 @@ public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
                 findFirst().get();
     }
 
-    private Consumer<Integer> setVacancy() {
+    private Consumer<Integer[]> setMove() {
         return vacancy -> {
             try {
-                setCoordinates(calcRow(vacancy), calcColumn(vacancy));
+                setCoordinates(vacancy[0], vacancy[1]);
             } catch (OutOfBoundsException e) {
                 e.printStackTrace();
             }
         };
-    }
-
-    private int calcColumn(int vacancy) {
-        return vacancy - (calcRow(vacancy) * boundary);
-    }
-
-    private int calcRow(int vacancy) {
-        int row = 0;
-        while (vacancy >= boundary) {
-            vacancy -= boundary;
-            row++;
-        }
-        return row;
     }
 }

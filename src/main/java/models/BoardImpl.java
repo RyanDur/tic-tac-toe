@@ -1,12 +1,15 @@
 package models;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.IntPredicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class BoardImpl implements Board {
     private final int side;
     private Player[] board;
+    private Integer[] lastMove;
 
     public BoardImpl(int side) {
         this.board = new Player[side * side];
@@ -15,6 +18,7 @@ public class BoardImpl implements Board {
 
     @Override
     public void set(int row, int column, Player player) {
+        lastMove = new Integer[]{row, column};
         board[calculate(row, column)] = player;
     }
 
@@ -42,6 +46,21 @@ public class BoardImpl implements Board {
         if (!result && rightDiagonallyPlaced(row, column))
             result = check(rightDiagonal(board, player));
         return result;
+    }
+
+    @Override
+    public List<Integer[]> getVacancies() {
+        List<Integer> list = IntStream.range(0, board.length).
+                filter(index -> board[index] == null).boxed().
+                collect(Collectors.toList());
+        return list.stream().
+                map(num -> new Integer[]{calcRow(num), calcColumn(num)}).
+                collect(Collectors.toList());
+    }
+
+    @Override
+    public Integer[] lastMove() {
+        return lastMove;
     }
 
     private boolean leftDiagonallyPlaced(int x, int y) {
@@ -95,5 +114,18 @@ public class BoardImpl implements Board {
 
     private int calculate(int x, int y) {
         return (x * side) + y;
+    }
+
+    private int calcColumn(int vacancy) {
+        return vacancy - (calcRow(vacancy) * side);
+    }
+
+    private int calcRow(int vacancy) {
+        int row = 0;
+        while (vacancy >= side) {
+            vacancy -= side;
+            row++;
+        }
+        return row;
     }
 }

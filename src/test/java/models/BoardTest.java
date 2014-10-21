@@ -4,6 +4,9 @@ import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -122,5 +125,31 @@ public class BoardTest {
         board.setBoard(players);
         board.set(2,1, player);
         assertThat(board.get(2, 1), is(equalTo(player)));
+    }
+
+    @Test
+    public void shouldBeAbleToGetTheVacantSpotsOnTheBoard() {
+        players[2] = player;
+        players[4] = player;
+        players[6] = player;
+        board.setBoard(players);
+        List<Integer[]> expected = new ArrayList<>();
+        expected.add(new Integer[]{0, 0});
+        expected.add(new Integer[]{0, 1});
+        expected.add(new Integer[]{1, 0});
+        expected.add(new Integer[]{1, 2});
+        expected.add(new Integer[]{2, 1});
+        expected.add(new Integer[]{2, 2});
+        List<Integer[]> actual = board.getVacancies();
+        assertThat(actual.size(), is(equalTo(expected.size())));
+        for(int i = 0; i < expected.size(); i++) {
+            assertThat(actual.get(i), is(equalTo(expected.get(i))));
+        }
+    }
+
+    @Test
+    public void shouldBeAbleToRetrieveTheLastMoveOnTheBoard() {
+        board.set(2,1, player);
+        assertThat(board.lastMove(), is(equalTo(new Integer[]{2,1})));
     }
 }

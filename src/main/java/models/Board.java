@@ -1,5 +1,7 @@
 package models;
 
+import java.util.List;
+
 public interface Board {
 
     void set(int row, int column, Player player);
@@ -11,4 +13,8 @@ public interface Board {
     Player[] getBoard();
 
     boolean isWinner(int row, int column, Player player);
+
+    List<Integer[]> getVacancies();
+
+    Integer[] lastMove();
 }

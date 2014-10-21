@@ -46,7 +46,7 @@ public class ComputerPlayerTest {
     @Test
     public void shouldBeAbleToGetTheWinningMove() throws OutOfBoundsException, NotVacantException {
         when(strategyGame.boardEmpty()).thenReturn(false);
-        when(strategyGame.findWinningMove(computer)).thenReturn(Optional.of(2));
+        when(strategyGame.findWinningMove(computer)).thenReturn(Optional.of(new Integer[]{0,2}));
         computer.setBoard(board);
         computer.calculateBestMove();
         assertThat(computer.getX(), is(equalTo(0)));
@@ -58,7 +58,7 @@ public class ComputerPlayerTest {
         when(strategyGame.boardEmpty()).thenReturn(false);
         Player player2 = mock(Player.class);
         when(strategyGame.findWinningMove(computer)).thenReturn(Optional.empty());
-        when(strategyGame.findWinningMove(player2)).thenReturn(Optional.of(3));
+        when(strategyGame.findWinningMove(player2)).thenReturn(Optional.of(new Integer[]{1,0}));
         board[3] = player2;
         computer.setBoard(board);
         computer.calculateBestMove();
@@ -72,7 +72,7 @@ public class ComputerPlayerTest {
         Player player2 = new PlayerImpl(constants.GAME_PIECE_TWO, constants.SIDE);
         when(strategyGame.findWinningMove(computer)).thenReturn(Optional.empty());
         when(strategyGame.findWinningMove(player2)).thenReturn(Optional.empty());
-        when(strategyGame.findBestMove(computer, player2)).thenReturn(Optional.of(7));
+        when(strategyGame.findBestMove(computer, player2)).thenReturn(Optional.of(new Integer[]{2,1}));
         board[3] = player2;
         computer.setBoard(board);
         computer.calculateBestMove();
