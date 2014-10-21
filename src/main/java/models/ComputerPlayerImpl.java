@@ -21,9 +21,9 @@ public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
     }
 
     @Override
-    public void setBoard(Player[] players) {
-        this.board = players;
-        strategyGame = strategyGameFactory.createStrategyGame(boundary, players);
+    public void setBoard(Player[] board) {
+        this.board = board;
+        strategyGame = strategyGameFactory.createStrategyGame(boundary, board);
     }
 
     @Override
@@ -31,12 +31,8 @@ public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
         if (strategyGame.boardEmpty()) setCoordinates(boundary - 1, boundary - 1);
         else {
             Optional<Integer> found = strategyGame.findWinningMove(this);
-            if (!found.isPresent()) {
-                found = strategyGame.findLosingMove(getOpponent());
-            }
-            if (!found.isPresent()) {
-                found = strategyGame.findBestMove(this, getOpponent());
-            }
+            if (!found.isPresent()) found = strategyGame.findWinningMove(getOpponent());
+            if (!found.isPresent()) found = strategyGame.findBestMove(this, getOpponent());
             found.ifPresent(setVacancy());
         }
     }

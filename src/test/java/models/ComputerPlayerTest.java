@@ -12,6 +12,8 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,7 +28,7 @@ public class ComputerPlayerTest {
         StrategyGameFactory strategyGameFactory = mock(StrategyGameFactory.class);
         strategyGame = mock(StrategyGame.class);
         board = new Player[constants.SIDE * constants.SIDE];
-        when(strategyGameFactory.createStrategyGame(constants.SIDE, board)).thenReturn(strategyGame);
+        when(strategyGameFactory.createStrategyGame(anyInt(), any(Player[].class))).thenReturn(strategyGame);
         computer = new ComputerPlayerImpl(constants.GAME_PIECE_ONE, constants.SIDE, strategyGameFactory);
     }
 
@@ -54,7 +56,7 @@ public class ComputerPlayerTest {
         when(strategyGame.boardEmpty()).thenReturn(false);
         Player player2 = mock(Player.class);
         when(strategyGame.findWinningMove(computer)).thenReturn(Optional.empty());
-        when(strategyGame.findLosingMove(player2)).thenReturn(Optional.of(3));
+        when(strategyGame.findWinningMove(player2)).thenReturn(Optional.of(3));
         board[3] = player2;
         computer.setBoard(board);
         computer.calculateBestMove();
@@ -67,7 +69,7 @@ public class ComputerPlayerTest {
         when(strategyGame.boardEmpty()).thenReturn(false);
         Player player2 = new PlayerImpl(constants.GAME_PIECE_TWO, constants.SIDE);
         when(strategyGame.findWinningMove(computer)).thenReturn(Optional.empty());
-        when(strategyGame.findLosingMove(player2)).thenReturn(Optional.empty());
+        when(strategyGame.findWinningMove(player2)).thenReturn(Optional.empty());
         when(strategyGame.findBestMove(computer, player2)).thenReturn(Optional.of(7));
         board[3] = player2;
         computer.setBoard(board);

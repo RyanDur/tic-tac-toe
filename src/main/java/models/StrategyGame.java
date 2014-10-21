@@ -10,7 +10,13 @@ public interface StrategyGame extends Game {
 
     Optional<Integer> findWinningMove(Player player);
 
-    Optional<Integer> findLosingMove(Player opponent);
-
     Optional<Integer> findBestMove(Player player, Player opponent) throws NotVacantException, OutOfBoundsException;
+
+    public void set(int vacancy, Player player);
+
+    public int getSpace();
+
+    public void setWeight(int weight);
+
+    public int getWeight();
 }

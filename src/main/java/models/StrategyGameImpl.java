@@ -11,111 +11,116 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class StrategyGameImpl extends GameImpl implements StrategyGame {
 
-    private final int boundary;
+    private final int side;
     private Player[] board;
+    private List<Integer> vacancies;
+    private int vacancy;
+    private int weight;
+    private Player winner;
 
     public StrategyGameImpl(int side, Player[] board) {
         super(side);
-        boundary = side;
+        this.side = side;
         this.board = board;
-        setBoard(board);
+        vacancies = getVacancies(board);
     }
 
     @Override
     public boolean boardEmpty() {
-        return getNumOfPieces() == 0;
+        return countPieces(board) == 0;
     }
 
     @Override
     public Optional<Integer> findWinningMove(Player player) {
-        return find(getBoard(), winningMove(player));
+        return find(winningMove(player));
     }
 
     @Override
-    public Optional<Integer> findLosingMove(Player opponent) {
-        return findWinningMove(opponent);
+    public Player getWinner() {
+        return winner;
+    }
+
+    @Override
+    public void set(int vacancy, Player player) {
+        this.vacancy = vacancy;
+        board[vacancy] = player;
+    }
+
+    @Override
+    public int getSpace() {
+        return vacancy;
+    }
+
+    @Override
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    @Override
+    public int getWeight() {
+        return weight;
     }
 
     @Override
     public Optional<Integer> findBestMove(Player player, Player opponent) throws NotVacantException, OutOfBoundsException {
-        List<Player[]> games = generatePossibleMoves(getBoard(), player, opponent);
-        List<Integer> vacancies = getVacancies(getBoard());
-        List<Integer> weights = games.stream().map(game -> getWeight(game, player, opponent, true)).collect(Collectors.toList());
-        System.out.println(weights);
-        System.out.println(vacancies.get(findMaxIndex(weights)));
-        return null;
+        List<StrategyGame> playersMoves = generatePossibleMoves(player, vacancies);
+        playersMoves.stream().
+                filter(possibleWin(player)).
+                forEach(board -> board.setWeight(getWeight(board, player, opponent)));
+        return Optional.of(playersMoves.stream().
+                max((game1, game2) -> game1.getWeight() - game2.getWeight()).
+                get().
+                getSpace());
     }
 
-    private int playerCount(Player[] board) {
+    private int getWeight(StrategyGame game, Player player, Player opponent) {
+        int result = 0;
+            System.out.println(filter(game, opponent, possibleWin(opponent)).count());
+//                forEach(board -> board.setWeight(getWeight(board, player, opponent)));
+        return result;
+    }
+
+    private Stream<StrategyGame> filter(StrategyGame game, Player player, Predicate<StrategyGame> predicate) {
+        return generatePossibleMoves(player, getVacancies(game.getBoard())).stream().
+                filter(predicate);
+    }
+
+    private Predicate<StrategyGame> possibleWin(Player player) {
+        return board -> board.findWinningMove(player).isPresent();
+    }
+
+    private List<StrategyGame> generatePossibleMoves(Player player, List<Integer> vacancies) {
+        List<StrategyGame> games = new ArrayList<>();
+
+        for (Integer vacancy : vacancies) {
+            StrategyGame game = new StrategyGameImpl(side, Arrays.copyOf(board, board.length));
+            game.set(vacancy, player);
+            games.add(game);
+        }
+        return games;
+    }
+
+    private int countPieces(Player[] board) {
         return (int) Arrays.stream(board).filter(player -> player != null).count();
     }
 
-    private Integer getWeight(Player[] board, Player player, Player opponent, boolean maximizingPlayer) {
-        boolean winPresent = winPresent(board, player, opponent);
-        int bestValue = 0;
-        if(playerCount(board) == (boundary * boundary) || winPresent) {
-            if(winPresent) {
-                if (player instanceof ComputerPlayer) return 1;
-                else return -1;
-            }
-            return 0;
-        }
-        if(maximizingPlayer) {
-            for(Player[] game : generatePossibleMoves(board, player, opponent)) {
-                int val = getWeight(game, player, opponent, false);
-                bestValue = Math.max(bestValue, val);
-            }
-            return bestValue;
-        } else {
-            for(Player[] game : generatePossibleMoves(board, player, opponent)) {
-                int val = getWeight(game, player, opponent, true);
-                bestValue = Math.max(bestValue, val);
-            }
-            return bestValue;
-        }
-    }
-
-    private boolean winPresent(Player[] board, Player player, Player opponent) {
-        boolean present = false;
-        if(find(board, winningMove(player)).isPresent()) present = true;
-        else if (find(board, winningMove(opponent)).isPresent()) present = true;
-        return present;
-    }
-
-    private int findMaxIndex(List<Integer> list) {
-        long max = 0;
-        int index = 0;
-        for (int i = 0; i < list.size(); i++) {
-            if (max < list.get(i)) {
-                max = list.get(i);
-                index = i;
-            }
-        }
-        return index;
-    }
-
     private Predicate<Integer> winningMove(Player player) {
-        return vacancy -> win(vacancy, player);
+        return vacancy -> {
+            Player[] copy = Arrays.copyOf(board, board.length);
+            copy[vacancy] = player;
+            if (isWinner(player, vacancy, copy)) winner = player;
+            return getWinner() != null;
+        };
     }
 
-    private Optional<Integer> find(Player[] board, Predicate<Integer> move) {
-        return getVacancies(board).stream().
+    private Optional<Integer> find(Predicate<Integer> move) {
+        return vacancies.stream().
                 filter(move).
                 findFirst();
-    }
-
-    private List<Player[]> generatePossibleMoves(Player[] board, Player player, Player opponent) {
-        List<Player[]> games = new ArrayList<>();
-        for (Integer vacancy : getVacancies(board)) {
-            Player[] copy = Arrays.copyOf(board, board.length);
-            if(playerCount(board) % 2 == 0) copy[vacancy] = player;
-            else copy[vacancy] = opponent;
-            games.add(copy);
-        }
-        return games;
     }
 
     private List<Integer> getVacancies(Player[] board) {
@@ -124,21 +129,13 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
                 collect(Collectors.toList());
     }
 
-    private boolean win(int vacancy, Player player) {
-        board = getBoard();
-        board[vacancy] = player;
-        return isWinner(player, vacancy);
-    }
-
-    private boolean isWinner(Player player, int vacancy) {
-        boolean result = check(row(player, calcRow(vacancy))) ||
-                check(column(player, calcColumn(vacancy)));
-        if (!result && leftDiagonallyPlaced(vacancy)) {
-            result = check(leftDiagonal(player));
-        }
-        if (!result && rightDiagonallyPlaced(vacancy)) {
-            result = check(rightDiagonal(player));
-        }
+    private boolean isWinner(Player player, int vacancy, Player[] board) {
+        boolean result = check(row(board, player, calcRow(vacancy))) ||
+                check(column(board, player, calcColumn(vacancy)));
+        if (!result && leftDiagonallyPlaced(vacancy))
+            result = check(leftDiagonal(board, player));
+        if (!result && rightDiagonallyPlaced(vacancy))
+            result = check(rightDiagonal(board, player));
         return result;
     }
 
@@ -151,15 +148,15 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
     }
 
     private boolean topRight(int vacancy) {
-        return calcRow(vacancy) == boundary - 1 && calcColumn(vacancy) == 0;
+        return calcRow(vacancy) == side - 1 && calcColumn(vacancy) == 0;
     }
 
     private boolean bottomLeft(int vacancy) {
-        return calcRow(vacancy) == 0 && calcColumn(vacancy) == boundary - 1;
+        return calcRow(vacancy) == 0 && calcColumn(vacancy) == side - 1;
     }
 
     private boolean bottomRight(int vacancy) {
-        return calcRow(vacancy) == boundary - 1 && calcColumn(vacancy) == boundary - 1;
+        return calcRow(vacancy) == side - 1 && calcColumn(vacancy) == side - 1;
     }
 
     private boolean topLeft(int vacancy) {
@@ -169,42 +166,42 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
     private boolean center(int vacancy) {
         int x = calcRow(vacancy);
         int y = calcColumn(vacancy);
-        return x > 0 && x < boundary - 1 && y > 0 && y < boundary - 1;
+        return x > 0 && x < side - 1 && y > 0 && y < side - 1;
     }
 
     private boolean check(IntPredicate predicate) {
-        return boundary == IntStream.range(0, boundary).
+        return side == IntStream.range(0, side).
                 filter(predicate).count();
     }
 
-    private IntPredicate rightDiagonal(Player player) {
-        return i -> board[calculate(i, (boundary - 1) - i)] == player;
+    private IntPredicate rightDiagonal(Player[] board, Player player) {
+        return i -> board[calculate(i, (side - 1) - i)] == player;
     }
 
-    private IntPredicate leftDiagonal(Player player) {
+    private IntPredicate leftDiagonal(Player[] board, Player player) {
         return i -> board[calculate(i, i)] == player;
     }
 
-    private IntPredicate column(Player player, int y) {
+    private IntPredicate column(Player[] board, Player player, int y) {
         return i -> board[calculate(i, y)] == player;
     }
 
-    private IntPredicate row(Player player, int x) {
+    private IntPredicate row(Player[] board, Player player, int x) {
         return i -> board[calculate(x, i)] == player;
     }
 
     private int calculate(int x, int y) {
-        return (x * boundary) + y;
+        return (x * side) + y;
     }
 
     private int calcColumn(int vacancy) {
-        return vacancy - (calcRow(vacancy) * boundary);
+        return vacancy - (calcRow(vacancy) * side);
     }
 
     private int calcRow(int vacancy) {
         int row = 0;
-        while (vacancy >= boundary) {
-            vacancy -= boundary;
+        while (vacancy >= side) {
+            vacancy -= side;
             row++;
         }
         return row;

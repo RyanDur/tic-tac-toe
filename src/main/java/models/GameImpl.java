@@ -116,8 +116,4 @@ public class GameImpl implements Game {
     private IntPredicate row(Player player) {
         return i -> get(player.getX(), i) == player;
     }
-
-    protected void setBoard(Player[] players) {
-        board = players;
-    }
 }
