@@ -2,6 +2,7 @@ package controllers;
 
 import exceptions.NotVacantException;
 import exceptions.OutOfTurnException;
+import factories.BoardFactory;
 import factories.GameFactory;
 import lang.constants;
 import models.Game;
@@ -18,29 +19,31 @@ import static org.mockito.Mockito.*;
 
 public class GameCtrlTest {
     private GameCtrl gameCtrl;
-    private GameFactory mockBoardFactory;
+    private GameFactory mockGameFactory;
     private Game mockGame;
     private Player mockPlayer;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
+    private BoardFactory boardFactory;
 
     @Before
     public void setup() {
-        mockBoardFactory = mock(GameFactory.class);
+        mockGameFactory = mock(GameFactory.class);
+        boardFactory = mock(BoardFactory.class);
         mockGame = mock(Game.class);
         mockPlayer = mock(Player.class);
         when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(mockGame.getNumOfPieces()).thenReturn(0);
-        when(mockBoardFactory.createGame(anyInt())).thenReturn(mockGame);
+        when(mockGameFactory.createGame(anyInt(), any(BoardFactory.class))).thenReturn(mockGame);
 
-        gameCtrl = new GameCtrlImpl(mockBoardFactory);
+        gameCtrl = new GameCtrlImpl(mockGameFactory, boardFactory);
         gameCtrl.setup();
     }
 
     @Test
     public void shouldBeAbleToSetupAGame() {
-        verify(mockBoardFactory).createGame(constants.SIDE);
+        verify(mockGameFactory).createGame(constants.SIDE, boardFactory);
     }
 
     @Test

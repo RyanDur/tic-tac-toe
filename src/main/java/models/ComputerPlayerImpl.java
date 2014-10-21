@@ -2,6 +2,7 @@ package models;
 
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
+import factories.BoardFactory;
 import factories.StrategyGameFactory;
 
 import java.util.Arrays;
@@ -11,19 +12,21 @@ import java.util.function.Consumer;
 public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
     private int boundary;
     private StrategyGameFactory strategyGameFactory;
+    private BoardFactory boardFactory;
     private StrategyGame strategyGame;
     private Player[] board;
 
-    public ComputerPlayerImpl(String gamePiece, int boundary, StrategyGameFactory strategyGameFactory) {
+    public ComputerPlayerImpl(String gamePiece, int boundary, StrategyGameFactory strategyGameFactory, BoardFactory boardFactory) {
         super(gamePiece, boundary);
         this.boundary = boundary;
         this.strategyGameFactory = strategyGameFactory;
+        this.boardFactory = boardFactory;
     }
 
     @Override
     public void setBoard(Player[] board) {
         this.board = board;
-        strategyGame = strategyGameFactory.createStrategyGame(boundary, board);
+        strategyGame = strategyGameFactory.createStrategyGame(boundary, board, boardFactory);
     }
 
     @Override

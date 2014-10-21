@@ -2,6 +2,7 @@ package models;
 
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
+import factories.BoardFactory;
 import factories.StrategyGameFactory;
 import lang.constants;
 import org.junit.Before;
@@ -27,9 +28,10 @@ public class ComputerPlayerTest {
     public void setup() {
         StrategyGameFactory strategyGameFactory = mock(StrategyGameFactory.class);
         strategyGame = mock(StrategyGame.class);
+        BoardFactory boardFactory = mock(BoardFactory.class);
         board = new Player[constants.SIDE * constants.SIDE];
-        when(strategyGameFactory.createStrategyGame(anyInt(), any(Player[].class))).thenReturn(strategyGame);
-        computer = new ComputerPlayerImpl(constants.GAME_PIECE_ONE, constants.SIDE, strategyGameFactory);
+        when(strategyGameFactory.createStrategyGame(anyInt(), any(Player[].class), any(BoardFactory.class))).thenReturn(strategyGame);
+        computer = new ComputerPlayerImpl(constants.GAME_PIECE_ONE, constants.SIDE, strategyGameFactory, boardFactory);
     }
 
     @Test

@@ -4,5 +4,5 @@ import models.Player;
 import models.StrategyGame;
 
 public interface StrategyGameFactory {
-    StrategyGame createStrategyGame(int side, Player[] board);
+    StrategyGame createStrategyGame(int side, Player[] board, BoardFactory boardFactory);
 }

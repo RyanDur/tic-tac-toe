@@ -5,7 +5,7 @@ import models.GameImpl;
 
 public class GameFactoryImpl implements GameFactory {
     @Override
-    public Game createGame(int side) {
-        return new GameImpl(side);
+    public Game createGame(int side, BoardFactory boardFactory) {
+        return new GameImpl(side, boardFactory);
     }
 }
