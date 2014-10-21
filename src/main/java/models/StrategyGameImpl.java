@@ -1,7 +1,5 @@
 package models;
 
-import exceptions.NotVacantException;
-import exceptions.OutOfBoundsException;
 import factories.BoardFactory;
 
 import java.util.ArrayList;
@@ -35,16 +33,6 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
     @Override
     public Optional<Integer[]> findWinningMove(Player player) {
         return find(winningMove(player, board));
-    }
-
-    @Override
-    public Optional<Integer[]> findBestMove(Player player, Player opponent) throws NotVacantException, OutOfBoundsException {
-//        Stream<StrategyGame> wins = filterMoves(this, player);
-//        wins.forEach(board -> board.setWeight(getWeight(board, player, opponent)));
-        return null;// Optional.of(wins.
-//                max((game1, game2) -> game1.getWeight() - game2.getWeight()).
-//                get().
-//                getSpace());
     }
 
     @Override

@@ -6,6 +6,7 @@ import factories.BoardFactory;
 import factories.StrategyGameFactory;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -35,7 +36,9 @@ public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
         else {
             Optional<Integer[]> found = strategyGame.findWinningMove(this);
             if (!found.isPresent()) found = strategyGame.findWinningMove(getOpponent());
-            if (!found.isPresent()) found = strategyGame.findBestMove(this, getOpponent());
+            if (!found.isPresent()) {
+                List<Integer[]> moves = strategyGame.filterMoves(this);
+            }
             found.ifPresent(setMove());
         }
     }
