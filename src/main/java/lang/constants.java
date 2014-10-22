@@ -23,5 +23,6 @@ public class constants {
     public static final int WIN_WEIGHT = 1;
     public static final int LOSE_WEIGHT = -1;
     public static final int DRAW_WEIGHT = 0;
+    public static final String MENU_VIEW = "/scenes/menu.fxml";
     public static String HAS_WON_MESSAGE = " Has Won!!";
 }
