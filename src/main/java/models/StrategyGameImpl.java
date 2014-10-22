@@ -38,11 +38,7 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
 
     @Override
     public Integer[] getCorner() {
-        List<Integer[]> corners = Arrays.asList(
-                new Integer[]{0, 0},
-                new Integer[]{0, constants.SIDE - 1},
-                new Integer[]{constants.SIDE - 1, 0},
-                new Integer[]{constants.SIDE - 1, constants.SIDE - 1});
+        List<Integer[]> corners = constants.CORNERS;
         return corners.get(random.nextInt(corners.size()));
     }
 
@@ -91,8 +87,8 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
         private void check() {
             Integer[] move = board.lastMove();
             if (board.isWinner(move[0], move[1], player2))
-                value = player2 instanceof ComputerPlayer ? 1 : -1;
-            else if (board.catsGame()) value = 0;
+                value = player2 instanceof ComputerPlayer ? constants.WIN_WEIGHT : constants.LOSE_WEIGHT;
+            else if (board.catsGame()) value = constants.DRAW_WEIGHT;
             else addNode();
         }
 

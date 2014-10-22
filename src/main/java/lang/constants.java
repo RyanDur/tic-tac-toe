@@ -1,5 +1,8 @@
 package lang;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class constants {
     public static final String GAME_PIECE_ONE = "X";
     public static final String GAME_PIECE_TWO = "O";
@@ -12,5 +15,13 @@ public class constants {
     public static final String OUT_OF_BOUNDS_MESSAGE = "You chose a space out of bounds, HOW!!??";
     public static final String OUT_OF_TURN_MESSAGE = "It's not your turn!";
     public static final String EMPTY = "";
+    public static final List<Integer[]> CORNERS = Arrays.asList(
+            new Integer[]{0, 0},
+            new Integer[]{0, constants.SIDE - 1},
+            new Integer[]{constants.SIDE - 1, 0},
+            new Integer[]{constants.SIDE - 1, constants.SIDE - 1});;
+    public static final int WIN_WEIGHT = 1;
+    public static final int LOSE_WEIGHT = -1;
+    public static final int DRAW_WEIGHT = 0;
     public static String HAS_WON_MESSAGE = " Has Won!!";
 }

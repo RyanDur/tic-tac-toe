@@ -6,7 +6,6 @@ import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -134,11 +133,7 @@ public class StrategyGameTest {
 
     @Test
     public void shouldBeAbleToChooseAnyRandomCorner() {
-        List<Integer[]> corners = Arrays.asList(
-                new Integer[]{0, 0},
-                new Integer[]{0, constants.SIDE - 1},
-                new Integer[]{constants.SIDE - 1, 0},
-                new Integer[]{constants.SIDE - 1, constants.SIDE - 1});
+        List<Integer[]> corners = constants.CORNERS;
         Integer[] corner = strategyGame.getCorner();
         assertThat(corners, hasItem(corner));
     }
