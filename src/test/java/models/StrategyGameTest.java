@@ -52,10 +52,23 @@ public class StrategyGameTest {
     }
 
     //      | |
-//    -------
-//      |O|
-//    -------
-//      | |X
+    //    -------
+    //      | |
+    //    -------
+    //      | |X
+    @Test
+    public void shouldBeAbleToFindTheBestMoveIfHumanGoesFirst() {
+        BoardFactory boardFactory1 = new BoardFactoryImpl();
+        players[4] = human;
+        StrategyGame strategyGame = new StrategyGameImpl(constants.SIDE, players, boardFactory1);
+        assertThat(strategyGame.getBestMove(computer, human).get(), is(new Integer[]{0, 0}));
+    }
+
+    //      | |
+    //    -------
+    //      |O|
+    //    -------
+    //      | |X
     @Test
     public void shouldBeAbleToFindTheBestMoveForComputerCornerHumanCenter() {
         BoardFactory boardFactory1 = new BoardFactoryImpl();
@@ -66,10 +79,10 @@ public class StrategyGameTest {
     }
 
     //     O| |
-//    -------
-//      |X|
-//    -------
-//      |O|X
+    //    -------
+    //      |X|
+    //    -------
+    //      |O|X
     @Test
     public void shouldBeAbleToFindTheBestMoveForComputerRightBottomHumanLeftTopComputerCenterHumanBottomMiddle() {
         BoardFactory boardFactory1 = new BoardFactoryImpl();
@@ -82,10 +95,10 @@ public class StrategyGameTest {
     }
 
     //      | |O
-//    -------
-//      | |X
-//    -------
-//      |O|X
+    //    -------
+    //      | |X
+    //    -------
+    //      |O|X
     @Test
     public void shouldBeAbleToFindTheBestMoveForComputerRightBottomHumanMiddleRightComputerTOpRightHumanBottomMiddle() {
         BoardFactory boardFactory1 = new BoardFactoryImpl();
@@ -98,10 +111,10 @@ public class StrategyGameTest {
     }
 
     //     O| |X
-//    -------
-//      | |O
-//    -------
-//      | |X
+    //    -------
+    //      | |O
+    //    -------
+    //      | |X
     @Test
     public void shouldBeAbleToFindTheBestMoveForComputerRightBottomHumanLeftTopComputerTopRightHumanCenterRight() {
         BoardFactory boardFactory1 = new BoardFactoryImpl();
@@ -114,10 +127,10 @@ public class StrategyGameTest {
     }
 
     //     O| |X
-//    -------
-//     X|O|O
-//    -------
-//     O|X|X
+    //    -------
+    //     X|O|O
+    //    -------
+    //     O|X|X
     @Test
     public void shouldBeAbleToMoveIfNoBestMoveExists() {
         BoardFactory boardFactory1 = new BoardFactoryImpl();

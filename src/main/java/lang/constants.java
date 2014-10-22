@@ -17,9 +17,9 @@ public class constants {
     public static final String EMPTY = "";
     public static final List<Integer[]> CORNERS = Arrays.asList(
             new Integer[]{0, 0},
-            new Integer[]{0, constants.SIDE - 1},
-            new Integer[]{constants.SIDE - 1, 0},
-            new Integer[]{constants.SIDE - 1, constants.SIDE - 1});;
+            new Integer[]{0, SIDE - 1},
+            new Integer[]{SIDE - 1, 0},
+            new Integer[]{SIDE - 1, SIDE - 1});;
     public static final int WIN_WEIGHT = 1;
     public static final int LOSE_WEIGHT = -1;
     public static final int DRAW_WEIGHT = 0;

@@ -4,7 +4,6 @@ import factories.BoardFactory;
 import lang.constants;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class StrategyGameImpl extends GameImpl implements StrategyGame {
     private Random random;
@@ -31,9 +30,11 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
 
     @Override
     public Optional<Integer[]> getBestMove(Player computer, Player human) {
-        Stream<Board> moves = board.filterMoves(computer);
-        if(noBest(moves)) return anyMove();
-        else return bestOf(computer, human, moves);
+        Optional<Board> move;
+        if(countPieces(board.getBoard()) == 1) move = bestMoveOf(human, computer);
+        else move = bestMoveOf(computer, human);
+        if(noBest(move)) return anyMove();
+        return Optional.of(move.get().lastMove());
     }
 
     @Override
@@ -42,14 +43,14 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
         return corners.get(random.nextInt(corners.size()));
     }
 
-    private Optional<Integer[]> bestOf(Player computer, Player human, Stream<Board> moves) {
-        return Optional.of(moves.max((game1, game2) ->
+    private Optional<Board> bestMoveOf(Player computer, Player human) {
+        return board.filterMoves(computer).max((game1, game2) ->
                 new GameNode(game1, human, computer, boardFactory).getValue() -
-                        new GameNode(game2, human, computer, boardFactory).getValue()).get().lastMove());
+                        new GameNode(game2, human, computer, boardFactory).getValue());
     }
 
-    private boolean noBest(Stream<Board> moves) {
-        return moves.count() == 0 && !boardEmpty();
+    private boolean noBest(Optional<Board> game) {
+        return !game.isPresent() && !boardEmpty();
     }
 
     private Optional<Integer[]> anyMove() {
@@ -86,10 +87,13 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
 
         private void check() {
             Integer[] move = board.lastMove();
-            if (board.isWinner(move[0], move[1], player2))
-                value = player2 instanceof ComputerPlayer ? constants.WIN_WEIGHT : constants.LOSE_WEIGHT;
+            if (board.isWinner(move[0], move[1], player2)) value = winWeight();
             else if (board.catsGame()) value = constants.DRAW_WEIGHT;
             else addNode();
+        }
+
+        private int winWeight() {
+            return player2 instanceof ComputerPlayer ? constants.WIN_WEIGHT : constants.LOSE_WEIGHT;
         }
 
         private void addNode() {
