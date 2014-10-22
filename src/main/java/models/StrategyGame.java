@@ -1,6 +1,5 @@
 package models;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface StrategyGame extends Game {
@@ -8,5 +7,7 @@ public interface StrategyGame extends Game {
 
     Optional<Integer[]> findWinningMove(Player player);
 
-    List<Integer[]> getBestMove(Player computer, Player human);
+    Optional<Integer[]> getBestMove(Player computer, Player human);
+
+    Integer[] getCorner();
 }

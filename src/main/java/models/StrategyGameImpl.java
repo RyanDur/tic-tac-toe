@@ -3,24 +3,20 @@ package models;
 import factories.BoardFactory;
 import lang.constants;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class StrategyGameImpl extends GameImpl implements StrategyGame {
-
-    private final int side;
+    private Random random;
     private Board board;
     private BoardFactory boardFactory;
 
     public StrategyGameImpl(int side, Player[] board, BoardFactory boardFactory) {
         super(side, boardFactory);
-        this.side = side;
         this.board = boardFactory.createBoard(side);
         this.board.setBoard(board);
         this.boardFactory = boardFactory;
+        random = new Random();
     }
 
     @Override
@@ -34,17 +30,35 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
     }
 
     @Override
-    public List<Integer[]> getBestMove(Player computer, Player human) {
+    public Optional<Integer[]> getBestMove(Player computer, Player human) {
         Stream<Board> moves = board.filterMoves(computer);
-        moves.forEach(game -> {
-            System.out.print(Arrays.toString(game.lastMove()));
-            System.out.println(new GameNode(game, human, computer, boardFactory).getValue());
-        });
-
-        return null;
+        if(noBest(moves)) return anyMove();
+        else return bestOf(computer, human, moves);
     }
 
+    @Override
+    public Integer[] getCorner() {
+        List<Integer[]> corners = Arrays.asList(
+                new Integer[]{0, 0},
+                new Integer[]{0, constants.SIDE - 1},
+                new Integer[]{constants.SIDE - 1, 0},
+                new Integer[]{constants.SIDE - 1, constants.SIDE - 1});
+        return corners.get(random.nextInt(corners.size()));
+    }
 
+    private Optional<Integer[]> bestOf(Player computer, Player human, Stream<Board> moves) {
+        return Optional.of(moves.max((game1, game2) ->
+                new GameNode(game1, human, computer, boardFactory).getValue() -
+                        new GameNode(game2, human, computer, boardFactory).getValue()).get().lastMove());
+    }
+
+    private boolean noBest(Stream<Board> moves) {
+        return moves.count() == 0 && !boardEmpty();
+    }
+
+    private Optional<Integer[]> anyMove() {
+        return Optional.of(board.getVacancies().get(0));
+    }
 
     private int countPieces(Player[] board) {
         return (int) Arrays.stream(board).filter(player -> player != null).count();
@@ -76,22 +90,17 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
 
         private void check() {
             Integer[] move = board.lastMove();
-            if(board.isWinner(move[0], move[1], player2)) {
-                if(player1 instanceof ComputerPlayer) value = 1;
-                else value = -1;
-            } else if (board.catsGame()) value = 0;
+            if (board.isWinner(move[0], move[1], player2))
+                value = player2 instanceof ComputerPlayer ? 1 : -1;
+            else if (board.catsGame()) value = 0;
             else addNode();
         }
 
         private void addNode() {
             Optional<Integer[]> winMove = board.winningMove(player1);
-            if(winMove.isPresent()) {
-                winMove = board.winningMove(player2);
-                set(winMove.get());
-            } else {
-                board.filterMoves(player1).forEach(move ->
-                        set(move.lastMove()));
-            }
+            if (!winMove.isPresent()) winMove = board.winningMove(player2);
+            if (!winMove.isPresent()) board.filterMoves(player1).forEach(move -> set(move.lastMove()));
+            else set(winMove.get());
         }
 
         private void set(Integer[] move) {
