@@ -2,50 +2,35 @@ package models;
 
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
-import factories.BoardFactory;
 import factories.StrategyGameFactory;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
     private int boundary;
+    private Player opponent;
     private StrategyGameFactory strategyGameFactory;
-    private BoardFactory boardFactory;
-    private StrategyGame strategyGame;
-    private Player[] board;
 
-    public ComputerPlayerImpl(String gamePiece, int boundary, StrategyGameFactory strategyGameFactory, BoardFactory boardFactory) {
+    public ComputerPlayerImpl(String gamePiece, int boundary, Player opponent, StrategyGameFactory strategyGameFactory) {
         super(gamePiece, boundary);
         this.boundary = boundary;
+        this.opponent = opponent;
         this.strategyGameFactory = strategyGameFactory;
-        this.boardFactory = boardFactory;
     }
 
     @Override
-    public void setBoard(Player[] board) {
-        this.board = board;
-        strategyGame = strategyGameFactory.createStrategyGame(boundary, board, boardFactory);
-    }
-
-    @Override
-    public void calculateBestMove() throws OutOfBoundsException, NotVacantException {
-        if (strategyGame.boardEmpty()) setCoordinates(boundary - 1, boundary - 1);
-        else {
+    public void calculateBestMove(Player[] board) throws OutOfBoundsException, NotVacantException {
+        StrategyGame strategyGame = strategyGameFactory.createStrategyGame(boundary, board);
+        if (strategyGame.boardEmpty()) {
+            Integer[] corner = strategyGame.getCorner();
+            setCoordinates(corner[0], corner[1]);
+        } else {
             Optional<Integer[]> found = strategyGame.findWinningMove(this);
-            if (!found.isPresent()) found = strategyGame.findWinningMove(getOpponent());
-            if (!found.isPresent()) {
-                found = strategyGame.getBestMove(this, getOpponent());
-            }
+            if (!found.isPresent()) found = strategyGame.findWinningMove(opponent);
+            if (!found.isPresent()) found = strategyGame.getBestMove(this, opponent);
             found.ifPresent(setMove());
         }
-    }
-
-    private Player getOpponent() {
-        return Arrays.stream(board).
-                filter(player -> player != this && player != null).
-                findFirst().get();
     }
 
     private Consumer<Integer[]> setMove() {
