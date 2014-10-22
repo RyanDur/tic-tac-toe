@@ -5,7 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -151,5 +153,55 @@ public class BoardTest {
     public void shouldBeAbleToRetrieveTheLastMoveOnTheBoard() {
         board.set(2,1, player);
         assertThat(board.lastMove(), is(equalTo(new Integer[]{2,1})));
+    }
+
+    @Test
+    public void shouldBeAbleToRetrieveTheWinningMoveForAPlayer() {
+        players[4] = player;
+        players[8] = player;
+        board.setBoard(players);
+        assertThat(board.winningMove(player).get(), is(equalTo(new Integer[]{0,0})));
+    }
+
+    @Test
+    public void shouldBeAbleToGetAllMovesThatLeadToAWinForAPlayer() {
+        players[4] = mock(Player.class);
+        players[8] = player;
+        board.setBoard(players);
+        List<Integer[]> expected = Arrays.asList(new Integer[]{0, 2}, new Integer[]{1, 2}, new Integer[]{2, 0}, new Integer[]{2, 1});
+        List<Integer[]> actual = board.filterMoves(player).map(Board::lastMove).collect(Collectors.toList());
+        assertThat(actual.size(), is(equalTo(expected.size())));
+        for(int i = 0; i < expected.size(); i++) {
+            assertThat(actual.get(i), is(equalTo(expected.get(i))));
+        }
+    }
+
+    @Test
+    public void shouldBeAbleToDetectACatsGame() {
+        Player player1 = mock(Player.class);
+        players[8] = player;
+        players[4] = player1;
+        players[6] = player;
+        players[7] = player1;
+        players[5] = player;
+        players[2] = player1;
+        players[1] = player;
+        players[0] = player1;
+        board.setBoard(players);
+        assertThat(board.catsGame(), is(true));
+    }
+
+    @Test
+    public void shouldNotBeAbleToDetectACatsGameIfItIsNot() {
+        Player player1 = mock(Player.class);
+        players[8] = player;
+        players[4] = player1;
+        players[6] = player;
+        players[7] = player1;
+        players[5] = player;
+        players[2] = player1;
+        players[1] = player;
+        board.setBoard(players);
+        assertThat(board.catsGame(), is(false));
     }
 }

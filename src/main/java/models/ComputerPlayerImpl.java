@@ -37,7 +37,7 @@ public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
             Optional<Integer[]> found = strategyGame.findWinningMove(this);
             if (!found.isPresent()) found = strategyGame.findWinningMove(getOpponent());
             if (!found.isPresent()) {
-                List<Integer[]> moves = strategyGame.filterMoves(this);
+                List<Integer[]> moves = strategyGame.getBestMove(this, getOpponent());
             }
             found.ifPresent(setMove());
         }

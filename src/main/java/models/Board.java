@@ -1,6 +1,8 @@
 package models;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public interface Board {
 
@@ -17,4 +19,10 @@ public interface Board {
     List<Integer[]> getVacancies();
 
     Integer[] lastMove();
+
+    Optional<Integer[]> winningMove(Player player);
+
+    Stream<Board> filterMoves(Player player);
+
+    boolean catsGame();
 }

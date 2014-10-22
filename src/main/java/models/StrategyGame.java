@@ -8,5 +8,5 @@ public interface StrategyGame extends Game {
 
     Optional<Integer[]> findWinningMove(Player player);
 
-    List<Integer[]> filterMoves(Player player);
+    List<Integer[]> getBestMove(Player computer, Player human);
 }

@@ -1,10 +1,14 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.IntPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class BoardImpl implements Board {
     private final int side;
@@ -61,6 +65,60 @@ public class BoardImpl implements Board {
     @Override
     public Integer[] lastMove() {
         return lastMove;
+    }
+
+    @Override
+    public Optional<Integer[]> winningMove(Player player) {
+        return find(winningMove(player, this), getVacancies());
+    }
+
+    @Override
+    public Stream<Board> filterMoves(Player player) {
+        return generatePossibleMoves(player, getVacancies()).stream().
+                filter(game -> find(winningMove(player, game), getVacancies()).isPresent());
+    }
+
+    @Override
+    public boolean catsGame() {
+        return 0 == getPlayers().map(player -> {
+            List<Integer[]> options = filterMoves(player).map(Board::lastMove).collect(Collectors.toList());
+            Optional<Integer[]> o = winningMove(player);
+            if(o.isPresent()) options.add(o.get());
+            return options.size();
+        }).reduce(0, (a,b) -> a + b);
+    }
+
+    private Stream<Player> getPlayers() {
+        return Arrays.stream(board).
+                distinct().
+                filter(player -> player != null);
+    }
+
+    private List<Board> generatePossibleMoves(Player player, List<Integer[]> vacancies) {
+        List<Board> games = new ArrayList<>();
+
+        for (Integer[] vacancy : vacancies) {
+            Board game = new BoardImpl(side);
+            game.setBoard(getBoard());
+            game.set(vacancy[0], vacancy[1], player);
+            games.add(game);
+        }
+        return games;
+    }
+
+    private Optional<Integer[]> find(Predicate<Integer[]> move, List<Integer[]> vacancies) {
+        return vacancies.stream().
+                filter(move).
+                findFirst();
+    }
+
+    private Predicate<Integer[]> winningMove(Player player, Board board) {
+        return vacancy -> {
+            Board copy = new BoardImpl(side);
+            copy.setBoard(board.getBoard());
+            copy.set(vacancy[0], vacancy[1], player);
+            return copy.isWinner(vacancy[0], vacancy[1], player);
+        };
     }
 
     private boolean leftDiagonallyPlaced(int x, int y) {
