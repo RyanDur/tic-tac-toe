@@ -33,7 +33,8 @@ public class ComputerPlayerTest {
     @Test
     public void shouldChooseCornerIfGoingFirst() throws OutOfBoundsException, NotVacantException {
         when(strategyGame.boardEmpty()).thenReturn(true);
-        when(strategyGame.getCorner()).thenReturn(new Integer[]{1,2});
+        Integer[] space = new Integer[]{0, 2};
+        when(strategyGame.getCorner()).thenReturn(space);
 
         computer.calculateBestMove(board);
         verify(strategyGame).getCorner();
@@ -42,9 +43,8 @@ public class ComputerPlayerTest {
     @Test
     public void shouldBeAbleToGetTheWinningMove() throws OutOfBoundsException, NotVacantException {
         when(strategyGame.boardEmpty()).thenReturn(false);
-        int row = 0;
-        int column = 2;
-        when(strategyGame.findWinningMove(computer)).thenReturn(Optional.of(new Integer[]{row, column}));
+        Optional<Integer[]> space = Optional.of(new Integer[]{0, 2});
+        when(strategyGame.findWinningMove(computer)).thenReturn(space);
 
         computer.calculateBestMove(board);
         verify(strategyGame).findWinningMove(computer);
@@ -52,11 +52,10 @@ public class ComputerPlayerTest {
 
     @Test
     public void shouldBlockOpponentFromSettingTheWinningMove() throws OutOfBoundsException, NotVacantException {
-        int row = 1;
-        int column = 0;
+        Optional<Integer[]> space = Optional.of(new Integer[]{0, 2});
         when(strategyGame.boardEmpty()).thenReturn(false);
         when(strategyGame.findWinningMove(computer)).thenReturn(Optional.empty());
-        when(strategyGame.findWinningMove(human)).thenReturn(Optional.of(new Integer[]{row, column}));
+        when(strategyGame.findWinningMove(human)).thenReturn(space);
 
         computer.calculateBestMove(board);
         verify(strategyGame).findWinningMove(human);
@@ -64,12 +63,11 @@ public class ComputerPlayerTest {
 
     @Test
     public void shouldPickBestSpaceIfThereIsNoWinningOrLosingMove() throws OutOfBoundsException, NotVacantException {
-        int row = 1;
-        int column = 0;
+        Optional<Integer[]> space = Optional.of(new Integer[]{0, 2});
         when(strategyGame.boardEmpty()).thenReturn(false);
         when(strategyGame.findWinningMove(computer)).thenReturn(Optional.empty());
         when(strategyGame.findWinningMove(human)).thenReturn(Optional.empty());
-        when(strategyGame.getBestMove(computer, human)).thenReturn(Optional.of(new Integer[]{row, column}));
+        when(strategyGame.getBestMove(computer, human)).thenReturn(space);
 
         computer.calculateBestMove(board);
         verify(strategyGame).getBestMove(computer, human);
