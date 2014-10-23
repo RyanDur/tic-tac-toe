@@ -30,6 +30,7 @@ public class MenuView extends Parent {
     private Button replay;
     private Button reset;
     private Label messages;
+    private GameView gameView;
 
     @Inject
     public MenuView(GameCtrl gameCtrl, PlayerFactory playerFactory, GameViewFactory gameViewFactory) throws IOException {
@@ -41,12 +42,26 @@ public class MenuView extends Parent {
         headerButtonVisibility(false);
         replay = (Button) header.lookup(constants.REPLAY_ID);
         reset = (Button) header.lookup(constants.RESET_ID);
+        reset.setOnMouseClicked(resetMenu());
         messages = (Label) header.lookup(constants.MESSAGES_ID);
         buttonOne = (Button) menu.getLeft();
         buttonTwo = (Button) menu.getRight();
+        setButtons();
+        this.getChildren().add(menu);
+    }
+
+    private EventHandler<MouseEvent> resetMenu() {
+        return event -> {
+            setButtons();
+            menu.getChildren().remove(gameView);
+            menu.setLeft(buttonOne);
+            menu.setRight(buttonTwo);
+        };
+    }
+
+    private void setButtons() {
         buttonTwo.setOnMouseClicked(twoPlayer());
         buttonOne.setOnMouseClicked(onePlayer());
-        this.getChildren().add(menu);
     }
 
     private EventHandler<MouseEvent> onePlayer() {
@@ -68,7 +83,6 @@ public class MenuView extends Parent {
     }
 
     private void setupGame(Player player1, Player player2) {
-        GameView gameView = null;
         try {
             gameView = gameViewFactory.createGameView(gameCtrl, player1, player2, messages, reset, replay);
         } catch (IOException e) {
