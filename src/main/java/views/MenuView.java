@@ -1,5 +1,6 @@
 package views;
 
+import com.google.inject.Inject;
 import controllers.GameCtrl;
 import factories.GameViewFactory;
 import factories.PlayerFactory;
@@ -7,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -25,16 +27,21 @@ public class MenuView extends Parent {
     private final Button buttonTwo;
     private final BorderPane menu;
     private final HBox header;
+    private Button replay;
+    private Button reset;
+    private Label messages;
 
+    @Inject
     public MenuView(GameCtrl gameCtrl, PlayerFactory playerFactory, GameViewFactory gameViewFactory) throws IOException {
+        menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
         this.gameCtrl = gameCtrl;
         this.playerFactory = playerFactory;
         this.gameViewFactory = gameViewFactory;
-        menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
         header = (HBox) menu.getTop();
-        header.getChildren().stream().
-                filter(node -> node instanceof Button).
-                forEach(button -> button.setVisible(false));
+        headerButtonVisibility(false);
+        replay = (Button) header.lookup(constants.REPLAY_ID);
+        reset = (Button) header.lookup(constants.RESET_ID);
+        messages = (Label) header.lookup(constants.MESSAGES_ID);
         buttonOne = (Button) menu.getLeft();
         buttonTwo = (Button) menu.getRight();
         buttonTwo.setOnMouseClicked(twoPlayer());
@@ -63,12 +70,12 @@ public class MenuView extends Parent {
     private void setupGame(Player player1, Player player2) {
         GameView gameView = null;
         try {
-            gameView = gameViewFactory.createGameView(gameCtrl, player1, player2, header);
+            gameView = gameViewFactory.createGameView(gameCtrl, player1, player2, messages, reset, replay);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        menu.getChildren().remove(buttonOne);
-        menu.getChildren().remove(buttonTwo);
+        assert gameView != null;
+        menu.getChildren().removeAll(buttonOne, buttonTwo);
         Pane pane = (Pane) menu.getCenter();
         pane.getChildren().add(gameView);
     }
@@ -79,5 +86,10 @@ public class MenuView extends Parent {
             Player player2 = playerFactory.createPlayer(constants.GAME_PIECE_TWO, constants.SIDE);
             setupGame(player1, player2);
         };
+    }
+
+    private void headerButtonVisibility(boolean hide) {
+        replay.setVisible(hide);
+        reset.setVisible(hide);
     }
 }

@@ -29,19 +29,19 @@ public class MenuViewTest extends GuiTest{
     private final String twoPlayerId = "#two_player";
     private final String onePlayer = "1 Player";
     private final String onePlayerId = "#one_player";
+    private final String menuId = "#menu";
+    private final String gameId = "#game";
     private PlayerFactory playerFactory;
     private String twoPlayer = "2 Player";
-    private GameViewFactory gameViewFactory;
-    private GameCtrl gameCtrl;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
+    private final GameCtrl gameCtrl = mock(GameCtrl.class);
 
     @Override
     protected Parent getRootNode() {
-        gameCtrl = mock(GameCtrl.class);
         playerFactory = mock(PlayerFactory.class);
-        gameViewFactory = new GameViewFactoryImpl();
+        GameViewFactory gameViewFactory = new GameViewFactoryImpl();
         try {
             return new MenuView(gameCtrl, playerFactory, gameViewFactory);
         } catch (IOException e) {
@@ -127,7 +127,7 @@ public class MenuViewTest extends GuiTest{
         when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
-        verifyThat("#menu", contains("#game"));
+        verifyThat(menuId, contains(gameId));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class MenuViewTest extends GuiTest{
         when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
         when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
         click(twoPlayer);
-        verifyThat("#menu", contains("#game"));
+        verifyThat(menuId, contains(gameId));
     }
 
     @Test
@@ -150,5 +150,12 @@ public class MenuViewTest extends GuiTest{
     public void shouldNotHaveVisibleHeaderResetButtonOnMenuPage() {
         exception.expect(NoNodesVisibleException.class);
         find("#reset");
+    }
+
+    @Test
+    public void whenGameOverHeaderReplayButtonShouldBeVisible() {
+        when(gameCtrl.gameOver()).thenReturn(true);
+        click(twoPlayer);
+        click("#cell1");
     }
 }

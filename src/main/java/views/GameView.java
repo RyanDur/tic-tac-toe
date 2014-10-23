@@ -1,11 +1,9 @@
 package views;
 
-import com.google.inject.Inject;
 import controllers.GameCtrl;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
-import factories.PlayerFactory;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -15,63 +13,64 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import lang.constants;
+import models.ComputerPlayer;
 import models.Player;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 public class GameView extends Parent {
     private GameCtrl gameCtrl;
-    private PlayerFactory playerFactory;
-    private Label messages;
     private Player player1;
     private Player player2;
     private Player currentPlayer;
     private GridPane grid;
-    private Button play;
+    private Label messages;
+    private Button replay;
+    private Button reset;
 
-    @Inject
-    public GameView(GameCtrl gameCtrl, PlayerFactory playerFactory) throws IOException {
+    public GameView(GameCtrl gameCtrl, Player player1, Player player2, Label messages, Button reset, Button replay) throws IOException {
         BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
-        grid = (GridPane) borderPane.getCenter();
-        grid.setVisible(false);
+        this.reset = reset;
+        this.replay = replay;
+        this.messages = messages;
         this.gameCtrl = gameCtrl;
-        this.playerFactory = playerFactory;
+        this.player1 = player1;
+        this.player2 = player2;
+        grid = (GridPane) borderPane.getCenter();
         this.getChildren().add(borderPane);
-        play = (Button) getNode((Pane) borderPane.getTop(), constants.PLAY_ID);
-        messages = (Label) getNode((Pane) borderPane.getTop(), constants.MESSAGES_ID);
         setPlay();
+        checkForComputer();
     }
 
-    public GameView(GameCtrl gameCtrl, Player player1, Player player2, HBox header) throws IOException {
-        BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
-        this.getChildren().add(borderPane);
+    private void checkForComputer() {
+        if(player2 instanceof ComputerPlayer && player2.getPiece().equals(constants.GAME_PIECE_ONE)) {
+            computerPlay();
+        }
+    }
+
+    private void computerPlay() {
+        try {
+            ((ComputerPlayer) player2).calculateBestMove(gameCtrl.getBoard());
+            gameCtrl.setPiece(player2);
+            fillBoard(gameCtrl.getBoard());
+            currentPlayer = player1;
+        } catch (OutOfBoundsException | NotVacantException | OutOfTurnException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setPlay() {
-        play.setOnMouseClicked(event -> {
-            clearBoard();
-            messages.setText(constants.EMPTY);
-            play.setVisible(false);
-            gameCtrl.setup();
-            grid.setVisible(true);
-            fillBoard(gameCtrl.getBoard());
-            setPlayers();
-        });
-    }
-
-    private void setPlayers() {
-        player1 = playerFactory.createPlayer(constants.GAME_PIECE_ONE, constants.SIDE);
-        player2 = playerFactory.createPlayer(constants.GAME_PIECE_TWO, constants.SIDE);
+        setupHeaderButtons(false);
+        clearBoard();
+        messages.setText(constants.EMPTY);
+        gameCtrl.setup();
+        fillBoard(gameCtrl.getBoard());
     }
 
     private void fillBoard(Player[] board) {
-        if(gameCtrl.gameOver()) {
-            setGameOverMessage();
-            play.setVisible(true);
+        if (gameCtrl.gameOver()) {
+            setGameOver();
         }
         grid.getChildren().stream().filter(space -> space instanceof Label)
                 .forEach(label -> setSpace(board, (Label) label));
@@ -97,6 +96,9 @@ public class GameView extends Parent {
                     player.setCoordinates(getRow(space), getColumn(space));
                     gameCtrl.setPiece(player);
                     fillBoard(gameCtrl.getBoard());
+                    if(player2 instanceof ComputerPlayer) {
+                        computerPlay();
+                    }
                 }
             } catch (OutOfTurnException | NotVacantException | OutOfBoundsException e) {
                 currentPlayer = getLastPlayer();
@@ -114,13 +116,20 @@ public class GameView extends Parent {
                 });
     }
 
-    private void setGameOverMessage() {
+    private void setGameOver() {
+        setupHeaderButtons(true);
         Player winner = gameCtrl.getWinner();
         if (winner == null) {
             messages.setText(constants.DRAW_MESSAGE);
         } else {
             messages.setText(winner.getPiece() + constants.HAS_WON_MESSAGE);
         }
+    }
+
+    private void setupHeaderButtons(boolean visible) {
+        replay.setVisible(visible);
+        reset.setVisible(visible);
+        replay.setOnMouseClicked(event -> setPlay());
     }
 
     private Player getCurrentPlayer() {
@@ -148,11 +157,5 @@ public class GameView extends Parent {
     private int getRow(Node node) {
         Integer row = GridPane.getRowIndex(node);
         return row == null ? 0 : row;
-    }
-
-    private Node getNode(Pane pane, String playId) {
-        return pane.getChildren().stream().
-                filter(node -> node.getId().equals(playId)).
-                collect(Collectors.toList()).get(0);
     }
 }
