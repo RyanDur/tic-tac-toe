@@ -9,6 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import lang.constants;
 import models.Player;
 
@@ -22,12 +24,14 @@ public class MenuView extends Parent {
     private final Button buttonOne;
     private final Button buttonTwo;
     private final BorderPane menu;
+    private final HBox header;
 
     public MenuView(GameCtrl gameCtrl, PlayerFactory playerFactory, GameViewFactory gameViewFactory) throws IOException {
         this.gameCtrl = gameCtrl;
         this.playerFactory = playerFactory;
         this.gameViewFactory = gameViewFactory;
         menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
+        header = (HBox) menu.getTop();
         buttonOne = (Button) menu.getLeft();
         buttonTwo = (Button) menu.getRight();
         buttonTwo.setOnMouseClicked(twoPlayer());
@@ -56,13 +60,14 @@ public class MenuView extends Parent {
     private void setupGame(Player player1, Player player2) {
         GameView gameView = null;
         try {
-            gameView = gameViewFactory.createGameView(gameCtrl, player1, player2);
+            gameView = gameViewFactory.createGameView(gameCtrl, player1, player2, header);
         } catch (IOException e) {
             e.printStackTrace();
         }
         menu.getChildren().remove(buttonOne);
         menu.getChildren().remove(buttonTwo);
-        menu.setCenter(gameView);
+        Pane pane = (Pane) menu.getCenter();
+        pane.getChildren().add(gameView);
     }
 
     private EventHandler<MouseEvent> twoPlayer() {

@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import lang.constants;
 import models.Player;
@@ -45,7 +46,7 @@ public class GameView extends Parent {
         setPlay();
     }
 
-    public GameView(GameCtrl gameCtrl, Player player1, Player player2) throws IOException {
+    public GameView(GameCtrl gameCtrl, Player player1, Player player2, HBox header) throws IOException {
         BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
         this.getChildren().add(borderPane);
     }
