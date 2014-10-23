@@ -32,6 +32,9 @@ public class MenuView extends Parent {
         this.gameViewFactory = gameViewFactory;
         menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
         header = (HBox) menu.getTop();
+        header.getChildren().stream().
+                filter(node -> node instanceof Button).
+                forEach(button -> button.setVisible(false));
         buttonOne = (Button) menu.getLeft();
         buttonTwo = (Button) menu.getRight();
         buttonTwo.setOnMouseClicked(twoPlayer());

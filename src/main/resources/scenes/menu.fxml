@@ -28,12 +28,12 @@
    <top>
       <HBox id="header" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="115.0" text="Reset">
+            <Button id="reset" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="115.0" text="Reset">
                <font>
                   <Font size="19.0" />
                </font>
             </Button>
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="60.0" prefWidth="298.0" text="Label" textAlignment="CENTER">
+            <Label id="messages" alignment="CENTER" contentDisplay="CENTER" prefHeight="60.0" prefWidth="298.0" textAlignment="CENTER">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -44,7 +44,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="115.0" text="Replay" textAlignment="RIGHT">
+            <Button id="replay" mnemonicParsing="false" prefHeight="60.0" prefWidth="115.0" text="Replay" textAlignment="RIGHT">
                <font>
                   <Font size="19.0" />
                </font>

@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.exceptions.NoNodesFoundException;
+import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
 import java.io.IOException;
 
@@ -137,5 +138,17 @@ public class MenuViewTest extends GuiTest{
         when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
         click(twoPlayer);
         verifyThat("#menu", contains("#game"));
+    }
+
+    @Test
+    public void shouldNotHaveVisibleHeaderReplayButtonOnMenuPage() {
+        exception.expect(NoNodesVisibleException.class);
+        find("#replay");
+    }
+
+    @Test
+    public void shouldNotHaveVisibleHeaderResetButtonOnMenuPage() {
+        exception.expect(NoNodesVisibleException.class);
+        find("#reset");
     }
 }
