@@ -3,7 +3,7 @@ package lang;
 import java.util.Arrays;
 import java.util.List;
 
-public class constants {
+public interface constants {
     public static final String GAME_PIECE_ONE = "X";
     public static final String GAME_PIECE_TWO = "O";
     public static final int SIDE = 3;
