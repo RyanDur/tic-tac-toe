@@ -105,7 +105,11 @@ public class MenuView extends Parent {
 
     private EventHandler<MouseEvent> resetMenu() {
         return event -> {
+            messages.setText(constants.EMPTY);
+            headerButtonVisibility(false);
             centerPane.getChildren().remove(gameView);
+            buttonOne.setText(constants.ONE_PLAYER);
+            buttonTwo.setText(constants.TWO_PLAYER);
             menu.setLeft(buttonOne);
             menu.setRight(buttonTwo);
             setButtons();
