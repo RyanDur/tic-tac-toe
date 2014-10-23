@@ -132,13 +132,6 @@ public class GameViewTest extends GuiTest {
         verify(player2).getPiece();
     }
 
-    @Test
-    public void shouldMakeReplayButtonVisibleWhenGameOver() {
-        when(mockGameCtrl.gameOver()).thenReturn(false, true);
-        click("#cell" + 3);
-        verify(replay).setVisible(true);
-    }
-
     private int calc(int x, int y) {
         return (x * constants.SIDE) + y;
     }

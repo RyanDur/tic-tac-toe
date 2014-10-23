@@ -54,10 +54,8 @@ public class BoardImpl implements Board {
 
     @Override
     public List<Integer[]> getVacancies() {
-        List<Integer> list = IntStream.range(0, board.length).
+        return IntStream.range(0, board.length).
                 filter(index -> board[index] == null).boxed().
-                collect(Collectors.toList());
-        return list.stream().
                 map(num -> new Integer[]{calcRow(num), calcColumn(num)}).
                 collect(Collectors.toList());
     }
@@ -79,11 +77,11 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public boolean catsGame() {
+    public boolean detectCatsGame() {
         return 0 == getPlayers().map(player -> {
             List<Integer[]> options = filterMoves(player).map(Board::lastMove).collect(Collectors.toList());
-            Optional<Integer[]> o = winningMove(player);
-            if(o.isPresent()) options.add(o.get());
+            Optional<Integer[]> option = winningMove(player);
+            if(option.isPresent()) options.add(option.get());
             return options.size();
         }).reduce(0, (a,b) -> a + b);
     }
@@ -96,13 +94,7 @@ public class BoardImpl implements Board {
 
     private List<Board> generatePossibleMoves(Player player, List<Integer[]> vacancies) {
         List<Board> games = new ArrayList<>();
-
-        for (Integer[] vacancy : vacancies) {
-            Board game = new BoardImpl(side);
-            game.setBoard(getBoard());
-            game.set(vacancy[0], vacancy[1], player);
-            games.add(game);
-        }
+        vacancies.stream().forEach(vacancy -> games.add(setVacancy(player, this, vacancy)));
         return games;
     }
 
@@ -113,12 +105,15 @@ public class BoardImpl implements Board {
     }
 
     private Predicate<Integer[]> winningMove(Player player, Board board) {
-        return vacancy -> {
-            Board copy = new BoardImpl(side);
-            copy.setBoard(board.getBoard());
-            copy.set(vacancy[0], vacancy[1], player);
-            return copy.isWinner(vacancy[0], vacancy[1], player);
-        };
+        return vacancy -> setVacancy(player, board, vacancy)
+                .isWinner(vacancy[0], vacancy[1], player);
+    }
+
+    private Board setVacancy(Player player, Board board, Integer[] vacancy) {
+        Board copy = new BoardImpl(side);
+        copy.setBoard(board.getBoard());
+        copy.set(vacancy[0], vacancy[1], player);
+        return copy;
     }
 
     private boolean leftDiagonallyPlaced(int x, int y) {

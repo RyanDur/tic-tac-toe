@@ -188,7 +188,7 @@ public class BoardTest {
         players[1] = player;
         players[0] = player1;
         board.setBoard(players);
-        assertThat(board.catsGame(), is(true));
+        assertThat(board.detectCatsGame(), is(true));
     }
 
     @Test
@@ -202,6 +202,6 @@ public class BoardTest {
         players[2] = player1;
         players[1] = player;
         board.setBoard(players);
-        assertThat(board.catsGame(), is(false));
+        assertThat(board.detectCatsGame(), is(false));
     }
 }

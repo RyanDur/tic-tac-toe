@@ -24,5 +24,5 @@ public interface Board {
 
     Stream<Board> filterMoves(Player player);
 
-    boolean catsGame();
+    boolean detectCatsGame();
 }

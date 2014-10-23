@@ -9,9 +9,11 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
     private Random random;
     private Board board;
     private BoardFactory boardFactory;
+    private int side;
 
     public StrategyGameImpl(int side, Player[] board, BoardFactory boardFactory) {
         super(side, boardFactory);
+        this.side = side;
         this.board = boardFactory.createBoard(side);
         this.board.setBoard(board);
         this.boardFactory = boardFactory;
@@ -25,12 +27,15 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
 
     @Override
     public Optional<Integer[]> getBestMove(Player computer, Player human) {
-        int pieces = countPieces(board.getBoard());
         if(boardEmpty()) return getCorner();
-        if(pieces > 0 && pieces < constants.SIDE-1) return centerOrCorner();
+        if(toFewPieces()) return centerOrCorner();
         Optional<Board> move = bestMoveOf(computer, human);
         if(noBest(move)) return anyMove();
         return Optional.of(move.get().lastMove());
+    }
+
+    private boolean toFewPieces() {
+        return countPieces(board.getBoard()) < side-1;
     }
 
     private Optional<Integer[]> centerOrCorner() {
@@ -45,14 +50,9 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
     }
 
     private Optional<Board> bestMoveOf(Player computer, Player human) {
-//        board.filterMoves(computer).forEach(move -> {
-//            System.out.print(Arrays.toString(move.lastMove()));
-//            System.out.println(new GameNode(move, human, computer, boardFactory).getValue());
-//        });
-//        return null;
         return board.filterMoves(computer).max((game1, game2) ->
-                new GameNode(game1, human, computer, boardFactory).getValue() -
-                        new GameNode(game2, human, computer, boardFactory).getValue());
+                new GameTree(game1, human, computer, boardFactory).getValue() -
+                        new GameTree(game2, human, computer, boardFactory).getValue());
     }
 
     private boolean noBest(Optional<Board> game) {
@@ -72,15 +72,15 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
     }
 
 
-    private class GameNode {
+    private class GameTree {
         private int value = 0;
-        private List<GameNode> children;
+        private List<GameTree> children;
         private final Board board;
         private Player player1;
         private final Player player2;
         private final BoardFactory boardFactory;
 
-        public GameNode(Board board, Player player1, Player player2, BoardFactory boardFactory) {
+        private GameTree(Board board, Player player1, Player player2, BoardFactory boardFactory) {
             this.board = board;
             this.player1 = player1;
             this.player2 = player2;
@@ -89,21 +89,21 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
             check();
         }
 
-        public int getValue() {
+        private int getValue() {
             return value + children.stream()
-                    .map(GameNode::getValue)
+                    .map(GameTree::getValue)
                     .reduce(0, (a, b) -> a + b);
         }
 
         private void check() {
             Integer[] move = board.lastMove();
             if (board.isWinner(move[0], move[1], player2)) value = winWeight();
-            else if (board.catsGame()) value = constants.DRAW_WEIGHT;
+            else if (board.detectCatsGame()) value = constants.DRAW_WEIGHT;
             else addNode();
         }
 
         private int winWeight() {
-            return player2 instanceof ComputerPlayer ? 2 : constants.LOSE_WEIGHT;
+            return player2 instanceof ComputerPlayer ? constants.WIN_WEIGHT : constants.LOSE_WEIGHT;
         }
 
         private void addNode() {
@@ -117,7 +117,7 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
             Board copy = boardFactory.createBoard(constants.SIDE);
             copy.setBoard(board.getBoard());
             copy.set(move[0], move[1], player1);
-            GameNode node = new GameNode(copy, player2, player1, boardFactory);
+            GameTree node = new GameTree(copy, player2, player1, boardFactory);
             children.add(node);
         }
     }

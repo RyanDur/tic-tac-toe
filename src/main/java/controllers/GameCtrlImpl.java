@@ -52,18 +52,10 @@ public class GameCtrlImpl implements GameCtrl {
         boolean result = true;
 
         if (numOfPieces == 0) {
-            if (piece.equals(constants.GAME_PIECE_TWO)) {
-                result = false;
-            }
+            if (piece.equals(constants.GAME_PIECE_TWO)) result = false;
         } else if (numOfPieces % 2 == 0) {
-            if (piece.equals(constants.GAME_PIECE_TWO)) {
-                result = false;
-            }
-        } else {
-            if (piece.equals(constants.GAME_PIECE_ONE)) {
-                result = false;
-            }
-        }
+            if (piece.equals(constants.GAME_PIECE_TWO)) result = false;
+        } else if (piece.equals(constants.GAME_PIECE_ONE)) result = false;
 
         return result;
     }
