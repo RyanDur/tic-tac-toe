@@ -6,8 +6,6 @@ import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
@@ -34,12 +32,6 @@ public class StrategyGameTest {
     }
 
     @Test
-    public void shouldBeAbleToCheckIfABoardIsEmpty() {
-        when(board.getBoard()).thenReturn(players);
-        assertThat(strategyGame.boardEmpty(), is(true));
-    }
-
-    @Test
     public void shouldBeAbleToFindTheWinningMove() {
         strategyGame.findWinningMove(computer);
         verify(board).winningMove(computer);
@@ -57,11 +49,39 @@ public class StrategyGameTest {
     //    -------
     //      | |X
     @Test
-    public void shouldBeAbleToFindTheBestMoveIfHumanGoesFirst() {
+    public void shouldPickCornerIfBoardIsEmpty() {
+        BoardFactory boardFactory1 = new BoardFactoryImpl();
+
+        StrategyGame strategyGame = new StrategyGameImpl(constants.SIDE, players, boardFactory1);
+        Integer[] corner = strategyGame.getBestMove(computer, human).get();
+        assertThat(constants.CORNERS, hasItem(corner));
+    }
+
+    //      | |
+    //    -------
+    //      | |
+    //    -------
+    //      | |X
+    @Test
+    public void shouldPickCenterIfHumanGoesFirstAndDoesNotOccupyIt() {
+        BoardFactory boardFactory1 = new BoardFactoryImpl();
+        players[8] = human;
+        StrategyGame strategyGame = new StrategyGameImpl(constants.SIDE, players, boardFactory1);
+        assertThat(strategyGame.getBestMove(computer, human).get(), is(new Integer[]{1, 1}));
+    }
+
+    //      | |
+    //    -------
+    //      |X|
+    //    -------
+    //      | |
+    @Test
+    public void shouldPickCornerIfHumanGoesFirstAndOccupiesCenter() {
         BoardFactory boardFactory1 = new BoardFactoryImpl();
         players[4] = human;
         StrategyGame strategyGame = new StrategyGameImpl(constants.SIDE, players, boardFactory1);
-        assertThat(strategyGame.getBestMove(computer, human).get(), is(new Integer[]{0, 0}));
+        Integer[] corner = strategyGame.getBestMove(computer, human).get();
+        assertThat(constants.CORNERS, hasItem(corner));
     }
 
     //      | |
@@ -142,12 +162,5 @@ public class StrategyGameTest {
         players[6] = human;
         StrategyGame strategyGame = new StrategyGameImpl(constants.SIDE, players, boardFactory1);
         assertThat(strategyGame.getBestMove(computer, human).get(), is(new Integer[]{0, 1}));
-    }
-
-    @Test
-    public void shouldBeAbleToChooseAnyRandomCorner() {
-        List<Integer[]> corners = constants.CORNERS;
-        Integer[] corner = strategyGame.getCorner();
-        assertThat(corners, hasItem(corner));
     }
 }

@@ -19,31 +19,37 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
     }
 
     @Override
-    public boolean boardEmpty() {
-        return countPieces(board.getBoard()) == 0;
-    }
-
-    @Override
     public Optional<Integer[]> findWinningMove(Player player) {
         return board.winningMove(player);
     }
 
     @Override
     public Optional<Integer[]> getBestMove(Player computer, Player human) {
-        Optional<Board> move;
-        if(countPieces(board.getBoard()) == 1) move = bestMoveOf(human, computer);
-        else move = bestMoveOf(computer, human);
+        int pieces = countPieces(board.getBoard());
+        if(boardEmpty()) return getCorner();
+        if(pieces > 0 && pieces < constants.SIDE-1) return centerOrCorner();
+        Optional<Board> move = bestMoveOf(computer, human);
         if(noBest(move)) return anyMove();
         return Optional.of(move.get().lastMove());
     }
 
-    @Override
-    public Integer[] getCorner() {
+    private Optional<Integer[]> centerOrCorner() {
+        Integer[] center = constants.CENTER;
+        if(board.get(center[0], center[1])  == null) return Optional.of(center);
+        return getCorner();
+    }
+
+    public Optional<Integer[]> getCorner() {
         List<Integer[]> corners = constants.CORNERS;
-        return corners.get(random.nextInt(corners.size()));
+        return Optional.of(corners.get(random.nextInt(corners.size())));
     }
 
     private Optional<Board> bestMoveOf(Player computer, Player human) {
+//        board.filterMoves(computer).forEach(move -> {
+//            System.out.print(Arrays.toString(move.lastMove()));
+//            System.out.println(new GameNode(move, human, computer, boardFactory).getValue());
+//        });
+//        return null;
         return board.filterMoves(computer).max((game1, game2) ->
                 new GameNode(game1, human, computer, boardFactory).getValue() -
                         new GameNode(game2, human, computer, boardFactory).getValue());
@@ -59,6 +65,10 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
 
     private int countPieces(Player[] board) {
         return (int) Arrays.stream(board).filter(player -> player != null).count();
+    }
+
+    private boolean boardEmpty() {
+        return countPieces(board.getBoard()) == 0;
     }
 
 
@@ -93,7 +103,7 @@ public class StrategyGameImpl extends GameImpl implements StrategyGame {
         }
 
         private int winWeight() {
-            return player2 instanceof ComputerPlayer ? constants.WIN_WEIGHT : constants.LOSE_WEIGHT;
+            return player2 instanceof ComputerPlayer ? 2 : constants.LOSE_WEIGHT;
         }
 
         private void addNode() {

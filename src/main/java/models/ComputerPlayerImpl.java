@@ -22,15 +22,10 @@ public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
     @Override
     public void calculateBestMove(Player[] board) throws OutOfBoundsException, NotVacantException {
         StrategyGame strategyGame = strategyGameFactory.createStrategyGame(boundary, board);
-        if (strategyGame.boardEmpty()) {
-            Integer[] corner = strategyGame.getCorner();
-            setCoordinates(corner[0], corner[1]);
-        } else {
-            Optional<Integer[]> found = strategyGame.findWinningMove(this);
-            if (!found.isPresent()) found = strategyGame.findWinningMove(opponent);
-            if (!found.isPresent()) found = strategyGame.getBestMove(this, opponent);
-            found.ifPresent(setMove());
-        }
+        Optional<Integer[]> found = strategyGame.findWinningMove(this);
+        if (!found.isPresent()) found = strategyGame.findWinningMove(opponent);
+        if (!found.isPresent()) found = strategyGame.getBestMove(this, opponent);
+        found.ifPresent(setMove());
     }
 
     private Consumer<Integer[]> setMove() {

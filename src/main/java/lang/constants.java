@@ -27,5 +27,6 @@ public class constants {
     public static final String RESET_ID = "#reset";
     public static final String ONE_PLAYER = "1 Player";
     public static final String TWO_PLAYER = "2 Player";
+    public static final Integer[] CENTER = new Integer[]{1,1};
     public static String HAS_WON_MESSAGE = " Has Won!!";
 }

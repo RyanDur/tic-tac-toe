@@ -34,7 +34,6 @@ public class GameCtrlTest {
         mockGame = mock(Game.class);
         mockPlayer = mock(Player.class);
         when(mockPlayer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
-        when(mockGame.getNumOfPieces()).thenReturn(0);
         when(mockGameFactory.createGame(anyInt(), any(BoardFactory.class))).thenReturn(mockGame);
 
         gameCtrl = new GameCtrlImpl(mockGameFactory, boardFactory);
