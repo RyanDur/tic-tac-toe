@@ -6,7 +6,6 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <BorderPane id="menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="568.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <Button id="one_player" mnemonicParsing="false" prefHeight="134.0" prefWidth="186.0" text="1 Player" BorderPane.alignment="CENTER">
@@ -33,7 +32,7 @@
                   <Font size="19.0" />
                </font>
             </Button>
-            <Label id="messages" alignment="CENTER" contentDisplay="CENTER" prefHeight="60.0" prefWidth="298.0" textAlignment="CENTER">
+            <Label id="messages" alignment="CENTER" contentDisplay="CENTER" prefHeight="60.0" prefWidth="339.0" textAlignment="CENTER">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>

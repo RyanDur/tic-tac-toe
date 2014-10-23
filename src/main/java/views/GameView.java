@@ -40,7 +40,6 @@ public class GameView extends Parent {
         grid = (GridPane) borderPane.getCenter();
         this.getChildren().add(borderPane);
         setPlay();
-        checkForComputer();
     }
 
     private void checkForComputer() {
@@ -66,6 +65,7 @@ public class GameView extends Parent {
         messages.setText(constants.EMPTY);
         gameCtrl.setup();
         fillBoard(gameCtrl.getBoard());
+        checkForComputer();
     }
 
     private void fillBoard(Player[] board) {
@@ -133,11 +133,9 @@ public class GameView extends Parent {
     }
 
     private Player getCurrentPlayer() {
-        if (currentPlayer == player1) {
-            currentPlayer = player2;
-        } else {
-            currentPlayer = player1;
-        }
+        if(player2 instanceof ComputerPlayer) return player1;
+        if (currentPlayer == player1) currentPlayer = player2;
+        else currentPlayer = player1;
         return currentPlayer;
     }
 
