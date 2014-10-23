@@ -2,6 +2,7 @@ package views;
 
 import controllers.GameCtrl;
 import factories.GameViewFactory;
+import factories.GameViewFactoryImpl;
 import factories.PlayerFactory;
 import javafx.scene.Parent;
 import lang.constants;
@@ -15,6 +16,7 @@ import org.loadui.testfx.exceptions.NoNodesFoundException;
 
 import java.io.IOException;
 
+import static org.loadui.testfx.controls.impl.ContainsNodesMatcher.contains;
 import static org.loadui.testfx.Assertions.verifyThat;
 import static org.loadui.testfx.controls.Commons.hasText;
 import static org.mockito.Matchers.anyInt;
@@ -38,7 +40,7 @@ public class MenuViewTest extends GuiTest{
     protected Parent getRootNode() {
         gameCtrl = mock(GameCtrl.class);
         playerFactory = mock(PlayerFactory.class);
-        gameViewFactory = mock(GameViewFactory.class);
+        gameViewFactory = new GameViewFactoryImpl();
         try {
             return new MenuView(gameCtrl, playerFactory, gameViewFactory);
         } catch (IOException e) {
@@ -93,37 +95,6 @@ public class MenuViewTest extends GuiTest{
     }
 
     @Test
-    public void shouldCreateGameViewWhenTwoPlayersIsChosen() {
-        Player player1 = mock(Player.class);
-        Player player2 = mock(Player.class);
-        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1, player2);
-        click(twoPlayer);
-        verify(gameViewFactory).createGameView(gameCtrl, player1, player2);
-    }
-
-    @Test
-    public void shouldCreateGameViewWhenXIsChosen() {
-        Player player1 = mock(Player.class);
-        ComputerPlayer player2 = mock(ComputerPlayer.class);
-        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
-        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
-        click(onePlayer);
-        click(constants.GAME_PIECE_ONE);
-        verify(gameViewFactory).createGameView(gameCtrl, player1, player2);
-    }
-
-    @Test
-    public void shouldCreateGameViewWhenOIsChosen() {
-        Player player1 = mock(Player.class);
-        ComputerPlayer player2 = mock(ComputerPlayer.class);
-        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
-        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
-        click(onePlayer);
-        click(constants.GAME_PIECE_TWO);
-        verify(gameViewFactory).createGameView(gameCtrl, player1, player2);
-    }
-
-    @Test
     public void shouldRemoveLeftButtonBeforeStartingTheGame() {
         exception.expect(NoNodesFoundException.class);
         Player player1 = mock(Player.class);
@@ -145,5 +116,26 @@ public class MenuViewTest extends GuiTest{
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
         find(twoPlayerId);
+    }
+
+    @Test
+    public void shouldPlaceGameIntoViewWhenStartingInOnePlayer() {
+        Player player1 = mock(Player.class);
+        ComputerPlayer player2 = mock(ComputerPlayer.class);
+        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
+        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+        click(onePlayer);
+        click(constants.GAME_PIECE_TWO);
+        verifyThat("#menu", contains("#game"));
+    }
+
+    @Test
+    public void shouldPlaceGameIntoViewWhenStartingInTwoPlayer() {
+        Player player1 = mock(Player.class);
+        ComputerPlayer player2 = mock(ComputerPlayer.class);
+        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
+        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+        click(twoPlayer);
+        verifyThat("#menu", contains("#game"));
     }
 }

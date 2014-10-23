@@ -54,8 +54,15 @@ public class MenuView extends Parent {
     }
 
     private void setupGame(Player player1, Player player2) {
-        GameView gameView = gameViewFactory.createGameView(gameCtrl, player1, player2);
-        menu.getChildren().removeAll(buttonOne, buttonTwo);
+        GameView gameView = null;
+        try {
+            gameView = gameViewFactory.createGameView(gameCtrl, player1, player2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        menu.getChildren().remove(buttonOne);
+        menu.getChildren().remove(buttonTwo);
+        menu.setCenter(gameView);
     }
 
     private EventHandler<MouseEvent> twoPlayer() {

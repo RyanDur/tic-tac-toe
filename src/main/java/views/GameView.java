@@ -23,13 +23,13 @@ import java.io.IOException;
 import java.util.stream.Collectors;
 
 public class GameView extends Parent {
-    private final GameCtrl gameCtrl;
-    private final PlayerFactory playerFactory;
-    private final Label messages;
+    private GameCtrl gameCtrl;
+    private PlayerFactory playerFactory;
+    private Label messages;
     private Player player1;
     private Player player2;
     private Player currentPlayer;
-    private final GridPane grid;
+    private GridPane grid;
     private Button play;
 
     @Inject
@@ -43,6 +43,11 @@ public class GameView extends Parent {
         play = (Button) getNode((Pane) borderPane.getTop(), constants.PLAY_ID);
         messages = (Label) getNode((Pane) borderPane.getTop(), constants.MESSAGES_ID);
         setPlay();
+    }
+
+    public GameView(GameCtrl gameCtrl, Player player1, Player player2) throws IOException {
+        BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
+        this.getChildren().add(borderPane);
     }
 
     private void setPlay() {
