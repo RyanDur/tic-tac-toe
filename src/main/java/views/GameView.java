@@ -53,8 +53,8 @@ public class GameView extends Parent {
         try {
             ((ComputerPlayer) player2).calculateBestMove(gameCtrl.getBoard());
             gameCtrl.setPiece(player2);
-            fillBoard(gameCtrl.getBoard());
             currentPlayer = player1;
+            fillBoard(gameCtrl.getBoard());
         } catch (OutOfBoundsException | NotVacantException | OutOfTurnException e) {
             e.printStackTrace();
         }

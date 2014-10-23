@@ -39,15 +39,19 @@ public class MenuView extends Parent {
         this.playerFactory = playerFactory;
         this.gameViewFactory = gameViewFactory;
         header = (HBox) menu.getTop();
-        headerButtonVisibility(false);
         replay = (Button) header.lookup(constants.REPLAY_ID);
+        buttonOne = (Button) menu.getLeft();
+        buttonTwo = (Button) menu.getRight();
+        getHeaderNodes();
+        headerButtonVisibility(false);
+        setButtons();
+        this.getChildren().add(menu);
+    }
+
+    private void getHeaderNodes() {
         reset = (Button) header.lookup(constants.RESET_ID);
         reset.setOnMouseClicked(resetMenu());
         messages = (Label) header.lookup(constants.MESSAGES_ID);
-        buttonOne = (Button) menu.getLeft();
-        buttonTwo = (Button) menu.getRight();
-        setButtons();
-        this.getChildren().add(menu);
     }
 
     private EventHandler<MouseEvent> resetMenu() {

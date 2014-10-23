@@ -13,9 +13,13 @@ public class Start extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Injector injector = Guice.createInjector(new MenuViewModule());
-        MenuView menuView = injector.getInstance(MenuView.class);
-        stage.setScene(new Scene(menuView, 600, 600));
-        stage.show();
+        try {
+            Injector injector = Guice.createInjector(new MenuViewModule());
+            MenuView menuView = injector.getInstance(MenuView.class);
+            stage.setScene(new Scene(menuView, 570, 650));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
