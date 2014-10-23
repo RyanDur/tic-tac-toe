@@ -1,5 +1,7 @@
 package views;
 
+import controllers.GameCtrl;
+import factories.GameViewFactory;
 import factories.PlayerFactory;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -14,12 +16,16 @@ import java.io.IOException;
 
 public class MenuView extends Parent {
 
+    private final GameCtrl gameCtrl;
     private PlayerFactory playerFactory;
+    private final GameViewFactory gameViewFactory;
     private final Button buttonOne;
     private final Button buttonTwo;
 
-    public MenuView(PlayerFactory playerFactory) throws IOException {
+    public MenuView(GameCtrl gameCtrl, PlayerFactory playerFactory, GameViewFactory gameViewFactory) throws IOException {
+        this.gameCtrl = gameCtrl;
         this.playerFactory = playerFactory;
+        this.gameViewFactory = gameViewFactory;
         BorderPane menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
         buttonOne = (Button) menu.getLeft();
         buttonTwo = (Button) menu.getRight();
@@ -40,15 +46,17 @@ public class MenuView extends Parent {
 
     private EventHandler<MouseEvent> setOnePlayers(String gamePiece, String gamePiece1) {
         return event -> {
-            Player player = playerFactory.createPlayer(gamePiece, constants.SIDE);
-            playerFactory.createComputerPlayer(gamePiece1, constants.SIDE, player);
+            Player player1 = playerFactory.createPlayer(gamePiece, constants.SIDE);
+            Player player2 = playerFactory.createComputerPlayer(gamePiece1, constants.SIDE, player1);
+            GameView gameView = gameViewFactory.createGameView(gameCtrl, player1, player2);
         };
     }
 
     private EventHandler<MouseEvent> twoPlayer() {
         return event -> {
-            playerFactory.createPlayer(constants.GAME_PIECE_ONE, constants.SIDE);
-            playerFactory.createPlayer(constants.GAME_PIECE_TWO, constants.SIDE);
+            Player player1 = playerFactory.createPlayer(constants.GAME_PIECE_ONE, constants.SIDE);
+            Player player2 = playerFactory.createPlayer(constants.GAME_PIECE_TWO, constants.SIDE);
+            GameView gameView = gameViewFactory.createGameView(gameCtrl, player1, player2);
         };
     }
 }

@@ -1,8 +1,11 @@
 package views;
 
+import controllers.GameCtrl;
+import factories.GameViewFactory;
 import factories.PlayerFactory;
 import javafx.scene.Parent;
 import lang.constants;
+import models.ComputerPlayer;
 import models.Player;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
@@ -21,12 +24,17 @@ public class MenuViewTest extends GuiTest{
     private final String onePlayer = "1 Player";
     private final String onePlayerId = "#one_player";
     private PlayerFactory playerFactory;
+    private String twoPlayer = "2 Player";
+    private GameViewFactory gameViewFactory;
+    private GameCtrl gameCtrl;
 
     @Override
     protected Parent getRootNode() {
+        gameCtrl = mock(GameCtrl.class);
         playerFactory = mock(PlayerFactory.class);
+        gameViewFactory = mock(GameViewFactory.class);
         try {
-            return new MenuView(playerFactory);
+            return new MenuView(gameCtrl, playerFactory, gameViewFactory);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,12 +48,12 @@ public class MenuViewTest extends GuiTest{
 
     @Test
     public void shouldHaveATwoPlayerButton() {
-        verifyThat(twoPlayerId, hasText("2 Player"));
+        verifyThat(twoPlayerId, hasText(twoPlayer));
     }
 
     @Test
     public void shouldCreateTwoPlayersIfTwoPlayerIsChosen() {
-        click(twoPlayerId);
+        click(twoPlayer);
         verify(playerFactory, times(2)).createPlayer(anyString(), anyInt());
     }
 
@@ -76,5 +84,36 @@ public class MenuViewTest extends GuiTest{
         verify(playerFactory).createPlayer(constants.GAME_PIECE_ONE, constants.SIDE);
         verify(playerFactory).createComputerPlayer(anyString(), anyInt(), any(Player.class));
         verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_TWO, constants.SIDE, null);
+    }
+
+    @Test
+    public void shouldCreateGameViewWhenTwoPlayersIsChosen() {
+        Player player1 = mock(Player.class);
+        Player player2 = mock(Player.class);
+        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1, player2);
+        click(twoPlayer);
+        verify(gameViewFactory).createGameView(gameCtrl, player1, player2);
+    }
+
+    @Test
+    public void shouldCreateGameViewWhenXIsChosen() {
+        Player player1 = mock(Player.class);
+        ComputerPlayer player2 = mock(ComputerPlayer.class);
+        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
+        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+        click(onePlayer);
+        click(constants.GAME_PIECE_ONE);
+        verify(gameViewFactory).createGameView(gameCtrl, player1, player2);
+    }
+
+    @Test
+    public void shouldCreateGameViewWhenOIsChosen() {
+        Player player1 = mock(Player.class);
+        ComputerPlayer player2 = mock(ComputerPlayer.class);
+        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
+        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+        click(onePlayer);
+        click(constants.GAME_PIECE_TWO);
+        verify(gameViewFactory).createGameView(gameCtrl, player1, player2);
     }
 }
