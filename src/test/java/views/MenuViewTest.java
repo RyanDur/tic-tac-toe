@@ -7,8 +7,11 @@ import javafx.scene.Parent;
 import lang.constants;
 import models.ComputerPlayer;
 import models.Player;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
+import org.loadui.testfx.exceptions.NoNodesFoundException;
 
 import java.io.IOException;
 
@@ -27,6 +30,9 @@ public class MenuViewTest extends GuiTest{
     private String twoPlayer = "2 Player";
     private GameViewFactory gameViewFactory;
     private GameCtrl gameCtrl;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Override
     protected Parent getRootNode() {
@@ -115,5 +121,29 @@ public class MenuViewTest extends GuiTest{
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
         verify(gameViewFactory).createGameView(gameCtrl, player1, player2);
+    }
+
+    @Test
+    public void shouldRemoveLeftButtonBeforeStartingTheGame() {
+        exception.expect(NoNodesFoundException.class);
+        Player player1 = mock(Player.class);
+        ComputerPlayer player2 = mock(ComputerPlayer.class);
+        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
+        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+        click(onePlayer);
+        click(constants.GAME_PIECE_TWO);
+        find(onePlayerId);
+    }
+
+    @Test
+    public void shouldRemoveRightButtonBeforeStartingTheGame() {
+        exception.expect(NoNodesFoundException.class);
+        Player player1 = mock(Player.class);
+        ComputerPlayer player2 = mock(ComputerPlayer.class);
+        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
+        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+        click(onePlayer);
+        click(constants.GAME_PIECE_TWO);
+        find(twoPlayerId);
     }
 }

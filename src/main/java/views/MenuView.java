@@ -21,12 +21,13 @@ public class MenuView extends Parent {
     private final GameViewFactory gameViewFactory;
     private final Button buttonOne;
     private final Button buttonTwo;
+    private final BorderPane menu;
 
     public MenuView(GameCtrl gameCtrl, PlayerFactory playerFactory, GameViewFactory gameViewFactory) throws IOException {
         this.gameCtrl = gameCtrl;
         this.playerFactory = playerFactory;
         this.gameViewFactory = gameViewFactory;
-        BorderPane menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
+        menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
         buttonOne = (Button) menu.getLeft();
         buttonTwo = (Button) menu.getRight();
         buttonTwo.setOnMouseClicked(twoPlayer());
@@ -48,15 +49,20 @@ public class MenuView extends Parent {
         return event -> {
             Player player1 = playerFactory.createPlayer(gamePiece, constants.SIDE);
             Player player2 = playerFactory.createComputerPlayer(gamePiece1, constants.SIDE, player1);
-            GameView gameView = gameViewFactory.createGameView(gameCtrl, player1, player2);
+            setupGame(player1, player2);
         };
+    }
+
+    private void setupGame(Player player1, Player player2) {
+        GameView gameView = gameViewFactory.createGameView(gameCtrl, player1, player2);
+        menu.getChildren().removeAll(buttonOne, buttonTwo);
     }
 
     private EventHandler<MouseEvent> twoPlayer() {
         return event -> {
             Player player1 = playerFactory.createPlayer(constants.GAME_PIECE_ONE, constants.SIDE);
             Player player2 = playerFactory.createPlayer(constants.GAME_PIECE_TWO, constants.SIDE);
-            GameView gameView = gameViewFactory.createGameView(gameCtrl, player1, player2);
+            setupGame(player1, player2);
         };
     }
 }

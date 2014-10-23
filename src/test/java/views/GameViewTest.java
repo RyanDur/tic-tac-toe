@@ -29,10 +29,10 @@ public class GameViewTest extends GuiTest {
     private Player player2;
     private GameCtrl mockGameCtrl;
     private Player[] board;
+    private PlayerFactory mockPlayerFactory;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    private PlayerFactory mockPlayerFactory;
 
     @Override
     protected Parent getRootNode() {
