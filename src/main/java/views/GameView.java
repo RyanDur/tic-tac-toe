@@ -95,7 +95,7 @@ public class GameView extends Parent {
                     player.setCoordinates(getRow(space), getColumn(space));
                     gameCtrl.setPiece(player);
                     fillBoard(gameCtrl.getBoard());
-                    if(player2 instanceof ComputerPlayer) computerPlay();
+                    if(player2 instanceof ComputerPlayer && !gameCtrl.gameOver()) computerPlay();
                 }
             } catch (OutOfTurnException | NotVacantException | OutOfBoundsException e) {
                 currentPlayer = getLastPlayer();
