@@ -17,4 +17,6 @@ public interface GamePlayCtrl {
     Player getWinner();
 
     Player[] getBoard();
+
+    void setup();
 }

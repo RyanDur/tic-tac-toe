@@ -40,6 +40,7 @@ public class MenuView extends Parent {
     public MenuView(GamePlayCtrl gamePlayCtrl, GameViewFactory gameViewFactory) throws IOException {
         this.game = gamePlayCtrl;
         menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
+        centerPane = (Pane) menu.getCenter();
         this.getChildren().add(menu);
         this.gameViewFactory = gameViewFactory;
         getHeaderNodes();
@@ -73,7 +74,8 @@ public class MenuView extends Parent {
 
     private void setupGame() {
         try {
-            centerPane = (Pane) menu.getCenter();
+            messages.setText(constants.EMPTY);
+            game.setup();
             menu.getChildren().removeAll(buttonOne, buttonTwo);
             headerButtonVisibility(false);
             Function<MouseEvent, Player[]> play = play(game);
@@ -87,13 +89,14 @@ public class MenuView extends Parent {
     private Function<MouseEvent, Player[]> play(GamePlayCtrl game) {
         return (MouseEvent event) -> {
             try {
-                if (game.over()) {
-                    headerButtonVisibility(true);
-                    displayWinner(game.getWinner());
-                } else {
+                if (!game.over()) {
                     messages.setText(constants.EMPTY);
                     Label space = (Label) event.getSource();
                     game.set(getRow(space), getColumn(space));
+                }
+                if (game.over()) {
+                    headerButtonVisibility(true);
+                    displayWinner(game.getWinner());
                 }
             } catch (OutOfBoundsException | NotVacantException | OutOfTurnException e) {
                 messages.setText(e.getMessage());
@@ -114,6 +117,13 @@ public class MenuView extends Parent {
             centerPane.getChildren().remove(gameView);
             setPlayerChoiceButtons();
             setButtons();
+        };
+    }
+
+    private EventHandler<MouseEvent> resetGame() {
+        return event -> {
+            centerPane.getChildren().remove(gameView);
+            setupGame();
         };
     }
 
@@ -145,7 +155,7 @@ public class MenuView extends Parent {
         buttonTwo.setOnMouseClicked(twoPlayer());
         buttonOne.setOnMouseClicked(onePlayer());
         reset.setOnMouseClicked(resetMenu());
-        replay.setOnMouseClicked(event -> setupGame());
+        replay.setOnMouseClicked(resetGame());
     }
 
     private int getColumn(Node node) {

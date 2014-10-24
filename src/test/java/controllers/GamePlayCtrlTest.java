@@ -120,4 +120,10 @@ public class GamePlayCtrlTest {
         inOrder.verify(computer).calculateBestMove(board);
         inOrder.verify(gameCtrl).setPiece(computer);
     }
+
+    @Test
+    public void shouldBeAbleToSetupAGame() {
+        gamePlayCtrl.setup();
+        verify(gameCtrl).setup();
+    }
 }
