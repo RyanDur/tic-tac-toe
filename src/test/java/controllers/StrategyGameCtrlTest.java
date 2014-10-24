@@ -26,7 +26,7 @@ public class StrategyGameCtrlTest {
         strategyGameFactory = mock(StrategyGameFactory.class);
         strategyGame = mock(StrategyGame.class);
         when(strategyGameFactory.createStrategyGame(anyInt(), any(Player[].class))).thenReturn(strategyGame);
-        strategyGameCtrl = new StrategyGameCtrlImpl(constants.SIDE, strategyGameFactory);
+        strategyGameCtrl = new StrategyGameCtrlImpl(strategyGameFactory);
         board = new Player[]{};
         strategyGameCtrl.setBoard(board);
         player = mock(Player.class);

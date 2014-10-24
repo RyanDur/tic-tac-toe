@@ -8,8 +8,6 @@ public interface PlayerCtrl {
 
     void setupOnePlayer(String pieceOne, String pieceTwo);
 
-    Player[] getMove(Player[] players);
-
     Player getPlayer(Player[] board);
 
     int playerCount();

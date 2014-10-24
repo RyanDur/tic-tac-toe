@@ -22,7 +22,7 @@ import lang.constants;
 import models.Player;
 
 import java.io.IOException;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class MenuView extends Parent {
 
@@ -41,6 +41,7 @@ public class MenuView extends Parent {
     @Inject
     public MenuView(GameCtrl gameCtrl, PlayerCtrl playerCtrl, GameViewFactory gameViewFactory) throws IOException {
         menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
+        this.getChildren().add(menu);
         this.playerCtrl = playerCtrl;
         this.gameCtrl = gameCtrl;
         this.gameViewFactory = gameViewFactory;
@@ -48,7 +49,6 @@ public class MenuView extends Parent {
         getMenuButtons();
         headerButtonVisibility(false);
         setButtons();
-        this.getChildren().add(menu);
     }
 
     private EventHandler<MouseEvent> onePlayer() {
@@ -75,17 +75,20 @@ public class MenuView extends Parent {
     }
 
     private void setupGame() {
-        menu.getChildren().removeAll(buttonOne, buttonTwo);
         centerPane = (Pane) menu.getCenter();
-        centerPane.getChildren().add(gameView);
+        menu.getChildren().removeAll(buttonOne, buttonTwo);
         headerButtonVisibility(false);
         gameCtrl.setup();
-        Consumer<MouseEvent> play = play(playerCtrl, gameCtrl);
-        gameView = gameViewFactory.createGameView(gameCtrl, playerCtrl, play);
+        Function<MouseEvent, Player[]> play = play(playerCtrl, gameCtrl);
+        try {
+            gameView = gameViewFactory.createGameView(gameCtrl, playerCtrl, play);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         centerPane.getChildren().add(gameView);
     }
 
-    private Consumer<MouseEvent> play(PlayerCtrl playerCtrl, GameCtrl gameCtrl) {
+    private Function<MouseEvent, Player[]> play(PlayerCtrl playerCtrl, GameCtrl gameCtrl) {
         return (MouseEvent event) -> {
             try {
                 if (!gameCtrl.gameOver()) {
@@ -104,6 +107,7 @@ public class MenuView extends Parent {
             } catch (OutOfTurnException | NotVacantException | OutOfBoundsException e) {
                 messages.setText(e.getMessage());
             }
+            return gameCtrl.getBoard();
         };
     }
 

@@ -1,7 +1,9 @@
 package controllers;
 
+import com.google.inject.Inject;
 import factories.PlayerFactory;
 import lang.constants;
+import models.ComputerPlayer;
 import models.Player;
 
 public class PlayerCtrlImpl implements PlayerCtrl {
@@ -11,8 +13,9 @@ public class PlayerCtrlImpl implements PlayerCtrl {
     private Player player1;
     private Player player2;
 
-    public PlayerCtrlImpl(int side, PlayerFactory playerFactory, StrategyGameCtrl strategyGameCtrl) {
-        this.side = side;
+    @Inject
+    public PlayerCtrlImpl(PlayerFactory playerFactory, StrategyGameCtrl strategyGameCtrl) {
+        this.side = constants.SIDE;
         this.playerFactory = playerFactory;
         this.strategyGameCtrl = strategyGameCtrl;
     }
@@ -30,18 +33,19 @@ public class PlayerCtrlImpl implements PlayerCtrl {
     }
 
     @Override
-    public Player[] getMove(Player[] players) {
-        if(players.length % 2 == 0) return new Player[]{player1};
-        return new Player[]{player2};
-    }
-
-    @Override
     public Player getPlayer(Player[] board) {
-        return null;
+        if (player2 instanceof ComputerPlayer) return player1;
+        return (board.length % 2 != 0) ? player2 : player1;
     }
 
     @Override
     public int playerCount() {
-        return 0;
+        if (player1 == null) return 0;
+        return player2 instanceof ComputerPlayer ? 1 : 2;
+    }
+
+    @Override
+    public ComputerPlayer getComputerPlayer(Player[] board) {
+        return (player2 instanceof ComputerPlayer) ? (ComputerPlayer) player2 : null;        
     }
 }

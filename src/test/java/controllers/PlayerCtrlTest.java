@@ -2,6 +2,7 @@ package controllers;
 
 import factories.PlayerFactory;
 import lang.constants;
+import models.ComputerPlayer;
 import models.Player;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -22,6 +24,7 @@ public class PlayerCtrlTest {
     private Player player1;
     private Player player2;
     private StrategyGameCtrl strategyGameCtrl;
+    private ComputerPlayer computer;
 
     @Before
     public void setup() {
@@ -30,9 +33,11 @@ public class PlayerCtrlTest {
         player2 = mock(Player.class);
         when(player2.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
         playerFactory = mock(PlayerFactory.class);
+        computer = mock(ComputerPlayer.class);
         when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1, player2);
+        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class), any(StrategyGameCtrl.class))).thenReturn(computer);
         strategyGameCtrl = mock(StrategyGameCtrl.class);
-        playerCtrl = new PlayerCtrlImpl(constants.SIDE, playerFactory, strategyGameCtrl);
+        playerCtrl = new PlayerCtrlImpl(playerFactory, strategyGameCtrl);
     }
 
     @Test
@@ -45,15 +50,13 @@ public class PlayerCtrlTest {
     @Test
     public void shouldGetTheCorrectFirstMoveWhenAsked() {
         playerCtrl.setupTwoPlayer();
-        Player[] players = new Player[]{player1};
-        assertThat(playerCtrl.getMove(new Player[]{}), is(equalTo(players)));
+        assertThat(playerCtrl.getPlayer(new Player[]{}), is(equalTo(player1)));
     }
 
     @Test
     public void shouldGetTheCorrectSecondMoveWhenAsked() {
         playerCtrl.setupTwoPlayer();
-        Player[] players = new Player[]{player2};
-        assertThat(playerCtrl.getMove(new Player[]{player1}), is(equalTo(players)));
+        assertThat(playerCtrl.getPlayer(new Player[]{player1}), is(equalTo(player2)));
     }
 
     @Test
@@ -64,10 +67,38 @@ public class PlayerCtrlTest {
     }
 
     @Test
-    public void shouldGetBothMovesForOnePlayerGameAndComputerPlayerIsO() {
+    public void shouldOnlyGetHumanPlayerIfOnePlayerMode() {
+        playerCtrl.setupOnePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
+        assertThat(playerCtrl.getPlayer(new Player[]{}), is(equalTo(player1)));
+        assertThat(playerCtrl.getPlayer(new Player[]{player1}), is(equalTo(player1)));
+    }
+
+    @Test
+    public void shouldGet0IfAPlayerModeHasNotBeenSetup() {
+        assertThat(playerCtrl.playerCount(), is(equalTo(0)));
+    }
+
+    @Test
+    public void shouldBeAbleToGetTheNumberOfHumanPlayersInTwoPlayerMode() {
         playerCtrl.setupTwoPlayer();
-        when(player2.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        Player[] players = new Player[]{player1, player2};
-        assertThat(playerCtrl.getMove(new Player[]{}), is(equalTo(players)));
+        assertThat(playerCtrl.playerCount(), is(equalTo(2)));
+    }
+
+    @Test
+    public void shouldBeAbleToGetTheNumberOfHumanPlayersInOnePlayerMode() {
+        playerCtrl.setupOnePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
+        assertThat(playerCtrl.playerCount(), is(equalTo(1)));
+    }
+
+    @Test
+    public void shouldNotBeAbleToGetAComputerPlayerIfInTwoPlayerMode() {
+        playerCtrl.setupTwoPlayer();
+        assertThat(playerCtrl.getComputerPlayer(new Player[]{}), is(equalTo(null)));
+    }
+
+    @Test
+    public void shouldBeAbleToGetAComputerPlayerIfInOnePlayerMode() {
+        playerCtrl.setupOnePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
+        assertThat(playerCtrl.getComputerPlayer(new Player[]{}), is(equalTo(computer)));
     }
 }

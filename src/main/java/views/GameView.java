@@ -16,15 +16,15 @@ import models.ComputerPlayer;
 import models.Player;
 
 import java.io.IOException;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class GameView extends Parent {
     private final PlayerCtrl playerCtrl;
-    private Consumer<MouseEvent> play;
+    private Function<MouseEvent, Player[]> play;
     private GameCtrl gameCtrl;
     private GridPane grid;
 
-    public GameView(GameCtrl gameCtrl, PlayerCtrl playerCtrl, Consumer<MouseEvent> play) throws IOException {
+    public GameView(GameCtrl gameCtrl, PlayerCtrl playerCtrl, Function<MouseEvent, Player[]> play) throws IOException {
         this.playerCtrl = playerCtrl;
         this.play = play;
         BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
@@ -44,7 +44,7 @@ public class GameView extends Parent {
     private void checkForComputer() {
         try {
             ComputerPlayer computer = playerCtrl.getComputerPlayer(gameCtrl.getBoard());
-            if (computer.getPiece().equals(constants.GAME_PIECE_ONE)) gameCtrl.setPiece(computer);
+            if (computer != null && computer.getPiece().equals(constants.GAME_PIECE_ONE)) gameCtrl.setPiece(computer);
         } catch (OutOfTurnException | NotVacantException e) {
             e.printStackTrace();
         }
@@ -58,7 +58,7 @@ public class GameView extends Parent {
     private void setSpace(Player[] board, Label label) {
         int position = calc(getRow(label), getColumn(label));
         Player player = board[position];
-        if (player == null) label.setOnMouseClicked(play::accept);
+        if (player == null) label.setOnMouseClicked(event -> fillBoard(play.apply(event)));
         else label.setText(player.getPiece());
     }
 

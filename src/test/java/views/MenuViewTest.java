@@ -1,9 +1,9 @@
 package views;
 
 import controllers.GameCtrl;
+import controllers.PlayerCtrl;
 import factories.GameViewFactory;
 import factories.GameViewFactoryImpl;
-import factories.PlayerFactory;
 import javafx.scene.Parent;
 import lang.constants;
 import models.ComputerPlayer;
@@ -17,12 +17,11 @@ import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
 import java.io.IOException;
 
-import static org.loadui.testfx.controls.impl.ContainsNodesMatcher.contains;
 import static org.loadui.testfx.Assertions.verifyThat;
 import static org.loadui.testfx.controls.Commons.hasText;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.loadui.testfx.controls.impl.ContainsNodesMatcher.contains;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MenuViewTest extends GuiTest{
 
@@ -31,7 +30,7 @@ public class MenuViewTest extends GuiTest{
     private final String onePlayerId = "#one_player";
     private final String menuId = "#menu";
     private final String gameId = "#game";
-    private PlayerFactory playerFactory;
+    private PlayerCtrl playerCtrl;
     private String twoPlayer = "2 Player";
 
     @Rule
@@ -40,10 +39,10 @@ public class MenuViewTest extends GuiTest{
 
     @Override
     protected Parent getRootNode() {
-        playerFactory = mock(PlayerFactory.class);
+        playerCtrl = mock(PlayerCtrl.class);
         GameViewFactory gameViewFactory = new GameViewFactoryImpl();
         try {
-            return new MenuView(gameCtrl, playerFactory, gameViewFactory);
+            return new MenuView(gameCtrl, playerCtrl, gameViewFactory);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,7 +62,7 @@ public class MenuViewTest extends GuiTest{
     @Test
     public void shouldCreateTwoPlayersIfTwoPlayerIsChosen() {
         click(twoPlayer);
-        verify(playerFactory, times(2)).createPlayer(anyString(), anyInt());
+//        verify(playerCtrl, times(2)).createPlayer(anyString(), anyInt());
     }
 
     @Test
@@ -78,9 +77,9 @@ public class MenuViewTest extends GuiTest{
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
 
-        verify(playerFactory).createPlayer(constants.GAME_PIECE_TWO, constants.SIDE);
-//        verify(playerFactory).createComputerPlayer(anyString(), anyInt(), any(Player.class));
-//        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_ONE, constants.SIDE, null);
+//        verify(playerCtrl).createPlayer(constants.GAME_PIECE_TWO, constants.SIDE);
+//        verify(playerCtrl).createComputerPlayer(anyString(), anyInt(), any(Player.class));
+//        verify(playerCtrl).createComputerPlayer(constants.GAME_PIECE_ONE, constants.SIDE, null);
     }
 
     @Test
@@ -88,11 +87,11 @@ public class MenuViewTest extends GuiTest{
         click(onePlayer);
         click(constants.GAME_PIECE_ONE);
         Player human = mock(Player.class);
-        when(playerFactory.createPlayer(anyString(),anyInt())).thenReturn(human);
+//        when(playerCtrl.createPlayer(anyString(),anyInt())).thenReturn(human);
 
-        verify(playerFactory).createPlayer(constants.GAME_PIECE_ONE, constants.SIDE);
-//        verify(playerFactory).createComputerPlayer(anyString(), anyInt(), any(Player.class));
-//        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_TWO, constants.SIDE, null);
+//        verify(playerCtrl).createPlayer(constants.GAME_PIECE_ONE, constants.SIDE);
+//        verify(playerCtrl).createComputerPlayer(anyString(), anyInt(), any(Player.class));
+//        verify(playerCtrl).createComputerPlayer(constants.GAME_PIECE_TWO, constants.SIDE, null);
     }
 
     @Test
@@ -100,8 +99,8 @@ public class MenuViewTest extends GuiTest{
         exception.expect(NoNodesFoundException.class);
         Player player1 = mock(Player.class);
         ComputerPlayer player2 = mock(ComputerPlayer.class);
-        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
-//        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+//        when(playerCtrl.createPlayer(anyString(), anyInt())).thenReturn(player1);
+//        when(playerCtrl.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
         find(onePlayerId);
@@ -112,8 +111,8 @@ public class MenuViewTest extends GuiTest{
         exception.expect(NoNodesFoundException.class);
         Player player1 = mock(Player.class);
         ComputerPlayer player2 = mock(ComputerPlayer.class);
-        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
-//        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+//        when(playerCtrl.createPlayer(anyString(), anyInt())).thenReturn(player1);
+//        when(playerCtrl.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
         find(twoPlayerId);
@@ -123,8 +122,8 @@ public class MenuViewTest extends GuiTest{
     public void shouldPlaceGameIntoViewWhenStartingInOnePlayer() {
         Player player1 = mock(Player.class);
         ComputerPlayer player2 = mock(ComputerPlayer.class);
-        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
-//        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+//        when(playerCtrl.createPlayer(anyString(), anyInt())).thenReturn(player1);
+//        when(playerCtrl.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
         verifyThat(menuId, contains(gameId));
@@ -134,8 +133,8 @@ public class MenuViewTest extends GuiTest{
     public void shouldPlaceGameIntoViewWhenStartingInTwoPlayer() {
         Player player1 = mock(Player.class);
         ComputerPlayer player2 = mock(ComputerPlayer.class);
-        when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
-//        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+//        when(playerCtrl.createPlayer(anyString(), anyInt())).thenReturn(player1);
+//        when(playerCtrl.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
         click(twoPlayer);
         verifyThat(menuId, contains(gameId));
     }
