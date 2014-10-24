@@ -11,7 +11,6 @@ import factories.PlayerFactoryImpl;
 public class MenuViewModule extends AbstractModule {
     @Override
     protected void configure() {
-        install(new PlayerFactoryModule());
         install(new GameCtrlModule());
         bind(GameCtrl.class).to(GameCtrlImpl.class);
         bind(PlayerFactory.class).to(PlayerFactoryImpl.class);

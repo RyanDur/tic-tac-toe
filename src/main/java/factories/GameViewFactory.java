@@ -1,13 +1,12 @@
 package factories;
 
 import controllers.GameCtrl;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import models.Player;
+import controllers.PlayerCtrl;
+import javafx.scene.input.MouseEvent;
 import views.GameView;
 
-import java.io.IOException;
+import java.util.function.Consumer;
 
 public interface GameViewFactory {
-    GameView createGameView(GameCtrl gameCtrl, Player player1, Player player2, Label messages, Button reset, Button replay) throws IOException;
+    GameView createGameView(GameCtrl gameCtrl, PlayerCtrl playerCtrl, Consumer<MouseEvent> play);
 }

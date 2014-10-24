@@ -79,8 +79,8 @@ public class MenuViewTest extends GuiTest{
         click(constants.GAME_PIECE_TWO);
 
         verify(playerFactory).createPlayer(constants.GAME_PIECE_TWO, constants.SIDE);
-        verify(playerFactory).createComputerPlayer(anyString(), anyInt(), any(Player.class));
-        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_ONE, constants.SIDE, null);
+//        verify(playerFactory).createComputerPlayer(anyString(), anyInt(), any(Player.class));
+//        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_ONE, constants.SIDE, null);
     }
 
     @Test
@@ -91,8 +91,8 @@ public class MenuViewTest extends GuiTest{
         when(playerFactory.createPlayer(anyString(),anyInt())).thenReturn(human);
 
         verify(playerFactory).createPlayer(constants.GAME_PIECE_ONE, constants.SIDE);
-        verify(playerFactory).createComputerPlayer(anyString(), anyInt(), any(Player.class));
-        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_TWO, constants.SIDE, null);
+//        verify(playerFactory).createComputerPlayer(anyString(), anyInt(), any(Player.class));
+//        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_TWO, constants.SIDE, null);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class MenuViewTest extends GuiTest{
         Player player1 = mock(Player.class);
         ComputerPlayer player2 = mock(ComputerPlayer.class);
         when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
-        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+//        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
         find(onePlayerId);
@@ -113,7 +113,7 @@ public class MenuViewTest extends GuiTest{
         Player player1 = mock(Player.class);
         ComputerPlayer player2 = mock(ComputerPlayer.class);
         when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
-        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+//        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
         find(twoPlayerId);
@@ -124,7 +124,7 @@ public class MenuViewTest extends GuiTest{
         Player player1 = mock(Player.class);
         ComputerPlayer player2 = mock(ComputerPlayer.class);
         when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
-        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+//        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
         verifyThat(menuId, contains(gameId));
@@ -135,7 +135,7 @@ public class MenuViewTest extends GuiTest{
         Player player1 = mock(Player.class);
         ComputerPlayer player2 = mock(ComputerPlayer.class);
         when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1);
-        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+//        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
         click(twoPlayer);
         verifyThat(menuId, contains(gameId));
     }

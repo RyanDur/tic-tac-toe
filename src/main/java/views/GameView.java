@@ -1,14 +1,12 @@
 package views;
 
 import controllers.GameCtrl;
+import controllers.PlayerCtrl;
 import exceptions.NotVacantException;
-import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -18,59 +16,41 @@ import models.ComputerPlayer;
 import models.Player;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 public class GameView extends Parent {
+    private final PlayerCtrl playerCtrl;
+    private Consumer<MouseEvent> play;
     private GameCtrl gameCtrl;
-    private Player player1;
-    private Player player2;
-    private Player currentPlayer;
     private GridPane grid;
-    private Label messages;
-    private Button replay;
-    private Button reset;
 
-    public GameView(GameCtrl gameCtrl, Player player1, Player player2, Label messages, Button reset, Button replay) throws IOException {
+    public GameView(GameCtrl gameCtrl, PlayerCtrl playerCtrl, Consumer<MouseEvent> play) throws IOException {
+        this.playerCtrl = playerCtrl;
+        this.play = play;
         BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
-        this.reset = reset;
-        this.replay = replay;
-        this.messages = messages;
         this.gameCtrl = gameCtrl;
-        this.player1 = player1;
-        this.player2 = player2;
         grid = (GridPane) borderPane.getCenter();
         this.getChildren().add(borderPane);
         setPlay();
     }
 
-    private void checkForComputer() {
-        if(player2 instanceof ComputerPlayer && player2.getPiece().equals(constants.GAME_PIECE_ONE)) {
-            computerPlay();
-        }
-    }
-
-    private void computerPlay() {
-        try {
-            ((ComputerPlayer) player2).calculateBestMove(gameCtrl.getBoard());
-            gameCtrl.setPiece(player2);
-            fillBoard(gameCtrl.getBoard());
-        } catch (OutOfBoundsException | NotVacantException | OutOfTurnException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void setPlay() {
-        setupHeaderButtons(false);
         clearBoard();
-        messages.setText(constants.EMPTY);
         gameCtrl.setup();
         fillBoard(gameCtrl.getBoard());
         checkForComputer();
     }
 
-    private void fillBoard(Player[] board) {
-        if (gameCtrl.gameOver()) {
-            setGameOver();
+    private void checkForComputer() {
+        try {
+            ComputerPlayer computer = playerCtrl.getComputerPlayer(gameCtrl.getBoard());
+            if (computer.getPiece().equals(constants.GAME_PIECE_ONE)) gameCtrl.setPiece(computer);
+        } catch (OutOfTurnException | NotVacantException e) {
+            e.printStackTrace();
         }
+    }
+
+    private void fillBoard(Player[] board) {
         grid.getChildren().stream().filter(space -> space instanceof Label)
                 .forEach(label -> setSpace(board, (Label) label));
     }
@@ -78,66 +58,14 @@ public class GameView extends Parent {
     private void setSpace(Player[] board, Label label) {
         int position = calc(getRow(label), getColumn(label));
         Player player = board[position];
-        if (player == null) {
-            label.setOnMouseClicked(setPiece());
-        } else {
-            label.setText(player.getPiece());
-        }
-    }
-
-    private EventHandler<MouseEvent> setPiece() {
-        return mouseEvent -> {
-            try {
-                messages.setText(constants.EMPTY);
-                if (!gameCtrl.gameOver()) {
-                    Label space = (Label) mouseEvent.getSource();
-                    Player player = getCurrentPlayer();
-                    player.setCoordinates(getRow(space), getColumn(space));
-                    gameCtrl.setPiece(player);
-                    fillBoard(gameCtrl.getBoard());
-                    if(player2 instanceof ComputerPlayer && !gameCtrl.gameOver()) computerPlay();
-                }
-            } catch (OutOfTurnException | NotVacantException | OutOfBoundsException e) {
-                currentPlayer = getLastPlayer();
-                messages.setText(e.getMessage());
-            }
-        };
+        if (player == null) label.setOnMouseClicked(play::accept);
+        else label.setText(player.getPiece());
     }
 
     private void clearBoard() {
         grid.getChildren().stream().
                 filter(space -> space instanceof Label).
-                forEach(space -> {
-                    Label label = (Label) space;
-                    label.setText(constants.EMPTY);
-                });
-    }
-
-    private void setGameOver() {
-        setupHeaderButtons(true);
-        Player winner = gameCtrl.getWinner();
-        if (winner == null) {
-            messages.setText(constants.DRAW_MESSAGE);
-        } else {
-            messages.setText(winner.getPiece() + constants.HAS_WON_MESSAGE);
-        }
-    }
-
-    private void setupHeaderButtons(boolean visible) {
-        replay.setVisible(visible);
-        reset.setVisible(visible);
-        replay.setOnMouseClicked(event -> setPlay());
-    }
-
-    private Player getCurrentPlayer() {
-        if(player2 instanceof ComputerPlayer) return player1;
-        if (currentPlayer == player1) currentPlayer = player2;
-        else currentPlayer = player1;
-        return currentPlayer;
-    }
-
-    private Player getLastPlayer() {
-        return getCurrentPlayer();
+                forEach(space -> ((Label) space).setText(constants.EMPTY));
     }
 
     private int calc(int row, int column) {
