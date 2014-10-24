@@ -1,6 +1,7 @@
 package controllers;
 
-import models.ComputerPlayer;
+import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
 import models.Player;
 
 public interface PlayerCtrl {
@@ -12,5 +13,5 @@ public interface PlayerCtrl {
 
     int playerCount();
 
-    ComputerPlayer getComputerPlayer(Player[] board);
+    Player getComputerPlayer(Player[] board) throws NotVacantException, OutOfBoundsException;
 }

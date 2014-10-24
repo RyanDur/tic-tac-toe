@@ -1,6 +1,8 @@
 package controllers;
 
 import com.google.inject.Inject;
+import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
 import factories.PlayerFactory;
 import lang.constants;
 import models.ComputerPlayer;
@@ -45,7 +47,11 @@ public class PlayerCtrlImpl implements PlayerCtrl {
     }
 
     @Override
-    public ComputerPlayer getComputerPlayer(Player[] board) {
-        return (player2 instanceof ComputerPlayer) ? (ComputerPlayer) player2 : null;        
+    public Player getComputerPlayer(Player[] board) throws NotVacantException, OutOfBoundsException {
+        if ((player2 instanceof ComputerPlayer)) {
+            ((ComputerPlayer) player2).calculateBestMove(board);
+            return player2;
+        }
+        return null;
     }
 }

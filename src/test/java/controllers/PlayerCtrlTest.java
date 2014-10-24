@@ -1,5 +1,7 @@
 package controllers;
 
+import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
 import factories.PlayerFactory;
 import lang.constants;
 import models.ComputerPlayer;
@@ -91,13 +93,13 @@ public class PlayerCtrlTest {
     }
 
     @Test
-    public void shouldNotBeAbleToGetAComputerPlayerIfInTwoPlayerMode() {
+    public void shouldNotBeAbleToGetAComputerPlayerIfInTwoPlayerMode() throws NotVacantException, OutOfBoundsException {
         playerCtrl.setupTwoPlayer();
         assertThat(playerCtrl.getComputerPlayer(new Player[]{}), is(equalTo(null)));
     }
 
     @Test
-    public void shouldBeAbleToGetAComputerPlayerIfInOnePlayerMode() {
+    public void shouldBeAbleToGetAComputerPlayerIfInOnePlayerMode() throws NotVacantException, OutOfBoundsException {
         playerCtrl.setupOnePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
         assertThat(playerCtrl.getComputerPlayer(new Player[]{}), is(equalTo(computer)));
     }

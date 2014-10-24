@@ -3,6 +3,7 @@ package views;
 import controllers.GameCtrl;
 import controllers.PlayerCtrl;
 import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,7 +13,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import lang.constants;
-import models.ComputerPlayer;
 import models.Player;
 
 import java.io.IOException;
@@ -43,9 +43,9 @@ public class GameView extends Parent {
 
     private void checkForComputer() {
         try {
-            ComputerPlayer computer = playerCtrl.getComputerPlayer(gameCtrl.getBoard());
+            Player computer = playerCtrl.getComputerPlayer(gameCtrl.getBoard());
             if (computer != null && computer.getPiece().equals(constants.GAME_PIECE_ONE)) gameCtrl.setPiece(computer);
-        } catch (OutOfTurnException | NotVacantException e) {
+        } catch (OutOfTurnException | NotVacantException | OutOfBoundsException e) {
             e.printStackTrace();
         }
     }

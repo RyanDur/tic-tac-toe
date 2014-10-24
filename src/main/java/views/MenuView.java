@@ -97,8 +97,11 @@ public class MenuView extends Parent {
                     Label space = (Label) event.getSource();
                     player.setCoordinates(getRow(space), getColumn(space));
                     gameCtrl.setPiece(player);
-                    if (playerCtrl.playerCount() == 1 && !gameCtrl.gameOver())
-                        gameCtrl.setPiece(playerCtrl.getComputerPlayer(gameCtrl.getBoard()));
+                    if (playerCtrl.playerCount() == 1 && !gameCtrl.gameOver()) {
+                        Player player1 = playerCtrl.getComputerPlayer(gameCtrl.getBoard());
+                        System.out.println(player1);
+                        gameCtrl.setPiece(player1);
+                    }
                 }
                 if (gameCtrl.gameOver()) {
                     headerButtonVisibility(true);
