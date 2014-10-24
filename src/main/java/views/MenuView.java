@@ -1,8 +1,7 @@
 package views;
 
 import com.google.inject.Inject;
-import controllers.GameCtrl;
-import controllers.PlayerCtrl;
+import controllers.GamePlayCtrl;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
@@ -26,7 +25,6 @@ import java.util.function.Function;
 
 public class MenuView extends Parent {
 
-    private final GameCtrl gameCtrl;
     private final GameViewFactory gameViewFactory;
     private final BorderPane menu;
     private Button buttonOne;
@@ -36,14 +34,13 @@ public class MenuView extends Parent {
     private Label messages;
     private GameView gameView;
     private Pane centerPane;
-    private PlayerCtrl playerCtrl;
+    private GamePlayCtrl game;
 
     @Inject
-    public MenuView(GameCtrl gameCtrl, PlayerCtrl playerCtrl, GameViewFactory gameViewFactory) throws IOException {
+    public MenuView(GamePlayCtrl gamePlayCtrl, GameViewFactory gameViewFactory) throws IOException {
+        this.game = gamePlayCtrl;
         menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
         this.getChildren().add(menu);
-        this.playerCtrl = playerCtrl;
-        this.gameCtrl = gameCtrl;
         this.gameViewFactory = gameViewFactory;
         getHeaderNodes();
         getMenuButtons();
@@ -62,60 +59,50 @@ public class MenuView extends Parent {
 
     private EventHandler<MouseEvent> twoPlayer() {
         return event -> {
-            playerCtrl.setupTwoPlayer();
+            game.twoPlayer();
             setupGame();
         };
     }
 
     private EventHandler<MouseEvent> setOnePlayers(String player1, String player2) {
         return event -> {
-            playerCtrl.setupOnePlayer(player1, player2);
+            game.onePlayer(player1, player2);
             setupGame();
         };
     }
 
     private void setupGame() {
-        centerPane = (Pane) menu.getCenter();
-        menu.getChildren().removeAll(buttonOne, buttonTwo);
-        headerButtonVisibility(false);
-        gameCtrl.setup();
-        Function<MouseEvent, Player[]> play = play(playerCtrl, gameCtrl);
         try {
-            gameView = gameViewFactory.createGameView(gameCtrl, playerCtrl, play);
+            centerPane = (Pane) menu.getCenter();
+            menu.getChildren().removeAll(buttonOne, buttonTwo);
+            headerButtonVisibility(false);
+            Function<MouseEvent, Player[]> play = play(game);
+            gameView = gameViewFactory.createGameView(game.getBoard(), play);
+            centerPane.getChildren().add(gameView);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        centerPane.getChildren().add(gameView);
     }
 
-    private Function<MouseEvent, Player[]> play(PlayerCtrl playerCtrl, GameCtrl gameCtrl) {
+    private Function<MouseEvent, Player[]> play(GamePlayCtrl game) {
         return (MouseEvent event) -> {
             try {
-                if (!gameCtrl.gameOver()) {
-                    messages.setText(constants.EMPTY);
-                    Player player = playerCtrl.getPlayer(gameCtrl.getBoard());
-                    Label space = (Label) event.getSource();
-                    player.setCoordinates(getRow(space), getColumn(space));
-                    gameCtrl.setPiece(player);
-                    if (playerCtrl.playerCount() == 1 && !gameCtrl.gameOver()) {
-                        Player player1 = playerCtrl.getComputerPlayer(gameCtrl.getBoard());
-                        System.out.println(player1);
-                        gameCtrl.setPiece(player1);
-                    }
-                }
-                if (gameCtrl.gameOver()) {
+                if (game.over()) {
                     headerButtonVisibility(true);
-                    displayWinner(gameCtrl);
+                    displayWinner(game.getWinner());
+                } else {
+                    messages.setText(constants.EMPTY);
+                    Label space = (Label) event.getSource();
+                    game.set(getRow(space), getColumn(space));
                 }
-            } catch (OutOfTurnException | NotVacantException | OutOfBoundsException e) {
+            } catch (OutOfBoundsException | NotVacantException | OutOfTurnException e) {
                 messages.setText(e.getMessage());
             }
-            return gameCtrl.getBoard();
+            return game.getBoard();
         };
     }
 
-    private void displayWinner(GameCtrl gameCtrl) {
-        Player winner = gameCtrl.getWinner();
+    private void displayWinner(Player winner) {
         if (winner == null) messages.setText(constants.DRAW_MESSAGE);
         else messages.setText(winner.getPiece() + constants.HAS_WON_MESSAGE);
     }
@@ -151,13 +138,14 @@ public class MenuView extends Parent {
         HBox header = (HBox) menu.getTop();
         replay = (Button) header.lookup(constants.REPLAY_ID);
         reset = (Button) header.lookup(constants.RESET_ID);
-        reset.setOnMouseClicked(resetMenu());
         messages = (Label) header.lookup(constants.MESSAGES_ID);
     }
 
     private void setButtons() {
         buttonTwo.setOnMouseClicked(twoPlayer());
         buttonOne.setOnMouseClicked(onePlayer());
+        reset.setOnMouseClicked(resetMenu());
+        replay.setOnMouseClicked(event -> setupGame());
     }
 
     private int getColumn(Node node) {

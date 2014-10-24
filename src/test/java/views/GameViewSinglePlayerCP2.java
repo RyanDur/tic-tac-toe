@@ -1,7 +1,6 @@
 package views;
 
 import controllers.GameCtrl;
-import controllers.PlayerCtrl;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import javafx.scene.Parent;
@@ -30,11 +29,10 @@ public class GameViewSinglePlayerCP2 extends GuiTest {
         when(player2.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
         when(player1.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         GameCtrl mockGameCtrl = mock(GameCtrl.class);
-        PlayerCtrl playerCtrl = mock(PlayerCtrl.class);
         Function<MouseEvent, Player[]> play = null;
         when(mockGameCtrl.getBoard()).thenReturn(board);
         try {
-            return new GameView(mockGameCtrl, playerCtrl, play);
+            return new GameView(new Player[]{}, play);
         } catch (IOException e) {
             e.printStackTrace();
         }

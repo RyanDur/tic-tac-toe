@@ -1,10 +1,5 @@
 package views;
 
-import controllers.GameCtrl;
-import controllers.PlayerCtrl;
-import exceptions.NotVacantException;
-import exceptions.OutOfBoundsException;
-import exceptions.OutOfTurnException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -19,16 +14,14 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class GameView extends Parent {
-    private final PlayerCtrl playerCtrl;
+    private Player[] board;
     private Function<MouseEvent, Player[]> play;
-    private GameCtrl gameCtrl;
     private GridPane grid;
 
-    public GameView(GameCtrl gameCtrl, PlayerCtrl playerCtrl, Function<MouseEvent, Player[]> play) throws IOException {
-        this.playerCtrl = playerCtrl;
+    public GameView(Player[] board, Function<MouseEvent, Player[]> play) throws IOException {
+        this.board = board;
         this.play = play;
         BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
-        this.gameCtrl = gameCtrl;
         grid = (GridPane) borderPane.getCenter();
         this.getChildren().add(borderPane);
         setPlay();
@@ -36,18 +29,7 @@ public class GameView extends Parent {
 
     private void setPlay() {
         clearBoard();
-        gameCtrl.setup();
-        fillBoard(gameCtrl.getBoard());
-        checkForComputer();
-    }
-
-    private void checkForComputer() {
-        try {
-            Player computer = playerCtrl.getComputerPlayer(gameCtrl.getBoard());
-            if (computer != null && computer.getPiece().equals(constants.GAME_PIECE_ONE)) gameCtrl.setPiece(computer);
-        } catch (OutOfTurnException | NotVacantException | OutOfBoundsException e) {
-            e.printStackTrace();
-        }
+        fillBoard(board);
     }
 
     private void fillBoard(Player[] board) {

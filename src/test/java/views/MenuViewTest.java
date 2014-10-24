@@ -1,6 +1,7 @@
 package views;
 
 import controllers.GameCtrl;
+import controllers.GamePlayCtrl;
 import controllers.PlayerCtrl;
 import factories.GameViewFactory;
 import factories.GameViewFactoryImpl;
@@ -41,8 +42,9 @@ public class MenuViewTest extends GuiTest{
     protected Parent getRootNode() {
         playerCtrl = mock(PlayerCtrl.class);
         GameViewFactory gameViewFactory = new GameViewFactoryImpl();
+        GamePlayCtrl gamePlayCtrl = mock(GamePlayCtrl.class);
         try {
-            return new MenuView(gameCtrl, playerCtrl, gameViewFactory);
+            return new MenuView(gamePlayCtrl, gameViewFactory);
         } catch (IOException e) {
             e.printStackTrace();
         }

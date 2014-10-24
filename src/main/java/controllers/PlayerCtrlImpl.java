@@ -1,11 +1,8 @@
 package controllers;
 
 import com.google.inject.Inject;
-import exceptions.NotVacantException;
-import exceptions.OutOfBoundsException;
 import factories.PlayerFactory;
 import lang.constants;
-import models.ComputerPlayer;
 import models.Player;
 
 public class PlayerCtrlImpl implements PlayerCtrl {
@@ -23,35 +20,16 @@ public class PlayerCtrlImpl implements PlayerCtrl {
     }
 
     @Override
-    public void setupTwoPlayer() {
+    public Player[] setupTwoPlayer() {
         player1 = playerFactory.createPlayer(constants.GAME_PIECE_ONE, side);
         player2 = playerFactory.createPlayer(constants.GAME_PIECE_TWO, side);
+        return new Player[]{player1, player2};
     }
 
     @Override
-    public void setupOnePlayer(String pieceOne, String pieceTwo) {
+    public Player[] setupOnePlayer(String pieceOne, String pieceTwo) {
         player1 = playerFactory.createPlayer(pieceOne, side);
         player2 = playerFactory.createComputerPlayer(pieceTwo, side, player1, strategyGameCtrl);
-    }
-
-    @Override
-    public Player getPlayer(Player[] board) {
-        if (player2 instanceof ComputerPlayer) return player1;
-        return (board.length % 2 != 0) ? player2 : player1;
-    }
-
-    @Override
-    public int playerCount() {
-        if (player1 == null) return 0;
-        return player2 instanceof ComputerPlayer ? 1 : 2;
-    }
-
-    @Override
-    public Player getComputerPlayer(Player[] board) throws NotVacantException, OutOfBoundsException {
-        if ((player2 instanceof ComputerPlayer)) {
-            ((ComputerPlayer) player2).calculateBestMove(board);
-            return player2;
-        }
-        return null;
+        return new Player[]{player1, player2};
     }
 }
