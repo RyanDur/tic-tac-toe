@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import modules.MenuViewModule;
-import views.MenuView;
+import views.TicTacToeImpl;
 
 public class Start extends Application {
     public static void main(String[] args) {
@@ -15,8 +15,8 @@ public class Start extends Application {
     public void start(Stage stage) throws Exception {
         try {
             Injector injector = Guice.createInjector(new MenuViewModule());
-            MenuView menuView = injector.getInstance(MenuView.class);
-            stage.setScene(new Scene(menuView, 570, 650));
+            TicTacToeImpl ticTacToeImpl = injector.getInstance(TicTacToeImpl.class);
+            stage.setScene(new Scene(ticTacToeImpl, 570, 650));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

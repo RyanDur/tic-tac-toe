@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class MenuView extends Parent {
+public class TicTacToeImpl extends Parent {
     private GameViewImpl gameView;
     private Pane centerPane;
     private GamePlayCtrl game;
@@ -32,7 +32,7 @@ public class MenuView extends Parent {
     private NavigationView nav;
 
     @Inject
-    public MenuView(GamePlayCtrl game, ViewFactory viewFactory, HeaderView header) throws IOException {
+    public TicTacToeImpl(GamePlayCtrl game, ViewFactory viewFactory, HeaderView header) throws IOException {
         menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
         this.getChildren().add(menu);
         this.viewFactory = viewFactory;
@@ -46,7 +46,7 @@ public class MenuView extends Parent {
         try {
             header.clearMessage();
             header.setButtonsVisibility(false);
-            gameView = getGameView(game);
+            gameView = getGameView();
             swapCenter((Node) nav, gameView);
         } catch (IOException e) {
             e.printStackTrace();
@@ -142,8 +142,8 @@ public class MenuView extends Parent {
         };
     }
 
-    private GameViewImpl getGameView(GamePlayCtrl game) throws IOException {
-        return viewFactory.createGameView(game.getBoard(), play(game));
+    private GameViewImpl getGameView() throws IOException {
+        return viewFactory.createGameView();
     }
 
     private void setHeader(HeaderView header) {

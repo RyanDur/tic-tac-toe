@@ -1,5 +1,6 @@
 package views;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -14,34 +15,41 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class GameViewImpl extends Parent implements GameView {
-    private Player[] board;
     private Function<MouseEvent, Player[]> play;
     private GridPane grid;
 
-    public GameViewImpl(Player[] board, Function<MouseEvent, Player[]> play) throws IOException {
-        this.board = board;
-        this.play = play;
+    public GameViewImpl() throws IOException {
         BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
         grid = (GridPane) borderPane.getCenter();
         this.getChildren().add(borderPane);
-        setPlay();
     }
 
-    private void setPlay() {
-        clearBoard();
-        fillBoard(board);
+
+    @Override
+    public void setup(Player[] board) {
+        Platform.runLater(() -> fillBoard(board));
     }
+
+    @Override
+    public void clear() {
+        Platform.runLater(this::clearBoard);
+    }
+
+    @Override
+    public void setPlay(Function<MouseEvent, Player[]> play) {
+        this.play = play;
+    }
+
 
     private void fillBoard(Player[] board) {
         grid.getChildren().stream().filter(space -> space instanceof Label)
                 .forEach(label -> setSpace(board, (Label) label));
     }
 
-    private void setSpace(Player[] board, Label label) {
-        int position = calc(getRow(label), getColumn(label));
-        Player player = board[position];
-        if (player == null) label.setOnMouseClicked(event -> fillBoard(play.apply(event)));
-        else label.setText(player.getPiece());
+    private void setSpace(Player[] board, Label cell) {
+        Player player = board[calc(getRow(cell), getColumn(cell))];
+        if (player == null) cell.setOnMouseClicked(event -> fillBoard(play.apply(event)));
+        else cell.setText(player.getPiece());
     }
 
     private void clearBoard() {

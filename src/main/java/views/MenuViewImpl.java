@@ -11,11 +11,11 @@ import lang.constants;
 import java.io.IOException;
 import java.util.function.BiConsumer;
 
-public class NavigationViewImpl extends Parent implements NavigationView {
+public class MenuViewImpl extends Parent implements NavigationView {
     private final Button right;
     private final Button left;
 
-    public NavigationViewImpl() throws IOException {
+    public MenuViewImpl() throws IOException {
         GridPane nav = FXMLLoader.load(getClass().getResource(constants.NAVIGATION_VIEW));
         right = (Button) nav.lookup(constants.RIGHT_BUTTON_ID);
         left = (Button) nav.lookup(constants.LEFT_BUTTON_ID);
