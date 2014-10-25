@@ -22,14 +22,14 @@ import java.io.IOException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class TicTacToeImpl extends Parent {
+public class TicTacToeImpl extends Parent implements TicTacToe {
     private GameViewImpl gameView;
     private Pane centerPane;
     private GamePlayCtrl game;
     private HeaderView header;
     private ViewFactory viewFactory;
     private final BorderPane menu;
-    private NavigationView nav;
+    private MenuView nav;
 
     @Inject
     public TicTacToeImpl(GamePlayCtrl game, ViewFactory viewFactory, HeaderView header) throws IOException {
@@ -116,9 +116,9 @@ public class TicTacToeImpl extends Parent {
         setCenter(node2);
     }
 
-    private NavigationView getNav() {
+    private MenuView getNav() {
         try {
-            nav = viewFactory.createNav();
+            nav = viewFactory.createMenu();
             nav.setOnePlayer(getOnePlayer());
             nav.setTwoPlayer(getTwoPlayer());
             return nav;

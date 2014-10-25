@@ -15,30 +15,30 @@ import static org.mockito.Mockito.verify;
 
 
 public class MenuViewTest extends GuiTest {
-    private NavigationView navigationView;
+    private MenuView menuView;
     private GamePlayCtrl game;
 
     @Override
     protected Parent getRootNode() {
         game = mock(GamePlayCtrl.class);
         try {
-            navigationView = new MenuViewImpl();
+            menuView = new MenuViewImpl();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return (Parent) navigationView;
+        return (Parent) menuView;
     }
 
     @Test
     public void shouldBeAbleToSetATwoPlayerGame() {
-        navigationView.setTwoPlayer(e -> game.twoPlayer());
+        menuView.setTwoPlayer(e -> game.twoPlayer());
         click(constants.TWO_PLAYER);
         verify(game).twoPlayer();
     }
 
     @Test
     public void shouldBeAbleToChooseBetweenXAndOIfAOnePlayerGame() {
-        navigationView.setOnePlayer(game::onePlayer);
+        menuView.setOnePlayer(game::onePlayer);
         click(constants.ONE_PLAYER);
         verifyThat(constants.LEFT_BUTTON_ID, hasText(constants.GAME_PIECE_ONE));
         verifyThat(constants.RIGHT_BUTTON_ID, hasText(constants.GAME_PIECE_TWO));
@@ -46,7 +46,7 @@ public class MenuViewTest extends GuiTest {
 
     @Test
     public void shouldBeAbleToAllowAPlayerToChooseX() {
-        navigationView.setOnePlayer(game::onePlayer);
+        menuView.setOnePlayer(game::onePlayer);
         click(constants.ONE_PLAYER);
         click(constants.GAME_PIECE_ONE);
         verify(game).onePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
@@ -54,7 +54,7 @@ public class MenuViewTest extends GuiTest {
 
     @Test
     public void shouldBeAbleToAllowAPlayerToChooseO() {
-        navigationView.setOnePlayer(game::onePlayer);
+        menuView.setOnePlayer(game::onePlayer);
         click(constants.ONE_PLAYER);
         click(constants.GAME_PIECE_TWO);
         verify(game).onePlayer(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE);

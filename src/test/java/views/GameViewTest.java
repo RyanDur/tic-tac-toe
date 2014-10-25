@@ -71,12 +71,12 @@ public class GameViewTest extends GuiTest {
     @Test
     public void shouldBeAbleToClearTheBoard() throws InterruptedException {
         int index = 2;
+        Player[] board1 = new Player[constants.SIDE * constants.SIDE];
         board[index] = player;
         String id = "#cell" + index;
         gameView.setup(board);
         verifyThat(id, hasText(constants.GAME_PIECE_ONE));
-        gameView.clear();
-        Thread.sleep(100);
+        gameView.setup(board1);
         verifyThat(id, hasText(constants.EMPTY));
     }
 

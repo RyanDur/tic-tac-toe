@@ -8,7 +8,7 @@ import factories.ViewFactoryImpl;
 import views.HeaderView;
 import views.HeaderViewImpl;
 
-public class MenuViewModule extends AbstractModule {
+public class TicTacToeModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new GamePlayCtrlModule());

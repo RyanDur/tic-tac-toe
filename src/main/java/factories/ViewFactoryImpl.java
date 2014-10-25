@@ -2,7 +2,7 @@ package factories;
 
 import views.GameViewImpl;
 import views.MenuViewImpl;
-import views.NavigationView;
+import views.MenuView;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ public class ViewFactoryImpl implements ViewFactory {
     }
 
     @Override
-    public NavigationView createNav() throws IOException {
+    public MenuView createMenu() throws IOException {
         return new MenuViewImpl();
     }
 }

@@ -3,7 +3,7 @@ import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import modules.MenuViewModule;
+import modules.TicTacToeModule;
 import views.TicTacToeImpl;
 
 public class Start extends Application {
@@ -14,7 +14,7 @@ public class Start extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         try {
-            Injector injector = Guice.createInjector(new MenuViewModule());
+            Injector injector = Guice.createInjector(new TicTacToeModule());
             TicTacToeImpl ticTacToeImpl = injector.getInstance(TicTacToeImpl.class);
             stage.setScene(new Scene(ticTacToeImpl, 570, 650));
             stage.show();

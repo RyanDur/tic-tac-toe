@@ -23,7 +23,7 @@ import static org.loadui.testfx.controls.impl.ContainsNodesMatcher.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TicTacToeImplTest extends GuiTest {
+public class TicTacToeTest extends GuiTest {
 
     private final String twoPlayerId = "#two_player";
     private final String onePlayer = "1 Player";
@@ -42,7 +42,7 @@ public class TicTacToeImplTest extends GuiTest {
         playerCtrl = mock(PlayerCtrl.class);
         GamePlayCtrl gamePlayCtrl = mock(GamePlayCtrl.class);
         HeaderView headerView = mock(HeaderView.class);
-        NavigationView nav = mock(NavigationView.class);
+        MenuView nav = mock(MenuView.class);
         ViewFactory viewFactory = mock(ViewFactory.class);
         try {
             return new TicTacToeImpl(gamePlayCtrl, viewFactory, headerView);

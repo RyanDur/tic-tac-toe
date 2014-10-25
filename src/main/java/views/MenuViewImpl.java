@@ -11,7 +11,7 @@ import lang.constants;
 import java.io.IOException;
 import java.util.function.BiConsumer;
 
-public class MenuViewImpl extends Parent implements NavigationView {
+public class MenuViewImpl extends Parent implements MenuView {
     private final Button right;
     private final Button left;
 
