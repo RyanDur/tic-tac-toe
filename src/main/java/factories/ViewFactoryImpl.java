@@ -1,9 +1,10 @@
 package factories;
 
-import controllers.GamePlayCtrl;
 import javafx.scene.input.MouseEvent;
 import models.Player;
-import views.*;
+import views.GameViewImpl;
+import views.NavigationView;
+import views.NavigationViewImpl;
 
 import java.io.IOException;
 import java.util.function.Function;
@@ -15,7 +16,7 @@ public class ViewFactoryImpl implements ViewFactory {
     }
 
     @Override
-    public NavigationView createNav(GamePlayCtrl game) throws IOException {
-        return new NavigationViewImpl(game);
+    public NavigationView createNav() throws IOException {
+        return new NavigationViewImpl();
     }
 }

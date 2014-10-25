@@ -1,6 +1,5 @@
 package factories;
 
-import controllers.GamePlayCtrl;
 import javafx.scene.input.MouseEvent;
 import models.Player;
 import views.GameViewImpl;
@@ -12,5 +11,5 @@ import java.util.function.Function;
 public interface ViewFactory {
     GameViewImpl createGameView(Player[] board, Function<MouseEvent, Player[]> play) throws IOException;
 
-    NavigationView createNav(GamePlayCtrl game) throws IOException;
+    NavigationView createNav() throws IOException;
 }

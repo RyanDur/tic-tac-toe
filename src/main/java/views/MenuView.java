@@ -19,6 +19,7 @@ import lang.constants;
 import models.Player;
 
 import java.io.IOException;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class MenuView extends Parent {
@@ -45,9 +46,8 @@ public class MenuView extends Parent {
         try {
             header.clearMessage();
             header.setButtonsVisibility(false);
-            game.setup();
-            gameView = getGameView();
-            swap((Node) nav, gameView);
+            gameView = getGameView(game);
+            swapCenter((Node) nav, gameView);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,13 +81,14 @@ public class MenuView extends Parent {
         return event -> {
             header.clearMessage();
             header.setButtonsVisibility(false);
-            swap(gameView, (Node) getNav());
+            swapCenter(gameView, (Node) getNav());
         };
     }
 
     private EventHandler<MouseEvent> resetGame() {
         return event -> {
             removeCenter(gameView);
+            game.reset();
             setupGame();
         };
     }
@@ -110,16 +111,16 @@ public class MenuView extends Parent {
         centerPane.getChildren().add(node);
     }
 
-    private void swap(Node node1, Node node2) {
+    private void swapCenter(Node node1, Node node2) {
         removeCenter(node1);
         setCenter(node2);
     }
 
     private NavigationView getNav() {
         try {
-            nav = viewFactory.createNav(game);
-            nav.setOnePlayer();
-            nav.setTwoPlayer();
+            nav = viewFactory.createNav();
+            nav.setOnePlayer(getOnePlayer());
+            nav.setTwoPlayer(getTwoPlayer());
             return nav;
         } catch (IOException e) {
             e.printStackTrace();
@@ -127,7 +128,21 @@ public class MenuView extends Parent {
         return null;
     }
 
-    private GameViewImpl getGameView() throws IOException {
+    private EventHandler<MouseEvent> getTwoPlayer() {
+        return event -> {
+            game.twoPlayer();
+            setupGame();
+        };
+    }
+
+    private BiConsumer<String, String> getOnePlayer() {
+        return (player1, player2) -> {
+            game.onePlayer(player1, player2);
+            setupGame();
+        };
+    }
+
+    private GameViewImpl getGameView(GamePlayCtrl game) throws IOException {
         return viewFactory.createGameView(game.getBoard(), play(game));
     }
 

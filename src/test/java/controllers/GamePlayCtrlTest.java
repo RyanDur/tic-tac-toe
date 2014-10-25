@@ -142,4 +142,19 @@ public class GamePlayCtrlTest {
         gamePlayCtrl.setup();
         verify(gameCtrl).setup();
     }
+
+    @Test
+    public void shouldCheckToSeeIfTheComputerPlayerShouldGoIfGameReset() throws OutOfBoundsException, NotVacantException {
+        when(computer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
+        gamePlayCtrl.onePlayer(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE);
+        gamePlayCtrl.reset();
+        verify(computer, times(2)).calculateBestMove(any(Player[].class));
+    }
+
+    @Test
+    public void shouldBeAbleToRestTheGame() throws OutOfBoundsException, NotVacantException {
+        gamePlayCtrl.onePlayer(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE);
+        gamePlayCtrl.reset();
+        verify(gameCtrl, times(2)).setup();
+    }
 }

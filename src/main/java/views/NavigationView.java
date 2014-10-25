@@ -6,7 +6,7 @@ import javafx.scene.input.MouseEvent;
 import java.util.function.BiConsumer;
 
 public interface NavigationView {
-    void setTwoPlayer();
+    void setTwoPlayer(EventHandler<MouseEvent> twoPlayer);
 
-    void setOnePlayer();
+    void setOnePlayer(BiConsumer<String, String> onePlayer);
 }

@@ -19,4 +19,6 @@ public interface GamePlayCtrl {
     Player[] getBoard();
 
     void setup();
+
+    void reset();
 }

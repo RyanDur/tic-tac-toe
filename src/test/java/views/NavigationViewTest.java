@@ -22,7 +22,7 @@ public class NavigationViewTest extends GuiTest {
     protected Parent getRootNode() {
         game = mock(GamePlayCtrl.class);
         try {
-            navigationView = new NavigationViewImpl(game);
+            navigationView = new NavigationViewImpl();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,14 +31,14 @@ public class NavigationViewTest extends GuiTest {
 
     @Test
     public void shouldBeAbleToSetATwoPlayerGame() {
-        navigationView.setTwoPlayer();
+        navigationView.setTwoPlayer(e -> game.twoPlayer());
         click(constants.TWO_PLAYER);
         verify(game).twoPlayer();
     }
 
     @Test
     public void shouldBeAbleToChooseBetweenXAndOIfAOnePlayerGame() {
-        navigationView.setOnePlayer();
+        navigationView.setOnePlayer(game::onePlayer);
         click(constants.ONE_PLAYER);
         verifyThat(constants.LEFT_BUTTON_ID, hasText(constants.GAME_PIECE_ONE));
         verifyThat(constants.RIGHT_BUTTON_ID, hasText(constants.GAME_PIECE_TWO));
@@ -46,7 +46,7 @@ public class NavigationViewTest extends GuiTest {
 
     @Test
     public void shouldBeAbleToAllowAPlayerToChooseX() {
-        navigationView.setOnePlayer();
+        navigationView.setOnePlayer(game::onePlayer);
         click(constants.ONE_PLAYER);
         click(constants.GAME_PIECE_ONE);
         verify(game).onePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
@@ -54,7 +54,7 @@ public class NavigationViewTest extends GuiTest {
 
     @Test
     public void shouldBeAbleToAllowAPlayerToChooseO() {
-        navigationView.setOnePlayer();
+        navigationView.setOnePlayer(game::onePlayer);
         click(constants.ONE_PLAYER);
         click(constants.GAME_PIECE_TWO);
         verify(game).onePlayer(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE);
