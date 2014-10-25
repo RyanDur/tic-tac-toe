@@ -7,54 +7,13 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane id="menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="568.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <left>
-      <Button id="one_player" mnemonicParsing="false" prefHeight="134.0" prefWidth="186.0" text="1 Player" BorderPane.alignment="CENTER">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Button>
-   </left>
-   <right>
-      <Button id="two_player" mnemonicParsing="false" prefHeight="134.0" prefWidth="184.0" text="2 Player" BorderPane.alignment="CENTER">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Button>
-   </right>
    <padding>
       <Insets left="30.0" right="30.0" />
    </padding>
-   <top>
-      <HBox id="header" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button id="reset" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="115.0" text="Reset">
-               <font>
-                  <Font size="19.0" />
-               </font>
-            </Button>
-            <Label id="messages" alignment="CENTER" contentDisplay="CENTER" prefHeight="60.0" prefWidth="339.0" textAlignment="CENTER">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Button id="replay" mnemonicParsing="false" prefHeight="60.0" prefWidth="115.0" text="Replay" textAlignment="RIGHT">
-               <font>
-                  <Font size="19.0" />
-               </font>
-            </Button>
-         </children>
-         <padding>
-            <Insets left="8.0" />
-         </padding>
-      </HBox>
-   </top>
    <center>
       <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
+   <top>
+      <Pane prefHeight="97.0" prefWidth="508.0" BorderPane.alignment="CENTER" />
+   </top>
 </BorderPane>

@@ -23,17 +23,17 @@ public class NavigationViewImpl extends Parent implements NavigationView {
     }
 
     @Override
-    public void setTwoPlayer(EventHandler<MouseEvent> event) {
-        right.setOnMouseClicked(event);
+    public void setTwoPlayer(EventHandler<MouseEvent> twoPlayer) {
+        right.setOnMouseClicked(twoPlayer);
     }
 
     @Override
-    public void setOnePlayer(BiConsumer<String, String> consumer) {
+    public void setOnePlayer(BiConsumer<String, String> onePlayer) {
         left.setOnMouseClicked(event -> {
             left.setText(constants.GAME_PIECE_ONE);
             right.setText(constants.GAME_PIECE_TWO);
-            left.setOnMouseClicked(event2 -> consumer.accept(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO));
-            right.setOnMouseClicked(event2 -> consumer.accept(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE));
+            left.setOnMouseClicked(event2 -> onePlayer.accept(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO));
+            right.setOnMouseClicked(event2 -> onePlayer.accept(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE));
         });
     }
 }

@@ -3,8 +3,7 @@ package views;
 import controllers.GameCtrl;
 import controllers.GamePlayCtrl;
 import controllers.PlayerCtrl;
-import factories.GameViewFactory;
-import factories.GameViewFactoryImpl;
+import factories.ViewFactory;
 import javafx.scene.Parent;
 import lang.constants;
 import models.ComputerPlayer;
@@ -24,7 +23,7 @@ import static org.loadui.testfx.controls.impl.ContainsNodesMatcher.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MenuViewTest extends GuiTest{
+public class MenuViewTest extends GuiTest {
 
     private final String twoPlayerId = "#two_player";
     private final String onePlayer = "1 Player";
@@ -41,10 +40,12 @@ public class MenuViewTest extends GuiTest{
     @Override
     protected Parent getRootNode() {
         playerCtrl = mock(PlayerCtrl.class);
-        GameViewFactory gameViewFactory = new GameViewFactoryImpl();
         GamePlayCtrl gamePlayCtrl = mock(GamePlayCtrl.class);
+        HeaderView headerView = mock(HeaderView.class);
+        NavigationView nav = mock(NavigationView.class);
+        ViewFactory viewFactory = mock(ViewFactory.class);
         try {
-            return new MenuView(gamePlayCtrl, gameViewFactory);
+            return new MenuView(gamePlayCtrl, viewFactory, headerView);
         } catch (IOException e) {
             e.printStackTrace();
         }
