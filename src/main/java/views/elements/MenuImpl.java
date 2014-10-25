@@ -11,11 +11,11 @@ import lang.constants;
 import java.io.IOException;
 import java.util.function.BiConsumer;
 
-public class MenuViewImpl extends Parent implements MenuView {
+public class MenuImpl extends Parent implements Menu {
     private final Button right;
     private final Button left;
 
-    public MenuViewImpl(BiConsumer<String, String> onePlayer, EventHandler<MouseEvent> twoPlayer) {
+    public MenuImpl(BiConsumer<String, String> onePlayer, EventHandler<MouseEvent> twoPlayer) {
         GridPane nav = getFXML();
         right = (Button) nav.lookup(constants.RIGHT_BUTTON_ID);
         left = (Button) nav.lookup(constants.LEFT_BUTTON_ID);

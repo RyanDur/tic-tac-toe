@@ -1,5 +1,5 @@
 package views.elements;
 
-public interface MenuView {
+public interface Board {
 
 }

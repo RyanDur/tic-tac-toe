@@ -4,7 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import models.Player;
 
-public interface HeaderView {
+public interface Header {
     void setMessage(String message);
 
     void clearMessage();

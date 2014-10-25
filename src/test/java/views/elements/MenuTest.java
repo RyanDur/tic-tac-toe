@@ -16,7 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class MenuViewTest extends GuiTest {
+public class MenuTest extends GuiTest {
     private GamePlayCtrl game;
 
     @Override
@@ -24,8 +24,8 @@ public class MenuViewTest extends GuiTest {
         game = mock(GamePlayCtrl.class);
         BiConsumer<String, String> onePlayer = game::onePlayer;
         EventHandler<MouseEvent> twoPlayer = e -> game.twoPlayer();
-        MenuView menuView = new MenuViewImpl(onePlayer, twoPlayer);
-        return (Parent) menuView;
+        Menu menu = new MenuImpl(onePlayer, twoPlayer);
+        return (Parent) menu;
     }
 
     @Test

@@ -13,11 +13,11 @@ import models.Player;
 import java.io.IOException;
 import java.util.function.Function;
 
-public class GameViewImpl extends Parent implements GameView {
+public class BoardImpl extends Parent implements Board {
     private Function<MouseEvent, Player[]> play;
     private GridPane grid;
 
-    public GameViewImpl(Player[] board, Function<MouseEvent, Player[]> play) {
+    public BoardImpl(Player[] board, Function<MouseEvent, Player[]> play) {
         BorderPane borderPane = getFXML();
         this.play = play;
         grid = (GridPane) borderPane.getCenter();

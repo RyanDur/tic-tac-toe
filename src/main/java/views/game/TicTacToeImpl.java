@@ -1,4 +1,4 @@
-package views;
+package views.game;
 
 import com.google.inject.Inject;
 import controllers.GamePlayCtrl;
@@ -17,7 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import lang.constants;
 import models.Player;
-import views.elements.HeaderView;
+import views.elements.Header;
 
 import java.io.IOException;
 import java.util.function.BiConsumer;
@@ -26,12 +26,12 @@ import java.util.function.Function;
 public class TicTacToeImpl extends Parent implements TicTacToe {
     private Pane centerPane;
     private GamePlayCtrl game;
-    private HeaderView header;
+    private Header header;
     private ViewFactory viewFactory;
     private final BorderPane ticTacToe;
 
     @Inject
-    public TicTacToeImpl(GamePlayCtrl game, ViewFactory viewFactory, HeaderView header) {
+    public TicTacToeImpl(GamePlayCtrl game, ViewFactory viewFactory, Header header) {
         ticTacToe = getFXML();
         this.getChildren().add(ticTacToe);
         this.viewFactory = viewFactory;
@@ -90,14 +90,14 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     }
 
     private void setupBoard() {
-        swapCenter((Node) viewFactory.createGameView(game.getBoard(), play(game)));
+        swapCenter((Node) viewFactory.createBoard(game.getBoard(), play(game)));
     }
 
     private void setupMenu() {
         swapCenter((Node) viewFactory.createMenu(setOnePlayer(), setTwoPlayer()));
     }
 
-    private HeaderView setupHeader(HeaderView header) {
+    private Header setupHeader(Header header) {
         Pane headerPane = (Pane) ticTacToe.getTop();
         headerPane.getChildren().add((Node) header);
         header.setButtonsVisibility(false);
@@ -106,7 +106,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
         return header;
     }
 
-    private void clearHeader(HeaderView header) {
+    private void clearHeader(Header header) {
         header.clearMessage();
         header.setButtonsVisibility(false);
     }

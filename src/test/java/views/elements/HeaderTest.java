@@ -14,37 +14,37 @@ import static org.loadui.testfx.controls.Commons.hasText;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class HeaderViewTest extends GuiTest {
+public class HeaderTest extends GuiTest {
 
-    private HeaderView headerView;
+    private Header header;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Override
     protected Parent getRootNode() {
-        headerView = new HeaderViewImpl();
-        return (Parent) headerView;
+        header = new HeaderImpl();
+        return (Parent) header;
     }
 
     @Test
     public void shouldBeAbleToSetAMessage() {
-        headerView.setMessage(constants.HAS_WON_MESSAGE);
+        header.setMessage(constants.HAS_WON_MESSAGE);
         verifyThat(constants.MESSAGES_ID, hasText(constants.HAS_WON_MESSAGE));
     }
 
     @Test
     public void shouldBeAbleToClearAMessage() {
-        headerView.setMessage(constants.HAS_WON_MESSAGE);
+        header.setMessage(constants.HAS_WON_MESSAGE);
         verifyThat(constants.MESSAGES_ID, hasText(constants.HAS_WON_MESSAGE));
-        headerView.clearMessage();
+        header.clearMessage();
         verifyThat(constants.MESSAGES_ID, hasText(constants.EMPTY));
     }
 
     @Test
     public void shouldBeAbleToSetEventOnTheReplayButton() {
         String clicked = "replay";
-        headerView.setReplay(e -> headerView.setMessage(clicked));
+        header.setReplay(e -> header.setMessage(clicked));
         click(constants.REPLAY_ID);
         verifyThat(constants.MESSAGES_ID, hasText(clicked));
     }
@@ -52,7 +52,7 @@ public class HeaderViewTest extends GuiTest {
     @Test
     public void shouldBeAbleToSetEventOnTheResetButton() {
         String clicked = "reset";
-        headerView.setReset(e -> headerView.setMessage(clicked));
+        header.setReset(e -> header.setMessage(clicked));
         click(constants.RESET_ID);
         verifyThat(constants.MESSAGES_ID, hasText(clicked));
     }
@@ -60,7 +60,7 @@ public class HeaderViewTest extends GuiTest {
     @Test
     public void shouldBeAbleToMakeTheHeaderButtonsInvisible() {
         exception.expect(NoNodesVisibleException.class);
-        headerView.setButtonsVisibility(false);
+        header.setButtonsVisibility(false);
         find(constants.RESET_ID);
         find(constants.REPLAY_ID);
     }
@@ -69,7 +69,7 @@ public class HeaderViewTest extends GuiTest {
     public void shouldBeAbleToDisplayTheWinnerForX() {
         Player player = mock(Player.class);
         when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
-        headerView.displayWinner(player);
+        header.displayWinner(player);
         verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_ONE + constants.HAS_WON_MESSAGE));
     }
 
@@ -77,13 +77,13 @@ public class HeaderViewTest extends GuiTest {
     public void shouldBeAbleToDisplayTheWinnerForO() {
         Player player = mock(Player.class);
         when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        headerView.displayWinner(player);
+        header.displayWinner(player);
         verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
     }
 
     @Test
     public void shouldBeAbleToDisplayTheWinnerForDraw() {
-        headerView.displayWinner(null);
+        header.displayWinner(null);
         verifyThat(constants.MESSAGES_ID, hasText(constants.DRAW_MESSAGE));
     }
 }

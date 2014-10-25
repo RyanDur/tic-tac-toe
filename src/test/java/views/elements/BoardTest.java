@@ -17,7 +17,7 @@ import static org.loadui.testfx.controls.Commons.hasText;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class GameViewTest extends GuiTest {
+public class BoardTest extends GuiTest {
     private Player player;
     private Player[] board;
     private GameCtrl gameCtrl;
@@ -27,14 +27,14 @@ public class GameViewTest extends GuiTest {
 
     @Override
     protected Parent getRootNode() {
-        board = new Player[constants.SIDE * constants.SIDE];
+        this.board = new Player[constants.SIDE * constants.SIDE];
         player = mock(Player.class);
         when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         gameCtrl = mock(GameCtrl.class);
-        when(gameCtrl.getBoard()).thenReturn(board);
+        when(gameCtrl.getBoard()).thenReturn(this.board);
         Function<MouseEvent, Player[]> play = mockPlay();
-        GameView gameView = new GameViewImpl(board, play);
-        return (Parent) gameView;
+        Board board = new BoardImpl(this.board, play);
+        return (Parent) board;
     }
 
     @Test

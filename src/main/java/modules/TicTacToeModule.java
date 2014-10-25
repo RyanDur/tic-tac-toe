@@ -5,8 +5,8 @@ import controllers.GamePlayCtrl;
 import controllers.GamePlayCtrlImpl;
 import factories.ViewFactory;
 import factories.ViewFactoryImpl;
-import views.elements.HeaderView;
-import views.elements.HeaderViewImpl;
+import views.elements.Header;
+import views.elements.HeaderImpl;
 
 public class TicTacToeModule extends AbstractModule {
     @Override
@@ -14,6 +14,6 @@ public class TicTacToeModule extends AbstractModule {
         install(new GamePlayCtrlModule());
         bind(GamePlayCtrl.class).to(GamePlayCtrlImpl.class);
         bind(ViewFactory.class).to(ViewFactoryImpl.class);
-        bind(HeaderView.class).to(HeaderViewImpl.class);
+        bind(Header.class).to(HeaderImpl.class);
     }
 }

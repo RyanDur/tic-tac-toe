@@ -13,13 +13,13 @@ import models.Player;
 
 import java.io.IOException;
 
-public class HeaderViewImpl extends Parent implements HeaderView {
+public class HeaderImpl extends Parent implements Header {
 
     private final Label messageArea;
     private final Button replay;
     private final Button reset;
 
-    public HeaderViewImpl() {
+    public HeaderImpl() {
         HBox header = getFXML();
         messageArea = (Label) header.lookup(constants.MESSAGES_ID);
         replay = (Button) header.lookup(constants.REPLAY_ID);

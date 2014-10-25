@@ -1,4 +1,4 @@
-package views;
+package views.game;
 
 import controllers.GamePlayCtrl;
 import exceptions.NotVacantException;
@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.exceptions.NoNodesFoundException;
-import views.elements.HeaderView;
-import views.elements.HeaderViewImpl;
+import views.elements.Header;
+import views.elements.HeaderImpl;
 
 import static org.loadui.testfx.Assertions.assertNodeExists;
 import static org.loadui.testfx.Assertions.verifyThat;
@@ -43,8 +43,8 @@ public class TicTacToeTest extends GuiTest {
         game = mock(GamePlayCtrl.class);
         when(game.getBoard()).thenReturn(board);
         ViewFactory viewFactory = new ViewFactoryImpl();
-        HeaderView headerView = new HeaderViewImpl();
-        return new TicTacToeImpl(game, viewFactory, headerView);
+        Header header = new HeaderImpl();
+        return new TicTacToeImpl(game, viewFactory, header);
     }
 
 
