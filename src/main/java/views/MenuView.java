@@ -19,11 +19,10 @@ import lang.constants;
 import models.Player;
 
 import java.io.IOException;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class MenuView extends Parent {
-    private GameView gameView;
+    private GameViewImpl gameView;
     private Pane centerPane;
     private GamePlayCtrl game;
     private HeaderView header;
@@ -118,9 +117,9 @@ public class MenuView extends Parent {
 
     private NavigationView getNav() {
         try {
-            nav = viewFactory.createNav();
-            nav.setOnePlayer(getOnePlayer());
-            nav.setTwoPlayer(getTwoPlayer());
+            nav = viewFactory.createNav(game);
+            nav.setOnePlayer();
+            nav.setTwoPlayer();
             return nav;
         } catch (IOException e) {
             e.printStackTrace();
@@ -128,21 +127,7 @@ public class MenuView extends Parent {
         return null;
     }
 
-    private BiConsumer<String, String> getOnePlayer() {
-        return (human, computer) -> {
-            game.onePlayer(human, computer);
-            setupGame();
-        };
-    }
-
-    private EventHandler<MouseEvent> getTwoPlayer() {
-        return event -> {
-            game.twoPlayer();
-            setupGame();
-        };
-    }
-
-    private GameView getGameView() throws IOException {
+    private GameViewImpl getGameView() throws IOException {
         return viewFactory.createGameView(game.getBoard(), play(game));
     }
 

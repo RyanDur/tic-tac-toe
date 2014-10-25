@@ -1,5 +1,6 @@
 package views;
 
+import controllers.GamePlayCtrl;
 import javafx.scene.Parent;
 import lang.constants;
 import org.junit.Rule;
@@ -12,6 +13,7 @@ import java.io.IOException;
 
 import static org.loadui.testfx.Assertions.verifyThat;
 import static org.loadui.testfx.controls.Commons.hasText;
+import static org.mockito.Mockito.mock;
 
 public class HeaderViewTest extends GuiTest {
 

@@ -35,7 +35,7 @@ public class GameViewSinglePlayerCP1 extends GuiTest{
         Function<MouseEvent, Player[]> play = null;
         when(mockGameCtrl.getBoard()).thenReturn(board);
         try {
-            return new GameView(new Player[]{}, play);
+            return new GameViewImpl(new Player[]{}, play);
         } catch (IOException e) {
             e.printStackTrace();
         }
