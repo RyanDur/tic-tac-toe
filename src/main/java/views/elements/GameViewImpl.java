@@ -1,6 +1,5 @@
-package views;
+package views.elements;
 
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -18,20 +17,12 @@ public class GameViewImpl extends Parent implements GameView {
     private Function<MouseEvent, Player[]> play;
     private GridPane grid;
 
-    public GameViewImpl() throws IOException {
-        BorderPane borderPane = FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
-        grid = (GridPane) borderPane.getCenter();
-        this.getChildren().add(borderPane);
-    }
-
-    @Override
-    public void setup(Player[] board) {
-        Platform.runLater(() -> fillBoard(board));
-    }
-
-    @Override
-    public void setPlay(Function<MouseEvent, Player[]> play) {
+    public GameViewImpl(Player[] board, Function<MouseEvent, Player[]> play) {
+        BorderPane borderPane = getFXML();
         this.play = play;
+        grid = (GridPane) borderPane.getCenter();
+        fillBoard(board);
+        this.getChildren().add(borderPane);
     }
 
     private void fillBoard(Player[] board) {
@@ -59,5 +50,14 @@ public class GameViewImpl extends Parent implements GameView {
     private int getRow(Node node) {
         Integer row = GridPane.getRowIndex(node);
         return row == null ? 0 : row;
+    }
+
+    private BorderPane getFXML() {
+        try {
+            return FXMLLoader.load(getClass().getResource(constants.GAME_VIEW));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

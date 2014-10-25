@@ -1,12 +1,14 @@
-package views;
+package views.elements;
 
 import controllers.GamePlayCtrl;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
+import javafx.scene.input.MouseEvent;
 import lang.constants;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
 
-import java.io.IOException;
+import java.util.function.BiConsumer;
 
 import static org.loadui.testfx.Assertions.verifyThat;
 import static org.loadui.testfx.controls.Commons.hasText;
@@ -15,30 +17,25 @@ import static org.mockito.Mockito.verify;
 
 
 public class MenuViewTest extends GuiTest {
-    private MenuView menuView;
     private GamePlayCtrl game;
 
     @Override
     protected Parent getRootNode() {
         game = mock(GamePlayCtrl.class);
-        try {
-            menuView = new MenuViewImpl();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        BiConsumer<String, String> onePlayer = game::onePlayer;
+        EventHandler<MouseEvent> twoPlayer = e -> game.twoPlayer();
+        MenuView menuView = new MenuViewImpl(onePlayer, twoPlayer);
         return (Parent) menuView;
     }
 
     @Test
     public void shouldBeAbleToSetATwoPlayerGame() {
-        menuView.setTwoPlayer(e -> game.twoPlayer());
         click(constants.TWO_PLAYER);
         verify(game).twoPlayer();
     }
 
     @Test
     public void shouldBeAbleToChooseBetweenXAndOIfAOnePlayerGame() {
-        menuView.setOnePlayer(game::onePlayer);
         click(constants.ONE_PLAYER);
         verifyThat(constants.LEFT_BUTTON_ID, hasText(constants.GAME_PIECE_ONE));
         verifyThat(constants.RIGHT_BUTTON_ID, hasText(constants.GAME_PIECE_TWO));
@@ -46,7 +43,6 @@ public class MenuViewTest extends GuiTest {
 
     @Test
     public void shouldBeAbleToAllowAPlayerToChooseX() {
-        menuView.setOnePlayer(game::onePlayer);
         click(constants.ONE_PLAYER);
         click(constants.GAME_PIECE_ONE);
         verify(game).onePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
@@ -54,7 +50,6 @@ public class MenuViewTest extends GuiTest {
 
     @Test
     public void shouldBeAbleToAllowAPlayerToChooseO() {
-        menuView.setOnePlayer(game::onePlayer);
         click(constants.ONE_PLAYER);
         click(constants.GAME_PIECE_TWO);
         verify(game).onePlayer(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE);

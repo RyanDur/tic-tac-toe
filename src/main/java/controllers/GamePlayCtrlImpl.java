@@ -1,6 +1,7 @@
 package controllers;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
@@ -10,6 +11,7 @@ import models.Player;
 
 import java.util.Arrays;
 
+@Singleton
 public class GamePlayCtrlImpl implements GamePlayCtrl {
     private final GameCtrl gameCtrl;
     private final PlayerCtrl playerCtrl;

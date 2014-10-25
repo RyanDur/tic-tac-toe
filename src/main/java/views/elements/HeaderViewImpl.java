@@ -1,4 +1,4 @@
-package views;
+package views.elements;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import lang.constants;
+import models.Player;
 
 import java.io.IOException;
 
@@ -18,8 +19,8 @@ public class HeaderViewImpl extends Parent implements HeaderView {
     private final Button replay;
     private final Button reset;
 
-    public HeaderViewImpl() throws IOException {
-        HBox header = FXMLLoader.load(getClass().getResource(constants.HEADER_VIEW));
+    public HeaderViewImpl() {
+        HBox header = getFXML();
         messageArea = (Label) header.lookup(constants.MESSAGES_ID);
         replay = (Button) header.lookup(constants.REPLAY_ID);
         reset = (Button) header.lookup(constants.RESET_ID);
@@ -52,5 +53,20 @@ public class HeaderViewImpl extends Parent implements HeaderView {
             replay.setVisible(visible);
             reset.setVisible(visible);
         });
+    }
+
+    @Override
+    public void displayWinner(Player player) {
+        if (player == null) setMessage(constants.DRAW_MESSAGE);
+        else setMessage(player.getPiece() + constants.HAS_WON_MESSAGE);
+    }
+
+    private HBox getFXML() {
+        try {
+            return FXMLLoader.load(getClass().getResource(constants.HEADER_VIEW));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

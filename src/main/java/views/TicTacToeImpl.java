@@ -17,53 +17,70 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import lang.constants;
 import models.Player;
+import views.elements.HeaderView;
 
 import java.io.IOException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class TicTacToeImpl extends Parent implements TicTacToe {
-    private GameViewImpl gameView;
     private Pane centerPane;
     private GamePlayCtrl game;
     private HeaderView header;
     private ViewFactory viewFactory;
-    private final BorderPane menu;
-    private MenuView nav;
+    private final BorderPane ticTacToe;
 
     @Inject
-    public TicTacToeImpl(GamePlayCtrl game, ViewFactory viewFactory, HeaderView header) throws IOException {
-        menu = FXMLLoader.load(getClass().getResource(constants.MENU_VIEW));
-        this.getChildren().add(menu);
+    public TicTacToeImpl(GamePlayCtrl game, ViewFactory viewFactory, HeaderView header) {
+        ticTacToe = getFXML();
+        this.getChildren().add(ticTacToe);
         this.viewFactory = viewFactory;
         this.game = game;
-        centerPane = (Pane) menu.getCenter();
-        setHeader(header);
-        setCenter((Node) getNav());
+        centerPane = (Pane) ticTacToe.getCenter();
+        this.header = setupHeader(header);
+        setupMenu();
     }
 
-    private void setupGame() {
-        try {
-            header.clearMessage();
-            header.setButtonsVisibility(false);
-            gameView = getGameView();
-            swapCenter((Node) nav, gameView);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private EventHandler<MouseEvent> resetMenu() {
+        return event -> {
+            clearHeader(header);
+            setupMenu();
+        };
+    }
+
+    private EventHandler<MouseEvent> resetGame() {
+        return event -> {
+            clearHeader(header);
+            game.reset();
+            setupBoard();
+        };
+    }
+
+    private EventHandler<MouseEvent> setTwoPlayer() {
+        return event -> {
+            game.twoPlayer();
+            setupBoard();
+        };
+    }
+
+    private BiConsumer<String, String> setOnePlayer() {
+        return (player1, player2) -> {
+            game.onePlayer(player1, player2);
+            setupBoard();
+        };
     }
 
     private Function<MouseEvent, Player[]> play(GamePlayCtrl game) {
-        return (MouseEvent event) -> {
+        return click -> {
             try {
                 if (!game.over()) {
                     header.clearMessage();
-                    Label space = (Label) event.getSource();
+                    Label space = (Label) click.getSource();
                     game.set(getRow(space), getColumn(space));
                 }
                 if (game.over()) {
                     header.setButtonsVisibility(true);
-                    displayWinner(game.getWinner());
+                    header.displayWinner(game.getWinner());
                 }
             } catch (OutOfBoundsException | NotVacantException | OutOfTurnException e) {
                 header.setMessage(e.getMessage());
@@ -72,25 +89,31 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
         };
     }
 
-    private void displayWinner(Player winner) {
-        if (winner == null) header.setMessage(constants.DRAW_MESSAGE);
-        else header.setMessage(winner.getPiece() + constants.HAS_WON_MESSAGE);
+    private void setupBoard() {
+        swapCenter((Node) viewFactory.createGameView(game.getBoard(), play(game)));
     }
 
-    private EventHandler<MouseEvent> resetMenu() {
-        return event -> {
-            header.clearMessage();
-            header.setButtonsVisibility(false);
-            swapCenter(gameView, (Node) getNav());
-        };
+    private void setupMenu() {
+        swapCenter((Node) viewFactory.createMenu(setOnePlayer(), setTwoPlayer()));
     }
 
-    private EventHandler<MouseEvent> resetGame() {
-        return event -> {
-            removeCenter(gameView);
-            game.reset();
-            setupGame();
-        };
+    private HeaderView setupHeader(HeaderView header) {
+        Pane headerPane = (Pane) ticTacToe.getTop();
+        headerPane.getChildren().add((Node) header);
+        header.setButtonsVisibility(false);
+        header.setReplay(resetGame());
+        header.setReset(resetMenu());
+        return header;
+    }
+
+    private void clearHeader(HeaderView header) {
+        header.clearMessage();
+        header.setButtonsVisibility(false);
+    }
+
+    private void swapCenter(Node node) {
+        centerPane.getChildren().clear();
+        centerPane.getChildren().add(node);
     }
 
     private int getColumn(Node node) {
@@ -103,55 +126,12 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
         return row == null ? 0 : row;
     }
 
-    private void removeCenter(Node node) {
-        centerPane.getChildren().remove(node);
-    }
-
-    private void setCenter(Node node) {
-        centerPane.getChildren().add(node);
-    }
-
-    private void swapCenter(Node node1, Node node2) {
-        removeCenter(node1);
-        setCenter(node2);
-    }
-
-    private MenuView getNav() {
+    private BorderPane getFXML() {
         try {
-            nav = viewFactory.createMenu();
-            nav.setOnePlayer(getOnePlayer());
-            nav.setTwoPlayer(getTwoPlayer());
-            return nav;
+            return FXMLLoader.load(getClass().getResource(constants.TIC_TAC_TOE_VIEW));
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private EventHandler<MouseEvent> getTwoPlayer() {
-        return event -> {
-            game.twoPlayer();
-            setupGame();
-        };
-    }
-
-    private BiConsumer<String, String> getOnePlayer() {
-        return (player1, player2) -> {
-            game.onePlayer(player1, player2);
-            setupGame();
-        };
-    }
-
-    private GameViewImpl getGameView() throws IOException {
-        return viewFactory.createGameView();
-    }
-
-    private void setHeader(HeaderView header) {
-        this.header = header;
-        Pane headerPane = (Pane) menu.getTop();
-        this.header.setButtonsVisibility(false);
-        headerPane.getChildren().add((Node) this.header);
-        this.header.setReplay(resetGame());
-        this.header.setReset(resetMenu());
     }
 }

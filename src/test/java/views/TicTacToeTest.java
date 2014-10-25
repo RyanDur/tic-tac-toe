@@ -1,163 +1,303 @@
 package views;
 
-import controllers.GameCtrl;
 import controllers.GamePlayCtrl;
-import controllers.PlayerCtrl;
+import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
+import exceptions.OutOfTurnException;
 import factories.ViewFactory;
+import factories.ViewFactoryImpl;
 import javafx.scene.Parent;
 import lang.constants;
-import models.ComputerPlayer;
 import models.Player;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.exceptions.NoNodesFoundException;
-import org.loadui.testfx.exceptions.NoNodesVisibleException;
+import views.elements.HeaderView;
+import views.elements.HeaderViewImpl;
 
-import java.io.IOException;
-
+import static org.loadui.testfx.Assertions.assertNodeExists;
 import static org.loadui.testfx.Assertions.verifyThat;
 import static org.loadui.testfx.controls.Commons.hasText;
-import static org.loadui.testfx.controls.impl.ContainsNodesMatcher.contains;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TicTacToeTest extends GuiTest {
-
-    private final String twoPlayerId = "#two_player";
     private final String onePlayer = "1 Player";
-    private final String onePlayerId = "#one_player";
     private final String menuId = "#menu";
     private final String gameId = "#game";
-    private PlayerCtrl playerCtrl;
     private String twoPlayer = "2 Player";
+    private GamePlayCtrl game;
+    private Player[] board = new Player[constants.SIDE * constants.SIDE];
+    private String center = "#cell4";
+    private String reset = "Reset";
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    private final GameCtrl gameCtrl = mock(GameCtrl.class);
+    private String replay = "Replay";
+    private String centerLeft = "#cell3";
+
 
     @Override
     protected Parent getRootNode() {
-        playerCtrl = mock(PlayerCtrl.class);
-        GamePlayCtrl gamePlayCtrl = mock(GamePlayCtrl.class);
-        HeaderView headerView = mock(HeaderView.class);
-        MenuView nav = mock(MenuView.class);
-        ViewFactory viewFactory = mock(ViewFactory.class);
-        try {
-            return new TicTacToeImpl(gamePlayCtrl, viewFactory, headerView);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        game = mock(GamePlayCtrl.class);
+        when(game.getBoard()).thenReturn(board);
+        ViewFactory viewFactory = new ViewFactoryImpl();
+        HeaderView headerView = new HeaderViewImpl();
+        return new TicTacToeImpl(game, viewFactory, headerView);
+    }
+
+
+    @Test
+    public void shouldDisplayAMenuWhenStarted() {
+        assertNodeExists(menuId);
     }
 
     @Test
-    public void shouldHaveAOnePlayerButton() {
-        verifyThat(onePlayerId, hasText(onePlayer));
-    }
-
-    @Test
-    public void shouldHaveATwoPlayerButton() {
-        verifyThat(twoPlayerId, hasText(twoPlayer));
-    }
-
-    @Test
-    public void shouldCreateTwoPlayersIfTwoPlayerIsChosen() {
+    public void shouldDisplayTheGameWhenTwoPlayerModeIsChosen() {
         click(twoPlayer);
-//        verify(playerCtrl, times(2)).createPlayer(anyString(), anyInt());
+        assertNodeExists(gameId);
     }
 
     @Test
-    public void shouldChangeTheButtonsToChooseXOrOIfOnePlayerIsChosen() {
-        click(onePlayer);
-        verifyThat(onePlayerId, hasText(constants.GAME_PIECE_ONE));
-        verifyThat(twoPlayerId, hasText(constants.GAME_PIECE_TWO));
+    public void shouldCreateTwoPlayersWhenTwoPlayerModeIsChosen() {
+        click(twoPlayer);
+        verify(game).twoPlayer();
     }
 
     @Test
-    public void shouldMakeTheComputerPlayerXWhenOIsChosen() {
-        click(onePlayer);
-        click(constants.GAME_PIECE_TWO);
-
-//        verify(playerCtrl).createPlayer(constants.GAME_PIECE_TWO, constants.SIDE);
-//        verify(playerCtrl).createComputerPlayer(anyString(), anyInt(), any(Player.class));
-//        verify(playerCtrl).createComputerPlayer(constants.GAME_PIECE_ONE, constants.SIDE, null);
-    }
-
-    @Test
-    public void shouldMakeTheComputerPlayerOWhenXIsChosen() {
+    public void shouldDisplayBoardWhenPlayerChoosesXInOnePlayerMode() {
         click(onePlayer);
         click(constants.GAME_PIECE_ONE);
-        Player human = mock(Player.class);
-//        when(playerCtrl.createPlayer(anyString(),anyInt())).thenReturn(human);
-
-//        verify(playerCtrl).createPlayer(constants.GAME_PIECE_ONE, constants.SIDE);
-//        verify(playerCtrl).createComputerPlayer(anyString(), anyInt(), any(Player.class));
-//        verify(playerCtrl).createComputerPlayer(constants.GAME_PIECE_TWO, constants.SIDE, null);
+        assertNodeExists(gameId);
     }
 
     @Test
-    public void shouldRemoveLeftButtonBeforeStartingTheGame() {
+    public void shouldCreateAHumanAndComputerWhenPlayerChoosesXInOnePlayerMode() {
+        click(onePlayer);
+        click(constants.GAME_PIECE_ONE);
+        verify(game).onePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
+    }
+
+    @Test
+    public void shouldDisplayBoardWhenPlayerChoosesOInOnePlayerMode() {
+        click(onePlayer);
+        click(constants.GAME_PIECE_TWO);
+        assertNodeExists(gameId);
+    }
+
+    @Test
+    public void shouldCreateAComputerAndHumanWhenPlayerChoosesXInOnePlayerMode() {
+        click(onePlayer);
+        click(constants.GAME_PIECE_TWO);
+        verify(game).onePlayer(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE);
+    }
+
+    @Test
+    public void shouldRemoveMenuWhenShowingBoardInTwoPlayerMode() {
         exception.expect(NoNodesFoundException.class);
-        Player player1 = mock(Player.class);
-        ComputerPlayer player2 = mock(ComputerPlayer.class);
-//        when(playerCtrl.createPlayer(anyString(), anyInt())).thenReturn(player1);
-//        when(playerCtrl.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
-        click(onePlayer);
-        click(constants.GAME_PIECE_TWO);
-        find(onePlayerId);
+        click(twoPlayer);
+        find(menuId);
     }
 
     @Test
-    public void shouldRemoveRightButtonBeforeStartingTheGame() {
+    public void shouldRemoveMenuWhenPlayerChoosesXShowingBoardInOnePlayerMode() {
         exception.expect(NoNodesFoundException.class);
-        Player player1 = mock(Player.class);
-        ComputerPlayer player2 = mock(ComputerPlayer.class);
-//        when(playerCtrl.createPlayer(anyString(), anyInt())).thenReturn(player1);
-//        when(playerCtrl.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+        click(onePlayer);
+        click(constants.GAME_PIECE_ONE);
+        find(menuId);
+    }
+
+    @Test
+    public void shouldRemoveMenuWhenPlayerChoosesOShowingBoardInOnePlayerMode() {
+        exception.expect(NoNodesFoundException.class);
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
-        find(twoPlayerId);
+        find(menuId);
     }
 
     @Test
-    public void shouldPlaceGameIntoViewWhenStartingInOnePlayer() {
-        Player player1 = mock(Player.class);
-        ComputerPlayer player2 = mock(ComputerPlayer.class);
-//        when(playerCtrl.createPlayer(anyString(), anyInt())).thenReturn(player1);
-//        when(playerCtrl.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+    public void shouldSetThePlayerWithTheCoordinatesWhenPlayerChoosesInOnePlayerMode() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
-        verifyThat(menuId, contains(gameId));
+        click(center);
+        verify(game).set(1, 1);
     }
 
     @Test
-    public void shouldPlaceGameIntoViewWhenStartingInTwoPlayer() {
-        Player player1 = mock(Player.class);
-        ComputerPlayer player2 = mock(ComputerPlayer.class);
-//        when(playerCtrl.createPlayer(anyString(), anyInt())).thenReturn(player1);
-//        when(playerCtrl.createComputerPlayer(anyString(), anyInt(), any(Player.class))).thenReturn(player2);
+    public void shouldCheckForGameOverWhenPlayerChoosesInOnePlayerMode() {
+        click(onePlayer);
+        click(constants.GAME_PIECE_TWO);
+        click(center);
+        verify(game, times(2)).over();
+    }
+
+    @Test
+    public void shouldRevealReplayButtonWhenGameOverInOnePlayerMode() {
+        when(game.over()).thenReturn(true);
+        click(onePlayer);
+        click(constants.GAME_PIECE_ONE);
+        click(center);
+        verifyThat(constants.REPLAY_ID, hasText(replay));
+    }
+
+    @Test
+    public void shouldRevealResetButtonWhenGameOverInOnePlayerMode() {
+        when(game.over()).thenReturn(true);
+        click(onePlayer);
+        click(constants.GAME_PIECE_ONE);
+        click(center);
+        verifyThat(constants.RESET_ID, hasText(reset));
+    }
+
+    @Test
+    public void shouldRevealReplayButtonWhenGameOverInTwoPlayerMode() {
+        when(game.over()).thenReturn(true);
         click(twoPlayer);
-        verifyThat(menuId, contains(gameId));
+        click(center);
+        verifyThat(constants.REPLAY_ID, hasText(replay));
     }
 
     @Test
-    public void shouldNotHaveVisibleHeaderReplayButtonOnMenuPage() {
-        exception.expect(NoNodesVisibleException.class);
-        find("#replay");
-    }
-
-    @Test
-    public void shouldNotHaveVisibleHeaderResetButtonOnMenuPage() {
-        exception.expect(NoNodesVisibleException.class);
-        find("#reset");
-    }
-
-    @Test
-    public void whenGameOverHeaderReplayButtonShouldBeVisible() {
-        when(gameCtrl.gameOver()).thenReturn(true);
+    public void shouldRevealResetButtonWhenGameOverInTwoPlayerMode() {
+        when(game.over()).thenReturn(true);
         click(twoPlayer);
-        click("#cell1");
+        click(center);
+        verifyThat(constants.RESET_ID, hasText(reset));
+    }
+
+    @Test
+    public void shouldDisplayWinnerWhenGameIsOverForXInOnePlayerMode() {
+        Player player = mock(Player.class);
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
+        when(game.getWinner()).thenReturn(player);
+        when(game.over()).thenReturn(true);
+        click(onePlayer);
+        click(constants.GAME_PIECE_ONE);
+        click(center);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_ONE + constants.HAS_WON_MESSAGE));
+    }
+
+    @Test
+    public void shouldDisplayWinnerWhenGameIsOverForOInOnePlayerMode() {
+        Player player = mock(Player.class);
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        when(game.getWinner()).thenReturn(player);
+        when(game.over()).thenReturn(true);
+        click(onePlayer);
+        click(constants.GAME_PIECE_TWO);
+        click(center);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+    }
+
+    @Test
+    public void shouldDisplayWinnerWhenGameIsOverForXInTwoPlayerMode() {
+        Player player = mock(Player.class);
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
+        when(game.getWinner()).thenReturn(player);
+        when(game.over()).thenReturn(true);
+        click(twoPlayer);
+        click(center);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_ONE + constants.HAS_WON_MESSAGE));
+    }
+
+    @Test
+    public void shouldDisplayWinnerWhenGameIsOverForOInTwoPlayerMode() {
+        Player player = mock(Player.class);
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        when(game.getWinner()).thenReturn(player);
+        when(game.over()).thenReturn(true);
+        click(twoPlayer);
+        click(center);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+    }
+
+    @Test
+    public void shouldDisplayTheMenuWhenResetIsClicked() {
+        Player player = mock(Player.class);
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        when(game.getWinner()).thenReturn(player);
+        when(game.over()).thenReturn(true);
+        click(twoPlayer);
+        click(center);
+        click(reset);
+        assertNodeExists(menuId);
+    }
+
+    @Test
+    public void shouldRemoveMessageIfAnyWhenPlayerClicksOnEmptySpaceIsClicked() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
+        doThrow(new NotVacantException()).when(game).set(1,1);
+        Player player = mock(Player.class);
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        when(game.getWinner()).thenReturn(player);
+        click(twoPlayer);
+        click(center);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.NOT_VACANT_MESSAGE));
+        click(centerLeft);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.EMPTY));
+    }
+
+    @Test
+    public void shouldRemoveMessageWhenResetIsClicked() {
+        Player player = mock(Player.class);
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        when(game.getWinner()).thenReturn(player);
+        when(game.over()).thenReturn(true);
+        click(twoPlayer);
+        click(center);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+        click(reset);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.EMPTY));
+    }
+
+    @Test
+    public void shouldRemoveTheGameWhenResetIsClicked() {
+        exception.expect(NoNodesFoundException.class);
+        Player player = mock(Player.class);
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        when(game.getWinner()).thenReturn(player);
+        when(game.over()).thenReturn(true);
+        click(twoPlayer);
+        click(center);
+        click(reset);
+        find(gameId);
+    }
+
+    @Test
+    public void shouldResetTheGameWhenReplayIsChosen() {
+        Player player = mock(Player.class);
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        when(game.getWinner()).thenReturn(player);
+        when(game.over()).thenReturn(true);
+        click(twoPlayer);
+        click(center);
+        click(replay);
+        verify(game).reset();
+    }
+
+    @Test
+    public void shouldRemoveMessageWhenReplayIsChosen() {
+        Player player = mock(Player.class);
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        when(game.getWinner()).thenReturn(player);
+        when(game.over()).thenReturn(true);
+        click(twoPlayer);
+        click(center);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+        click(replay);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.EMPTY));
+    }
+
+    @Test
+    public void shouldNotRemoveWinMessageWhenPlayerHasWonButStillTryingToClickOnASpace() {
+        Player player = mock(Player.class);
+        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
+        when(game.getWinner()).thenReturn(player);
+        when(game.over()).thenReturn(true);
+        click(twoPlayer);
+        click(center);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+        click(centerLeft);
+        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
     }
 }

@@ -22,7 +22,7 @@ public interface constants {
     public static final int WIN_WEIGHT = 1;
     public static final int LOSE_WEIGHT = -1;
     public static final int DRAW_WEIGHT = 0;
-    public static final String MENU_VIEW = "/scenes/menu.fxml";
+    public static final String TIC_TAC_TOE_VIEW = "/scenes/tictactoe.fxml";
     public static final String REPLAY_ID = "#replay";
     public static final String RESET_ID = "#reset";
     public static final String ONE_PLAYER = "1 Player";
@@ -32,5 +32,5 @@ public interface constants {
     public static final String HEADER_VIEW = "/scenes/header.fxml";
     public static final String RIGHT_BUTTON_ID = "#right";
     public static final String LEFT_BUTTON_ID = "#left";
-    public static final String NAVIGATION_VIEW = "/scenes/navigation.fxml";
+    public static final String MENU_VIEW = "/scenes/menu.fxml";
 }

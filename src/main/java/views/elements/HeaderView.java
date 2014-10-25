@@ -1,7 +1,8 @@
-package views;
+package views.elements;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import models.Player;
 
 public interface HeaderView {
     void setMessage(String message);
@@ -13,4 +14,6 @@ public interface HeaderView {
     void setReset(EventHandler<MouseEvent> eventHandler);
 
     void setButtonsVisibility(boolean visible);
+
+    void displayWinner(Player player);
 }

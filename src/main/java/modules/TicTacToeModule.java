@@ -5,8 +5,8 @@ import controllers.GamePlayCtrl;
 import controllers.GamePlayCtrlImpl;
 import factories.ViewFactory;
 import factories.ViewFactoryImpl;
-import views.HeaderView;
-import views.HeaderViewImpl;
+import views.elements.HeaderView;
+import views.elements.HeaderViewImpl;
 
 public class TicTacToeModule extends AbstractModule {
     @Override

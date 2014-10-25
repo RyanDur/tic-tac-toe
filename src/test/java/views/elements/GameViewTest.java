@@ -1,4 +1,4 @@
-package views;
+package views.elements;
 
 import controllers.GameCtrl;
 import javafx.scene.Parent;
@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 
-import java.io.IOException;
 import java.util.function.Function;
 
 import static org.loadui.testfx.Assertions.verifyThat;
@@ -25,8 +24,6 @@ public class GameViewTest extends GuiTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    private GameView gameView;
-    private Function<MouseEvent, Player[]> play;
 
     @Override
     protected Parent getRootNode() {
@@ -35,20 +32,13 @@ public class GameViewTest extends GuiTest {
         when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         gameCtrl = mock(GameCtrl.class);
         when(gameCtrl.getBoard()).thenReturn(board);
-        play = mockPlay();
-        try {
-            gameView = new GameViewImpl();
-            return (Parent) gameView;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        Function<MouseEvent, Player[]> play = mockPlay();
+        GameView gameView = new GameViewImpl(board, play);
+        return (Parent) gameView;
     }
 
     @Test
     public void shouldBeAbleToChooseAPlaceOnTheBoard() {
-        gameView.setup(board);
-        gameView.setPlay(play);
         when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(gameCtrl.getBoard()).thenReturn(board);
         for (int i = 0; i < board.length; i++) {
@@ -64,7 +54,7 @@ public class GameViewTest extends GuiTest {
         int index = 2;
         board[index] = player;
         String id = "#cell" + index;
-        gameView.setup(board);
+        click(id);
         verifyThat(id, hasText(constants.GAME_PIECE_ONE));
     }
 
@@ -74,23 +64,11 @@ public class GameViewTest extends GuiTest {
         Player[] board1 = new Player[constants.SIDE * constants.SIDE];
         board[index] = player;
         String id = "#cell" + index;
-        gameView.setup(board);
-        verifyThat(id, hasText(constants.GAME_PIECE_ONE));
-        gameView.setup(board1);
-        verifyThat(id, hasText(constants.EMPTY));
-    }
-
-    @Test
-    public void shouldBeAbleToSetThePlayAction() {
-        int index = 2;
-        gameView.setup(board);
-        gameView.setPlay(play);
-        Player[] board1 = new Player[constants.SIDE * constants.SIDE];
-        board1[index] = player;
-        when(gameCtrl.getBoard()).thenReturn(board1);
-        String id = "#cell" + index;
         click(id);
         verifyThat(id, hasText(constants.GAME_PIECE_ONE));
+        when(gameCtrl.getBoard()).thenReturn(board1);
+        click(id);
+        verifyThat(id, hasText(constants.EMPTY));
     }
 
     private Function<MouseEvent, Player[]> mockPlay() {
