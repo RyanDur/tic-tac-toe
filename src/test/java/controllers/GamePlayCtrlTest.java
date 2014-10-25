@@ -122,6 +122,22 @@ public class GamePlayCtrlTest {
     }
 
     @Test
+    public void shouldNotCallComputerIfGameOver() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
+        Player[] board = {};
+        when(gameCtrl.getBoard()).thenReturn(board);
+        when(gameCtrl.gameOver()).thenReturn(true);
+        InOrder inOrder = inOrder(player1, computer, gameCtrl);
+        int row = 1;
+        int column = 2;
+        gamePlayCtrl.onePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
+        gamePlayCtrl.set(row, column);
+        inOrder.verify(player1).setCoordinates(row, column);
+        inOrder.verify(gameCtrl).setPiece(player1);
+        inOrder.verify(computer, never()).calculateBestMove(board);
+        inOrder.verify(gameCtrl, never()).setPiece(computer);
+    }
+
+    @Test
     public void shouldBeAbleToSetupAGame() {
         gamePlayCtrl.setup();
         verify(gameCtrl).setup();

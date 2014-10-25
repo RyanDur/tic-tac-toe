@@ -64,7 +64,7 @@ public class GamePlayCtrlImpl implements GamePlayCtrl {
     private void onePlayerMove(int row, int column) throws OutOfBoundsException, OutOfTurnException, NotVacantException {
         player1.setCoordinates(row, column);
         gameCtrl.setPiece(player1);
-        computerMove(player2);
+        if (!over()) computerMove(player2);
     }
 
     private void twoPlayerMove(int row, int column) throws OutOfBoundsException, OutOfTurnException, NotVacantException {
