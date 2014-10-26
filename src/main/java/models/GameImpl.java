@@ -19,12 +19,11 @@ public class GameImpl implements Game {
     public void set(Player player) throws NotVacantException {
         if (!vacant(player.getX(), player.getY())) throw new NotVacantException();
         board.set(player.getX(), player.getY(), player);
-        if (board.isWinner(player.getX(), player.getY(), player)) winner = player;
     }
 
     @Override
     public Player getWinner() {
-        return winner;
+        return board.getWinner();
     }
 
     @Override

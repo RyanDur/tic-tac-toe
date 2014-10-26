@@ -4,11 +4,6 @@ import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -31,9 +26,9 @@ public class BoardTest {
     public void shouldCheckBoardIfPlayerIsWinnerOnFirstRow() {
         players[0] = player;
         players[1] = player;
-        players[2] = player;
         board.setBoard(players);
-        assertThat(board.isWinner(0, 0, player), is(true));
+        board.set(0, 2, player);
+        assertThat(board.getWinner(), is(equalTo(player)));
     }
 
     @Test
@@ -41,16 +36,35 @@ public class BoardTest {
         players[0] = player;
         players[2] = player;
         board.setBoard(players);
-        assertThat(board.isWinner(0, 0, player), is(false));
+        board.set(1, 0, player);
+        assertThat(board.getWinner(), is(equalTo(null)));
+    }
+
+    @Test
+    public void shouldCheckBoardIfPlayerIsWinnerOnFirstColumn() {
+        players[0] = player;
+        players[3] = player;
+        board.setBoard(players);
+        board.set(2, 0, player);
+        assertThat(board.getWinner(), is(equalTo(player)));
+    }
+
+    @Test
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstColumn() {
+        players[0] = player;
+        players[2] = player;
+        board.setBoard(players);
+        board.set(1, 1, player);
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnSecondRow() {
-        players[3] = player;
         players[4] = player;
         players[5] = player;
         board.setBoard(players);
-        assertThat(board.isWinner(1, 1, player), is(true));
+        board.set(1, 0, player);
+        assertThat(board.getWinner(), is(equalTo(player)));
     }
 
     @Test
@@ -58,16 +72,35 @@ public class BoardTest {
         players[4] = player;
         players[5] = player;
         board.setBoard(players);
-        assertThat(board.isWinner(1, 1, player), is(false));
+        board.set(0, 0, player);
+        assertThat(board.getWinner(), is(equalTo(null)));
+    }
+
+    @Test
+    public void shouldCheckBoardIfPlayerIsWinnerOnSecondColumn() {
+        players[1] = player;
+        players[7] = player;
+        board.setBoard(players);
+        board.set(1, 1, player);
+        assertThat(board.getWinner(), is(equalTo(player)));
+    }
+
+    @Test
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondColumn() {
+        players[4] = player;
+        players[7] = player;
+        board.setBoard(players);
+        board.set(0, 0, player);
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnThirdRow() {
         players[6] = player;
         players[7] = player;
-        players[8] = player;
         board.setBoard(players);
-        assertThat(board.isWinner(2, 2, player), is(true));
+        board.set(2, 2, player);
+        assertThat(board.getWinner(), is(equalTo(player)));
     }
 
     @Test
@@ -75,16 +108,35 @@ public class BoardTest {
         players[6] = player;
         players[7] = player;
         board.setBoard(players);
-        assertThat(board.isWinner(2, 0, player), is(false));
+        board.set(0, 0, player);
+        assertThat(board.getWinner(), is(equalTo(null)));
+    }
+
+    @Test
+    public void shouldCheckBoardIfPlayerIsWinnerOnThirdColumn() {
+        players[5] = player;
+        players[8] = player;
+        board.setBoard(players);
+        board.set(0, 2, player);
+        assertThat(board.getWinner(), is(equalTo(player)));
+    }
+
+    @Test
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdColumn() {
+        players[2] = player;
+        players[8] = player;
+        board.setBoard(players);
+        board.set(0, 0, player);
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnTheLeftDiagonal() {
         players[0] = player;
         players[4] = player;
-        players[8] = player;
         board.setBoard(players);
-        assertThat(board.isWinner(2, 2, player), is(true));
+        board.set(2, 2, player);
+        assertThat(board.getWinner(), is(equalTo(player)));
     }
 
     @Test
@@ -92,16 +144,17 @@ public class BoardTest {
         players[4] = player;
         players[8] = player;
         board.setBoard(players);
-        assertThat(board.isWinner(1, 1, player), is(false));
+        board.set(1, 0, player);
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnTheRightDiagonal() {
         players[2] = player;
-        players[4] = player;
         players[6] = player;
         board.setBoard(players);
-        assertThat(board.isWinner(2, 0, player), is(true));
+        board.set(1, 1, player);
+        assertThat(board.getWinner(), is(equalTo(player)));
     }
 
     @Test
@@ -109,7 +162,8 @@ public class BoardTest {
         players[2] = player;
         players[4] = player;
         board.setBoard(players);
-        assertThat(board.isWinner(1, 1, player), is(false));
+        board.set(2, 2, player);
+        assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
@@ -125,83 +179,7 @@ public class BoardTest {
         players[2] = player;
         players[4] = player;
         board.setBoard(players);
-        board.set(2,1, player);
+        board.set(2, 1, player);
         assertThat(board.get(2, 1), is(equalTo(player)));
-    }
-
-    @Test
-    public void shouldBeAbleToGetTheVacantSpotsOnTheBoard() {
-        players[2] = player;
-        players[4] = player;
-        players[6] = player;
-        board.setBoard(players);
-        List<Integer[]> expected = new ArrayList<>();
-        expected.add(new Integer[]{0, 0});
-        expected.add(new Integer[]{0, 1});
-        expected.add(new Integer[]{1, 0});
-        expected.add(new Integer[]{1, 2});
-        expected.add(new Integer[]{2, 1});
-        expected.add(new Integer[]{2, 2});
-        List<Integer[]> actual = board.getVacancies();
-        assertThat(actual.size(), is(equalTo(expected.size())));
-        for(int i = 0; i < expected.size(); i++) {
-            assertThat(actual.get(i), is(equalTo(expected.get(i))));
-        }
-    }
-
-    @Test
-    public void shouldBeAbleToRetrieveTheLastMoveOnTheBoard() {
-        board.set(2,1, player);
-        assertThat(board.lastMove(), is(equalTo(new Integer[]{2,1})));
-    }
-
-    @Test
-    public void shouldBeAbleToRetrieveTheWinningMoveForAPlayer() {
-        players[4] = player;
-        players[8] = player;
-        board.setBoard(players);
-        assertThat(board.winningMove(player).get(), is(equalTo(new Integer[]{0,0})));
-    }
-
-    @Test
-    public void shouldBeAbleToGetAllMovesThatLeadToAWinForAPlayer() {
-        players[4] = mock(Player.class);
-        players[8] = player;
-        board.setBoard(players);
-        List<Integer[]> expected = Arrays.asList(new Integer[]{0, 2}, new Integer[]{1, 2}, new Integer[]{2, 0}, new Integer[]{2, 1});
-        List<Integer[]> actual = board.filterMoves(player).map(Board::lastMove).collect(Collectors.toList());
-        assertThat(actual.size(), is(equalTo(expected.size())));
-        for(int i = 0; i < expected.size(); i++) {
-            assertThat(actual.get(i), is(equalTo(expected.get(i))));
-        }
-    }
-
-    @Test
-    public void shouldBeAbleToDetectACatsGame() {
-        Player player1 = mock(Player.class);
-        players[8] = player;
-        players[4] = player1;
-        players[6] = player;
-        players[7] = player1;
-        players[5] = player;
-        players[2] = player1;
-        players[1] = player;
-        players[0] = player1;
-        board.setBoard(players);
-        assertThat(board.detectCatsGame(), is(true));
-    }
-
-    @Test
-    public void shouldNotBeAbleToDetectACatsGameIfItIsNot() {
-        Player player1 = mock(Player.class);
-        players[8] = player;
-        players[4] = player1;
-        players[6] = player;
-        players[7] = player1;
-        players[5] = player;
-        players[2] = player1;
-        players[1] = player;
-        board.setBoard(players);
-        assertThat(board.detectCatsGame(), is(false));
     }
 }

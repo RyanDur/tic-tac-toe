@@ -9,4 +9,6 @@ public interface StrategyBoard extends Board {
     Optional<Integer[]> winningMove(Player player);
 
     List<Integer[]> filterMoves(Player player);
+
+    boolean detectCatsGame(Player player, Player opponent);
 }
