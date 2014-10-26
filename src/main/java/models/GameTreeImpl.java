@@ -6,6 +6,7 @@ import lang.constants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class GameTreeImpl implements GameTree {
     private int value = 0;
@@ -21,6 +22,7 @@ public class GameTreeImpl implements GameTree {
         this.player2 = player2;
         this.boardFactory = boardFactory;
         children = new ArrayList<>();
+        setValue();
     }
 
     @Override
@@ -31,51 +33,22 @@ public class GameTreeImpl implements GameTree {
     }
 
     private void setValue() {
-        if (board.getWinner() == player1) {
-            if (player1 instanceof ComputerPlayer) value = constants.WIN_WEIGHT;
+        Player winner = board.getWinner();
+        if (winner != null) {
+            if (winner instanceof ComputerPlayer) value = constants.WIN_WEIGHT;
             else value = constants.LOSE_WEIGHT;
-        }// else if (board.detectCatsGame()) value = constants.DRAW_WEIGHT;
-        else setChildNodes();
+        } else if (board.getVacancies().size() == 0) value = constants.DRAW_WEIGHT;
+         else children = makeChildren();
     }
 
-    private void setChildNodes() {
-//        Optional<Integer[]> winningMove = board.winningMove(player2);
-//        if(!winningMove.isPresent()) winningMove = board.winningMove(player1);
-//        if(winningMove.isPresent()) children.add(getChild(winningMove));
-//        else children = getChildren();
-    }
-
-    private List<GameTree> getChildren() {
-        List<GameTree> children = bestChildren();
-        if (children.isEmpty()) children = anyChildren();
-        return children;
-    }
-
-    private List<GameTree> anyChildren() {
-//        return board.getVacancies().stream()
-//                .map(vacancy -> getChild(Optional.of(vacancy)))
-//                .collect(Collectors.toList());
-        return null;
-    }
-
-    private List<GameTree> bestChildren() {
-        List<GameTree> filtered = filter(player1);
-        if (filtered.isEmpty()) filtered = filter(player2);
-        return filtered;
-    }
-
-    private List<GameTree> filter(Player player) {
-//        return board.filterMoves(player)
-//                .map(this::getGameNode)
-//                .collect(Collectors.toList());
-        return null;
+    private List<GameTree> makeChildren() {
+        return board.getVacancies().stream()
+                .map(vacancy -> getChild(Optional.of(vacancy)))
+                .collect(Collectors.toList());
     }
 
     private GameTree getChild(Optional<Integer[]> move) {
-        return move.map(win -> {
-            StrategyBoard copy = getBoard(win);
-            return getGameNode(copy);
-        }).get();
+        return move.map(win -> getGameNode(getBoard(win))).get();
     }
 
     private GameTreeImpl getGameNode(StrategyBoard game) {
