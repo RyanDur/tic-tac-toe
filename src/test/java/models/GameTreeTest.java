@@ -95,11 +95,11 @@ public class GameTreeTest {
         Board copy1 = mockBoard(false, true, null, null, null, null);
         Board copy2 = mockBoard(true, false, null, null, null, null);
         Stream<Board> stream = Arrays.stream(new Board[]{copy1, copy2});
-        board = mockBoard(false, false, Optional.empty(), Optional.empty(), stream, null);
+        board = mockBoard(false, false, Optional.empty(), Optional.empty(), null, stream);
         when(boardFactory.createBoard(anyInt())).thenReturn(copy1, copy2);
 
         GameTree node = new GameTreeImpl(board, human, computer, boardFactory);
-        verify(board).filterMoves(computer);
+        verify(board).filterMoves(human);
         assertThat(node.getValue(), is(equalTo(constants.WIN_WEIGHT)));
     }
 
@@ -112,6 +112,19 @@ public class GameTreeTest {
         when(board.getVacancies()).thenReturn(Arrays.<Integer[]>asList(move));
         new GameTreeImpl(board, human, computer, boardFactory);
         verify(board).getVacancies();
+    }
+
+    @Test
+    public void shouldTakeIntoCountAllThePossibleLosingMovesIfNowPossibleWinningMoves() {
+        Board copy1 = mockBoard(false, true, null, null, null, null);
+        Board copy2 = mockBoard(true, false, null, null, null, null);
+        Stream<Board> stream = Arrays.stream(new Board[]{copy1, copy2});
+        board = mockBoard(false, false, Optional.empty(), Optional.empty(), Stream.empty(), stream);
+        when(boardFactory.createBoard(anyInt())).thenReturn(copy2);
+        Integer[] move = {1, 1};
+        when(board.getVacancies()).thenReturn(Arrays.<Integer[]>asList(move));
+        new GameTreeImpl(board, human, computer, boardFactory);
+        verify(board).filterMoves(human);
     }
 
     private Board mockBoard(boolean winner, boolean catsGame, Optional<Integer[]> winingMove, Optional<Integer[]> losingMove, Stream<Board> stream1, Stream<Board> stream2) {

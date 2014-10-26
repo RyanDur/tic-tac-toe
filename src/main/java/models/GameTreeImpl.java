@@ -60,7 +60,13 @@ public class GameTreeImpl implements GameTree {
     }
 
     private List<GameTree> bestChildren() {
-        return board.filterMoves(player2)
+        List<GameTree> filtered = filter(player1);
+        if (filtered.isEmpty()) filtered = filter(player2);
+        return filtered;
+    }
+
+    private List<GameTree> filter(Player player) {
+        return board.filterMoves(player)
                 .map(this::getGameNode)
                 .collect(Collectors.toList());
     }
