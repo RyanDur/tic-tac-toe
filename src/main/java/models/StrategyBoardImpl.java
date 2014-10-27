@@ -37,25 +37,6 @@ public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public boolean detectCatsGame(Player player, Player opponent) {
-        return !boardEmpty() &&
-                !getVacancies().isEmpty() &&
-                !winningMove(player).isPresent() &&
-                !winningMove(opponent).isPresent() &&
-                winLookAhead(player, opponent) == 0;
-    }
-
-    private int winLookAhead(Player player, Player opponent) {
-        return (int) generatePossibleMoves(player, getVacancies()).stream()
-                .map(board -> board.filterMoves(opponent).size())
-                .filter(num -> num != 0).count();
-    }
-
-    private boolean boardEmpty() {
-        return getVacancies().size() == getBoard().length;
-    }
-
     private List<StrategyBoard> generatePossibleMoves(Player player, List<Integer[]> vacancies) {
         return vacancies.stream()
                 .map(vacancy -> playVacancy(player, vacancy))

@@ -43,19 +43,19 @@ public class GameTreeImpl implements GameTree {
 
     private List<GameTree> makeChildren() {
         return board.getVacancies().stream()
-                .map(vacancy -> getChild(Optional.of(vacancy)))
+                .map(vacancy -> makeChild(Optional.of(vacancy)))
                 .collect(Collectors.toList());
     }
 
-    private GameTree getChild(Optional<Integer[]> move) {
-        return move.map(win -> getGameNode(getBoard(win))).get();
+    private GameTree makeChild(Optional<Integer[]> move) {
+        return move.map(win -> createNode(playMove(win))).get();
     }
 
-    private GameTreeImpl getGameNode(StrategyBoard game) {
+    private GameTreeImpl createNode(StrategyBoard game) {
         return new GameTreeImpl(game, player2, player1, boardFactory);
     }
 
-    private StrategyBoard getBoard(Integer[] win) {
+    private StrategyBoard playMove(Integer[] win) {
         StrategyBoard copy = boardFactory.createBoard(constants.SIDE, board);
         copy.setBoard(board.getBoard());
         copy.set(win[0], win[1], player2);
