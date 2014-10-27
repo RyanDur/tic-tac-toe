@@ -1,6 +1,8 @@
 package models;
 
+import exceptions.NotVacantException;
 import factories.BoardFactory;
+import factories.BoardFactoryImpl;
 import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +10,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -74,10 +77,56 @@ public class GameTreeTest {
         assertThat(node.getValue(), is(equalTo(constants.WIN_WEIGHT)));
     }
 
-    private StrategyBoard mockBoard(Player player, List<Integer[]> vacancys) {
+
+    @Test
+    public void should() throws NotVacantException {
+        Player[] players = new Player[constants.SIDE * constants.SIDE];
+        BoardFactory boardFactory = new BoardFactoryImpl();
+        StrategyBoard strategyBoard = boardFactory.createBoard(constants.SIDE, players);
+        strategyBoard.set(0,2,computer);
+
+        GameTree gameTree = new GameTreeImpl(strategyBoard, computer, human, boardFactory);
+        System.out.println(gameTree.getValue());
+    }
+
+    @Test
+    public void shouldGetWinningMoveOfFirstPlayerForChild() throws NotVacantException {
+        Integer[] winMove = {1, 1};
+        StrategyBoard copy = mockBoard(computer, null);
+        when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
+        board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
+        new GameTreeImpl(board, human, computer, boardFactory);
+
+        verify(board).winningMove(human);
+    }
+
+    @Test
+    public void shouldGetWinningMoveOfSecondPlayerForChild() throws NotVacantException {
+        Integer[] winMove = {1, 1};
+        StrategyBoard copy = mockBoard(computer, null);
+        when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
+        board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
+        new GameTreeImpl(board, human, computer, boardFactory);
+
+        verify(board).winningMove(computer);
+    }
+
+    @Test
+    public void shouldGetBestMovesOfFirstPlayerForChildren() throws NotVacantException {
+        Integer[] winMove = {1, 1};
+        StrategyBoard copy = mockBoard(computer, null);
+        when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
+        board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
+        new GameTreeImpl(board, human, computer, boardFactory);
+
+        verify(board).filterMoves(human);
+    }
+
+    private StrategyBoard mockBoard(Player player, List<Integer[]> vacancies) {
         StrategyBoard board = mock(StrategyBoard.class);
         when(board.getWinner()).thenReturn(player);
-        when(board.getVacancies()).thenReturn(vacancys);
+        when(board.getVacancies()).thenReturn(vacancies);
+        when(board.winningMove(any(Player.class))).thenReturn(Optional.empty());
         return board;
     }
 }

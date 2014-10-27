@@ -35,16 +35,34 @@ public class GameTreeImpl implements GameTree {
 
     private void setValue() {
         Player winner = board.getWinner();
-        if (winner != null) {
-            if (winner instanceof ComputerPlayer) value = constants.WIN_WEIGHT;
-            else value = constants.LOSE_WEIGHT;
-        } else if (board.getVacancies().size() == 0) value = constants.DRAW_WEIGHT;
-         else children = makeChildren();
+        if (winner != null) value = winWeight(winner);
+        else if (board.getVacancies().size() == 0) value = constants.DRAW_WEIGHT;
+        else children = setChildren();
+    }
+
+    private int winWeight(Player winner) {
+        return winner instanceof ComputerPlayer ? constants.WIN_WEIGHT : constants.LOSE_WEIGHT;
+    }
+
+    private List<GameTree> setChildren() {
+        List<GameTree> children = new ArrayList<>();
+        Optional<Integer[]> winMove = board.winningMove(player2);
+        Optional<Integer[]> loseMove = board.winningMove(player1);
+        if (winMove.isPresent())  children.add(makeChild(winMove));
+        if (loseMove.isPresent())  children.add(makeChild(loseMove));
+        if (children.isEmpty()) children = makeChildren();
+        return children;
     }
 
     private List<GameTree> makeChildren() {
-        return board.getVacancies().stream()
-                .map(vacancy -> makeChild(Optional.of(vacancy)))
+        List<GameTree> children;
+        children = collectChildren(board.filterMoves(player1));
+        if (children.isEmpty()) children = collectChildren(board.getVacancies());
+        return children;
+    }
+
+    private List<GameTree> collectChildren(List<Integer[]> stream) {
+        return stream.stream().map(move -> makeChild(Optional.of(move)))
                 .collect(Collectors.toList());
     }
 
