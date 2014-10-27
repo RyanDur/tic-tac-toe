@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.inject.Inject;
 import factories.BoardFactory;
 import factories.GameTreeFactory;
 import models.GameTree;
@@ -15,6 +16,7 @@ public class StrategyGameCtrlImpl implements StrategyGameCtrl {
     private StrategyBoard strategyBoard;
     private int side;
 
+    @Inject
     public StrategyGameCtrlImpl(BoardFactory boardFactory, GameTreeFactory gameTreeFactory) {
         this.boardFactory = boardFactory;
         this.gameTreeFactory = gameTreeFactory;

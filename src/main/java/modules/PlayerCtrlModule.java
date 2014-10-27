@@ -9,7 +9,7 @@ import factories.PlayerFactoryImpl;
 public class PlayerCtrlModule extends AbstractModule {
     @Override
     protected void configure() {
-        install(new StrategyBoardCtrlModule());
+        install(new StrategyCtrlModule());
         bind(PlayerFactory.class).to(PlayerFactoryImpl.class);
         bind(StrategyCtrl.class).to(StrategyCtrlImpl.class);
     }

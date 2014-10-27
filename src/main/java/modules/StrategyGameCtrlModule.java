@@ -6,7 +6,7 @@ import factories.BoardFactoryImpl;
 import factories.GameTreeFactory;
 import factories.GameTreeFactoryImpl;
 
-public class StrategyBoardCtrlModule extends AbstractModule {
+public class StrategyGameCtrlModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(GameTreeFactory.class).to(GameTreeFactoryImpl.class);
