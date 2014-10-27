@@ -13,6 +13,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class GameTest {
@@ -60,8 +61,28 @@ public class GameTest {
 
     @Test
     public void shouldBeAbleToGetTheWinner() throws NotVacantException {
-//        when(board.isWinner(anyInt(), anyInt(), any(Player.class))).thenReturn(true);
-//        game.set(mockPlayer);
-//        assertThat(game.getWinner(), is(equalTo(mockPlayer)));
+        game.getWinner();
+        verify(board).getWinner();
+    }
+
+    @Test
+    public void shouldBeAbleToTellIfABoardIsNotFull() {
+        when(board.getBoard()).thenReturn(new Player[constants.SIDE * constants.SIDE]);
+        assertThat(game.full(), is(false));
+    }
+
+    @Test
+    public void shouldBeAbleToTellIfABoardIsFull() {
+        when(board.getBoard()).thenReturn(new Player[]{
+                mock(Player.class),
+                mock(Player.class),
+                mock(Player.class),
+                mock(Player.class),
+                mock(Player.class),
+                mock(Player.class),
+                mock(Player.class),
+                mock(Player.class),
+                mock(Player.class)});
+        assertThat(game.full(), is(true));
     }
 }

@@ -1,8 +1,8 @@
 package modules;
 
 import com.google.inject.AbstractModule;
-import controllers.StrategyBoardCtrl;
-import controllers.StrategyBoardCtrlImpl;
+import controllers.StrategyCtrl;
+import controllers.StrategyCtrlImpl;
 import factories.PlayerFactory;
 import factories.PlayerFactoryImpl;
 
@@ -11,6 +11,6 @@ public class PlayerCtrlModule extends AbstractModule {
     protected void configure() {
         install(new StrategyBoardCtrlModule());
         bind(PlayerFactory.class).to(PlayerFactoryImpl.class);
-        bind(StrategyBoardCtrl.class).to(StrategyBoardCtrlImpl.class);
+        bind(StrategyCtrl.class).to(StrategyCtrlImpl.class);
     }
 }

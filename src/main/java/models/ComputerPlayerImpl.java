@@ -1,6 +1,6 @@
 package models;
 
-import controllers.StrategyBoardCtrl;
+import controllers.StrategyCtrl;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 
@@ -9,20 +9,20 @@ import java.util.function.Consumer;
 
 public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
     private Player opponent;
-    private StrategyBoardCtrl strategyBoardCtrl;
+    private StrategyCtrl strategyCtrl;
 
-    public ComputerPlayerImpl(String gamePiece, int boundary, Player opponent, StrategyBoardCtrl strategyBoardCtrl) {
+    public ComputerPlayerImpl(String gamePiece, int boundary, Player opponent, StrategyCtrl strategyCtrl) {
         super(gamePiece, boundary);
         this.opponent = opponent;
-        this.strategyBoardCtrl = strategyBoardCtrl;
+        this.strategyCtrl = strategyCtrl;
     }
 
     @Override
     public void calculateBestMove(Player[] board) throws OutOfBoundsException, NotVacantException {
-        strategyBoardCtrl.setBoard(board);
-        Optional<Integer[]> found = strategyBoardCtrl.findWinningMove(this);
-        if (!found.isPresent()) found = strategyBoardCtrl.findWinningMove(opponent);
-        if (!found.isPresent()) found = strategyBoardCtrl.getBestMove(this, opponent);
+        strategyCtrl.setBoard(board);
+        Optional<Integer[]> found = strategyCtrl.findWinningMove(this);
+        if (!found.isPresent()) found = strategyCtrl.findWinningMove(opponent);
+        if (!found.isPresent()) found = strategyCtrl.getBestMove(this, opponent);
         found.ifPresent(setMove());
     }
 

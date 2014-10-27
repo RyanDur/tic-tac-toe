@@ -1,6 +1,6 @@
 package factories;
 
-import controllers.StrategyBoardCtrl;
+import controllers.StrategyCtrl;
 import models.ComputerPlayer;
 import models.ComputerPlayerImpl;
 import models.Player;
@@ -14,8 +14,8 @@ public class PlayerFactoryImpl implements PlayerFactory {
     }
 
     @Override
-    public ComputerPlayer createComputerPlayer(String gamePiece, int side, Player opponent, StrategyBoardCtrl strategyBoardCtrl) {
-        return new ComputerPlayerImpl(gamePiece, side, opponent, strategyBoardCtrl);
+    public ComputerPlayer createComputerPlayer(String gamePiece, int side, Player opponent, StrategyCtrl strategyCtrl) {
+        return new ComputerPlayerImpl(gamePiece, side, opponent, strategyCtrl);
     }
 
 

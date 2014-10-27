@@ -8,15 +8,15 @@ import models.Player;
 public class PlayerCtrlImpl implements PlayerCtrl {
     private int side;
     private PlayerFactory playerFactory;
-    private StrategyBoardCtrl strategyBoardCtrl;
+    private StrategyCtrl strategyCtrl;
     private Player player1;
     private Player player2;
 
     @Inject
-    public PlayerCtrlImpl(PlayerFactory playerFactory, StrategyBoardCtrl strategyBoardCtrl) {
+    public PlayerCtrlImpl(PlayerFactory playerFactory, StrategyCtrl strategyCtrl) {
         this.side = constants.SIDE;
         this.playerFactory = playerFactory;
-        this.strategyBoardCtrl = strategyBoardCtrl;
+        this.strategyCtrl = strategyCtrl;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class PlayerCtrlImpl implements PlayerCtrl {
     @Override
     public Player[] setupOnePlayer(String pieceOne, String pieceTwo) {
         player1 = playerFactory.createPlayer(pieceOne, side);
-        player2 = playerFactory.createComputerPlayer(pieceTwo, side, player1, strategyBoardCtrl);
+        player2 = playerFactory.createComputerPlayer(pieceTwo, side, player1, strategyCtrl);
         return new Player[]{player1, player2};
     }
 }

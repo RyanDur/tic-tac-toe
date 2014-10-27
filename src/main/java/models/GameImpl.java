@@ -8,7 +8,6 @@ import java.util.Arrays;
 public class GameImpl implements Game {
     private Board board;
     private final int side;
-    private Player winner;
 
     public GameImpl(int side, BoardFactory boardFactory) {
         this.side = side;
