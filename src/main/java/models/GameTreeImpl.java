@@ -56,7 +56,7 @@ public class GameTreeImpl implements GameTree {
     }
 
     private StrategyBoard playMove(Integer[] win) {
-        StrategyBoard copy = boardFactory.createBoard(constants.SIDE, board);
+        StrategyBoard copy = boardFactory.createBoard(constants.SIDE, board.getBoard());
         copy.setBoard(board.getBoard());
         copy.set(win[0], win[1], player2);
         return copy;

@@ -5,6 +5,7 @@ import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class GameTreeTest {
 
     @Test
     public void shouldBeAbleToGetA0ValueForACatsGameNode() {
-        when(board.detectCatsGame(any(Player.class), any(Player.class))).thenReturn(true);
+        when(board.getVacancies()).thenReturn(new ArrayList<>());
         GameTree node = new GameTreeImpl(board, human, computer, boardFactory);
         assertThat(node.getValue(), is(equalTo(constants.DRAW_WEIGHT)));
     }
@@ -54,29 +55,28 @@ public class GameTreeTest {
     @Test
     public void shouldMakeAChildIfNotAWinningBoardAndHasWinningMove() {
         Integer[] winMove = {1, 1};
-        board = mockBoard(null, false, Arrays.<Integer[]>asList(winMove));
-        StrategyBoard child = mockBoard(human, true, null);
-        when(boardFactory.createBoard(anyInt(), any(StrategyBoard.class))).thenReturn(child);
+        board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
+        StrategyBoard child = mockBoard(human, new ArrayList<>());
+        when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(child);
 
         new GameTreeImpl(board, human, computer, boardFactory);
-        verify(boardFactory).createBoard(anyInt(), any(StrategyBoard.class));
+        verify(boardFactory).createBoard(anyInt(), any(Player[].class));
     }
 
     @Test
     public void shouldSumValuesOfChildrenWithParentGettingValueLeadingToAWin() {
         Integer[] winMove = {1, 1};
-        StrategyBoard copy = mockBoard(computer, false, null);
-        when(boardFactory.createBoard(anyInt(), any(StrategyBoard.class))).thenReturn(copy);
-        board = mockBoard(null, false, Arrays.<Integer[]>asList(winMove));
+        StrategyBoard copy = mockBoard(computer, null);
+        when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
+        board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
 
         GameTree node = new GameTreeImpl(board, human, computer, boardFactory);
         assertThat(node.getValue(), is(equalTo(constants.WIN_WEIGHT)));
     }
 
-    private StrategyBoard mockBoard(Player player, boolean won, List<Integer[]> vacancys) {
+    private StrategyBoard mockBoard(Player player, List<Integer[]> vacancys) {
         StrategyBoard board = mock(StrategyBoard.class);
         when(board.getWinner()).thenReturn(player);
-        when(board.detectCatsGame(any(Player.class), any(Player.class))).thenReturn(won);
         when(board.getVacancies()).thenReturn(vacancys);
         return board;
     }

@@ -9,7 +9,7 @@ public class BoardFactoryImpl implements BoardFactory {
     }
 
     @Override
-    public StrategyBoard createBoard(int side, StrategyBoard board) {
-        return new StrategyBoardImpl(side, board.getBoard());
+    public StrategyBoard createBoard(int side, Player[] board) {
+        return new StrategyBoardImpl(side, board);
     }
 }

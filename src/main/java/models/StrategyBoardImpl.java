@@ -31,10 +31,13 @@ public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
 
     @Override
     public List<Integer[]> filterMoves(Player player) {
-        return generatePossibleMoves(player, getVacancies()).stream()
+        List<Integer[]> moves = getVacancies();
+        moves = generatePossibleMoves(player, moves).stream()
                 .filter(game -> game.winningMove(player).isPresent())
                 .map(game -> game.winningMove(player).get())
                 .collect(Collectors.toList());
+        if(moves.isEmpty()) moves = getVacancies();
+        return moves;
     }
 
     private List<StrategyBoard> generatePossibleMoves(Player player, List<Integer[]> vacancies) {

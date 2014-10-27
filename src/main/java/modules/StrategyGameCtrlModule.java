@@ -1,13 +1,15 @@
 package modules;
 
 import com.google.inject.AbstractModule;
-import factories.StrategyGameFactory;
-import factories.StrategyGameFactoryImpl;
+import factories.BoardFactory;
+import factories.BoardFactoryImpl;
+import factories.GameTreeFactory;
+import factories.GameTreeFactoryImpl;
 
 public class StrategyGameCtrlModule extends AbstractModule {
     @Override
     protected void configure() {
-        install(new StrategyGameFactoryModule());
-        bind(StrategyGameFactory.class).to(StrategyGameFactoryImpl.class);
+        bind(GameTreeFactory.class).to(GameTreeFactoryImpl.class);
+        bind(BoardFactory.class).to(BoardFactoryImpl.class);
     }
 }
