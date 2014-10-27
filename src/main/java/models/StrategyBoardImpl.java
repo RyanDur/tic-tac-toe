@@ -1,5 +1,7 @@
 package models;
 
+import exceptions.NotVacantException;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -58,7 +60,11 @@ public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
 
     private StrategyBoard playVacancy(Player player, Integer[] vacancy) {
         StrategyBoard strategyBoard = new StrategyBoardImpl(side, getBoard());
-        strategyBoard.set(vacancy[0], vacancy[1], player);
+        try {
+            strategyBoard.set(vacancy[0], vacancy[1], player);
+        } catch (NotVacantException e) {
+            e.printStackTrace();
+        }
         return strategyBoard;
     }
 

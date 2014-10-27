@@ -16,7 +16,6 @@ public class GameImpl implements Game {
 
     @Override
     public void set(Player player) throws NotVacantException {
-        if (!vacant(player.getX(), player.getY())) throw new NotVacantException();
         board.set(player.getX(), player.getY(), player);
     }
 
@@ -38,9 +37,5 @@ public class GameImpl implements Game {
     @Override
     public int getNumOfPieces() {
         return (int) Arrays.stream(getBoard()).filter(player -> player != null).count();
-    }
-
-    private boolean vacant(int x, int y) {
-        return board.get(x, y) == null;
     }
 }

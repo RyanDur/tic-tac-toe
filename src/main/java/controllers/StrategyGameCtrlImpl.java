@@ -1,6 +1,7 @@
 package controllers;
 
 import com.google.inject.Inject;
+import exceptions.NotVacantException;
 import factories.BoardFactory;
 import factories.GameTreeFactory;
 import models.GameTree;
@@ -31,7 +32,11 @@ public class StrategyGameCtrlImpl implements StrategyGameCtrl {
     @Override
     public GameTree getTree(Player player, Player opponent, Integer[] move) {
         StrategyBoard copy = getStrategyBoard(strategyBoard.getBoard());
-        copy.set(move[0], move[1], player);
+        try {
+            copy.set(move[0], move[1], player);
+        } catch (NotVacantException e) {
+            e.printStackTrace();
+        }
         return gameTreeFactory.createTree(copy, player, opponent, boardFactory);
     }
 

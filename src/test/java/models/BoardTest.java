@@ -1,8 +1,11 @@
 package models;
 
+import exceptions.NotVacantException;
 import lang.constants;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -11,9 +14,12 @@ import static org.mockito.Mockito.mock;
 
 public class BoardTest {
 
-    Board board;
+    private Board board;
     private Player[] players;
     private Player player;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -23,7 +29,14 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnFirstRow() {
+    public void shouldNotBeAbleToSetAPlayerOnATakenSpot() throws NotVacantException {
+        exception.expect(NotVacantException.class);
+        board.set(1, 1, player);
+        board.set(1, 1, player);
+    }
+
+    @Test
+    public void shouldCheckBoardIfPlayerIsWinnerOnFirstRow() throws NotVacantException {
         players[0] = player;
         players[1] = player;
         board.setBoard(players);
@@ -32,7 +45,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstRow() {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstRow() throws NotVacantException {
         players[0] = player;
         players[2] = player;
         board.setBoard(players);
@@ -41,7 +54,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnFirstColumn() {
+    public void shouldCheckBoardIfPlayerIsWinnerOnFirstColumn() throws NotVacantException {
         players[0] = player;
         players[3] = player;
         board.setBoard(players);
@@ -50,7 +63,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstColumn() {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstColumn() throws NotVacantException {
         players[0] = player;
         players[2] = player;
         board.setBoard(players);
@@ -59,7 +72,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnSecondRow() {
+    public void shouldCheckBoardIfPlayerIsWinnerOnSecondRow() throws NotVacantException {
         players[4] = player;
         players[5] = player;
         board.setBoard(players);
@@ -68,7 +81,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondRow() {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondRow() throws NotVacantException {
         players[4] = player;
         players[5] = player;
         board.setBoard(players);
@@ -77,7 +90,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnSecondColumn() {
+    public void shouldCheckBoardIfPlayerIsWinnerOnSecondColumn() throws NotVacantException {
         players[1] = player;
         players[7] = player;
         board.setBoard(players);
@@ -86,7 +99,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondColumn() {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondColumn() throws NotVacantException {
         players[4] = player;
         players[7] = player;
         board.setBoard(players);
@@ -95,7 +108,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnThirdRow() {
+    public void shouldCheckBoardIfPlayerIsWinnerOnThirdRow() throws NotVacantException {
         players[6] = player;
         players[7] = player;
         board.setBoard(players);
@@ -104,7 +117,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdRow() {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdRow() throws NotVacantException {
         players[6] = player;
         players[7] = player;
         board.setBoard(players);
@@ -113,7 +126,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnThirdColumn() {
+    public void shouldCheckBoardIfPlayerIsWinnerOnThirdColumn() throws NotVacantException {
         players[5] = player;
         players[8] = player;
         board.setBoard(players);
@@ -122,7 +135,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdColumn() {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdColumn() throws NotVacantException {
         players[2] = player;
         players[8] = player;
         board.setBoard(players);
@@ -131,7 +144,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnTheLeftDiagonal() {
+    public void shouldCheckBoardIfPlayerIsWinnerOnTheLeftDiagonal() throws NotVacantException {
         players[0] = player;
         players[4] = player;
         board.setBoard(players);
@@ -140,7 +153,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnTheLeftDiagonal() {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnTheLeftDiagonal() throws NotVacantException {
         players[4] = player;
         players[8] = player;
         board.setBoard(players);
@@ -149,7 +162,7 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnTheRightDiagonal() {
+    public void shouldCheckBoardIfPlayerIsWinnerOnTheRightDiagonal() throws NotVacantException {
         players[2] = player;
         players[6] = player;
         board.setBoard(players);
@@ -158,28 +171,11 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnTheRightDiagonal() {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnTheRightDiagonal() throws NotVacantException {
         players[2] = player;
         players[4] = player;
         board.setBoard(players);
         board.set(2, 2, player);
         assertThat(board.getWinner(), is(equalTo(null)));
-    }
-
-    @Test
-    public void shouldBeAbleToGetAPieceFromTheBoard() {
-        players[2] = player;
-        players[4] = player;
-        board.setBoard(players);
-        assertThat(board.get(1, 1), is(equalTo(player)));
-    }
-
-    @Test
-    public void shouldBeAbleToSetAPieceOnTheBoard() {
-        players[2] = player;
-        players[4] = player;
-        board.setBoard(players);
-        board.set(2, 1, player);
-        assertThat(board.get(2, 1), is(equalTo(player)));
     }
 }

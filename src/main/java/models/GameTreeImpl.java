@@ -1,5 +1,6 @@
 package models;
 
+import exceptions.NotVacantException;
 import factories.BoardFactory;
 import lang.constants;
 
@@ -58,7 +59,11 @@ public class GameTreeImpl implements GameTree {
     private StrategyBoard playMove(Integer[] win) {
         StrategyBoard copy = boardFactory.createBoard(constants.SIDE, board.getBoard());
         copy.setBoard(board.getBoard());
-        copy.set(win[0], win[1], player2);
+        try {
+            copy.set(win[0], win[1], player2);
+        } catch (NotVacantException e) {
+            e.printStackTrace();
+        }
         return copy;
     }
 }

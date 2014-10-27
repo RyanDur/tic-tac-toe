@@ -1,10 +1,10 @@
 package models;
 
+import exceptions.NotVacantException;
+
 public interface Board {
 
-    void set(int row, int column, Player player);
-
-    Player get(int row, int column);
+    void set(int row, int column, Player player) throws NotVacantException;
 
     void setBoard(Player[] board);
 

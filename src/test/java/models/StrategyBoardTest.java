@@ -1,5 +1,6 @@
 package models;
 
+import exceptions.NotVacantException;
 import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class StrategyBoardTest {
     }
 
     @Test
-    public void shouldBeAbleToGetTheWinner() {
+    public void shouldBeAbleToGetTheWinner() throws NotVacantException {
         players[0] = player1;
         players[1] = player1;
         StrategyBoard board = new StrategyBoardImpl(constants.SIDE, players);

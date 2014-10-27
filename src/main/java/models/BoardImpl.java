@@ -1,5 +1,7 @@
 package models;
 
+import exceptions.NotVacantException;
+
 import java.util.Arrays;
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
@@ -15,19 +17,16 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public void set(int row, int column, Player player) {
-        board[calculate(row, column)] = player;
+    public void set(int row, int column, Player player) throws NotVacantException {
+        int spot = calculate(row, column);
+        if (board[spot] != null) throw new NotVacantException();
+        board[spot] = player;
         if (isWinner(row, column, player)) winner = player;
     }
 
     @Override
     public Player getWinner() {
         return winner;
-    }
-
-    @Override
-    public Player get(int row, int column) {
-        return board[calculate(row, column)];
     }
 
     @Override

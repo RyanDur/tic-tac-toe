@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.NotVacantException;
 import factories.BoardFactory;
 import factories.GameTreeFactory;
 import lang.constants;
@@ -44,7 +45,7 @@ public class StrategyGameCtrlTest {
     }
 
     @Test
-    public void shouldBeAbleTeGetAGameTreeBasedOnAMove() {
+    public void shouldBeAbleTeGetAGameTreeBasedOnAMove() throws NotVacantException {
         Player opponent = mock(Player.class);
         Integer[] move = {1,2};
         GameTree gameTree = mock(GameTree.class);

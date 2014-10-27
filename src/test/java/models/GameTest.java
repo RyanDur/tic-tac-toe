@@ -11,10 +11,7 @@ import org.junit.rules.ExpectedException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class GameTest {
 
@@ -35,10 +32,9 @@ public class GameTest {
     }
 
     @Test
-    public void shouldNotBeAbleToSetAPlayerOnASpotAlreadyTaken() throws NotVacantException {
-        exception.expect(NotVacantException.class);
-        when(board.get(anyInt(), anyInt())).thenReturn(mockPlayer);
+    public void shouldBeAbleToSetAPieceOnTheBoard() throws NotVacantException {
         game.set(mockPlayer);
+        verify(board).set(anyInt(), anyInt(), any(Player.class));
     }
 
     @Test
