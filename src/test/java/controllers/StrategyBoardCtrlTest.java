@@ -18,9 +18,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 
-public class StrategyGameCtrlTest {
+public class StrategyBoardCtrlTest {
 
-    private StrategyGameCtrl strategyGameCtrl;
+    private StrategyBoardCtrl strategyBoardCtrl;
     private Player[] board;
     private Player player;
     private BoardFactory boardFactory;
@@ -31,12 +31,12 @@ public class StrategyGameCtrlTest {
     public void setup() {
         boardFactory = mock(BoardFactory.class);
         gameTreeFactory = mock(GameTreeFactory.class);
-        strategyGameCtrl = new StrategyGameCtrlImpl(gameTreeFactory, boardFactory);
+        strategyBoardCtrl = new StrategyBoardCtrlImpl(gameTreeFactory, boardFactory);
         board = new Player[]{};
         strategyBoard = mock(StrategyBoard.class);
         when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(strategyBoard);
         player = mock(Player.class);
-        strategyGameCtrl.setBoard(board);
+        strategyBoardCtrl.setBoard(board);
 
     }
 
@@ -47,7 +47,7 @@ public class StrategyGameCtrlTest {
 
     @Test
     public void shouldBeAbleToGetTheWinningMove() {
-        strategyGameCtrl.findWinningMove(player);
+        strategyBoardCtrl.findWinningMove(player);
         verify(strategyBoard).winningMove(player);
     }
 
@@ -67,6 +67,6 @@ public class StrategyGameCtrlTest {
         when(gameTreeFactory.createTree(any(StrategyBoard.class), any(Player.class), any(Player.class), any(BoardFactory.class)))
                 .thenReturn(gameTree1, gameTree2);
 
-        assertThat(strategyGameCtrl.getBestMove(player, player).get(), is(equalTo(move2)));
+        assertThat(strategyBoardCtrl.getBestMove(player, player).get(), is(equalTo(move2)));
     }
 }

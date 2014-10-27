@@ -1,6 +1,6 @@
 package models;
 
-import controllers.StrategyGameCtrl;
+import controllers.StrategyBoardCtrl;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import lang.constants;
@@ -13,46 +13,46 @@ import static org.mockito.Mockito.*;
 
 public class ComputerPlayerTest {
 
-    private StrategyGameCtrl strategyGameCtrl;
+    private StrategyBoardCtrl strategyBoardCtrl;
     private Player[] board;
     private ComputerPlayer computer;
     private Player human;
 
     @Before
     public void setup() {
-        strategyGameCtrl = mock(StrategyGameCtrl.class);
+        strategyBoardCtrl = mock(StrategyBoardCtrl.class);
         board = new Player[constants.SIDE * constants.SIDE];
         human = mock(Player.class);
-        computer = new ComputerPlayerImpl(constants.GAME_PIECE_ONE, constants.SIDE, human, strategyGameCtrl);
+        computer = new ComputerPlayerImpl(constants.GAME_PIECE_ONE, constants.SIDE, human, strategyBoardCtrl);
     }
 
     @Test
     public void shouldBeAbleToGetTheWinningMove() throws OutOfBoundsException, NotVacantException {
         Optional<Integer[]> space = Optional.of(new Integer[]{0, 2});
-        when(strategyGameCtrl.findWinningMove(computer)).thenReturn(space);
+        when(strategyBoardCtrl.findWinningMove(computer)).thenReturn(space);
 
         computer.calculateBestMove(board);
-        verify(strategyGameCtrl).findWinningMove(computer);
+        verify(strategyBoardCtrl).findWinningMove(computer);
     }
 
     @Test
     public void shouldBlockOpponentFromSettingTheWinningMove() throws OutOfBoundsException, NotVacantException {
         Optional<Integer[]> space = Optional.of(new Integer[]{0, 2});
-        when(strategyGameCtrl.findWinningMove(computer)).thenReturn(Optional.empty());
-        when(strategyGameCtrl.findWinningMove(human)).thenReturn(space);
+        when(strategyBoardCtrl.findWinningMove(computer)).thenReturn(Optional.empty());
+        when(strategyBoardCtrl.findWinningMove(human)).thenReturn(space);
 
         computer.calculateBestMove(board);
-        verify(strategyGameCtrl).findWinningMove(human);
+        verify(strategyBoardCtrl).findWinningMove(human);
     }
 
     @Test
     public void shouldPickBestSpaceIfThereIsNoWinningOrLosingMove() throws OutOfBoundsException, NotVacantException {
         Optional<Integer[]> space = Optional.of(new Integer[]{0, 2});
-        when(strategyGameCtrl.findWinningMove(computer)).thenReturn(Optional.empty());
-        when(strategyGameCtrl.findWinningMove(human)).thenReturn(Optional.empty());
-        when(strategyGameCtrl.getBestMove(computer, human)).thenReturn(space);
+        when(strategyBoardCtrl.findWinningMove(computer)).thenReturn(Optional.empty());
+        when(strategyBoardCtrl.findWinningMove(human)).thenReturn(Optional.empty());
+        when(strategyBoardCtrl.getBestMove(computer, human)).thenReturn(space);
 
         computer.calculateBestMove(board);
-        verify(strategyGameCtrl).getBestMove(computer, human);
+        verify(strategyBoardCtrl).getBestMove(computer, human);
     }
 }

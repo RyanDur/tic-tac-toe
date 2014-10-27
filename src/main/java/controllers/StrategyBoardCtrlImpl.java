@@ -10,14 +10,14 @@ import models.StrategyBoard;
 
 import java.util.Optional;
 
-public class StrategyGameCtrlImpl implements StrategyGameCtrl {
+public class StrategyBoardCtrlImpl implements StrategyBoardCtrl {
     private int side;
     private GameTreeFactory gameTreeFactory;
     private BoardFactory boardFactory;
     private StrategyBoard strategyBoard;
 
     @Inject
-    public StrategyGameCtrlImpl(GameTreeFactory gameTreeFactory, BoardFactory boardFactory) {
+    public StrategyBoardCtrlImpl(GameTreeFactory gameTreeFactory, BoardFactory boardFactory) {
         this.boardFactory = boardFactory;
         this.side = constants.SIDE;
         this.gameTreeFactory = gameTreeFactory;
