@@ -131,22 +131,4 @@ public class StrategyBoardTest {
         assertThat(actual.size(), is(equalTo(expected.size())));
         expected.stream().forEach(move -> assertThat(actual, hasItem(move)));
     }
-
-    @Test
-    public void shouldBeAbleToFilterTheBestMovesFromEmptyBoard() {
-        StrategyBoard board = new StrategyBoardImpl(constants.SIDE, players);
-        Integer[] expected1 = {0, 0};
-        Integer[] expected2 = {0, 1};
-        Integer[] expected3 = {0, 2};
-        Integer[] expected4 = {1, 0};
-        Integer[] expected5 = {1, 1};
-        Integer[] expected6 = {1, 2};
-        Integer[] expected7 = {2, 0};
-        Integer[] expected8 = {2, 1};
-        Integer[] expected9 = {2, 2};
-        List<Integer[]> expected = Arrays.asList(expected1, expected2, expected3, expected4, expected5, expected6, expected7, expected8, expected9);
-        List<Integer[]> actual = board.filterMoves(player1);
-        assertThat(actual.size(), is(equalTo(expected.size())));
-        expected.stream().forEach(move -> assertThat(actual, hasItem(move)));
-    }
 }

@@ -29,6 +29,12 @@ public class BoardTest {
     }
 
     @Test
+    public void shouldBeAbleToGetASetPiece() throws NotVacantException {
+        board.set(1, 1, player);
+        assertThat(board.get(1,1), is(equalTo(player)));
+    }
+
+    @Test
     public void shouldNotBeAbleToSetAPlayerOnATakenSpot() throws NotVacantException {
         exception.expect(NotVacantException.class);
         board.set(1, 1, player);

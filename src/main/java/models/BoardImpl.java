@@ -39,6 +39,11 @@ public class BoardImpl implements Board {
         return Arrays.copyOf(board, board.length);
     }
 
+    @Override
+    public Player get(Integer row, Integer column) {
+        return board[calculate(row, column)];
+    }
+
     private boolean isWinner(int row, int column, Player player) {
         boolean result = check(row(board, player, row)) ||
                 check(column(board, player, column));

@@ -2,7 +2,6 @@ package models;
 
 import exceptions.NotVacantException;
 import factories.BoardFactory;
-import factories.BoardFactoryImpl;
 import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,21 +37,21 @@ public class GameTreeTest {
     public void shouldBeAbleToGetAValueForAWinningNode() {
         when(board.getWinner()).thenReturn(computer);
         GameTree node = new GameTreeImpl(board, computer, human, boardFactory);
-        assertThat(node.getValue(), is(equalTo(constants.WIN_WEIGHT)));
+        assertThat(node.getMaxValue(), is(equalTo(constants.WIN_WEIGHT)));
     }
 
     @Test
     public void shouldBeAbleToGetANegativeValueForAWinningNodeAndNotAComputerPlayer() {
         when(board.getWinner()).thenReturn(human);
         GameTree node = new GameTreeImpl(board, human, computer, boardFactory);
-        assertThat(node.getValue(), is(equalTo(constants.LOSE_WEIGHT)));
+        assertThat(node.getMinValue(), is(equalTo(constants.LOSE_WEIGHT)));
     }
 
     @Test
     public void shouldBeAbleToGetA0ValueForACatsGameNode() {
         when(board.getVacancies()).thenReturn(new ArrayList<>());
         GameTree node = new GameTreeImpl(board, human, computer, boardFactory);
-        assertThat(node.getValue(), is(equalTo(constants.DRAW_WEIGHT)));
+        assertThat(node.getMaxValue(), is(equalTo(constants.DRAW_WEIGHT)));
     }
 
     @Test
@@ -61,6 +60,7 @@ public class GameTreeTest {
         board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
         StrategyBoard child = mockBoard(human, new ArrayList<>());
         when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(child);
+        when(board.winningMove(any(Player.class))).thenReturn(Optional.of(winMove));
 
         new GameTreeImpl(board, human, computer, boardFactory);
         verify(boardFactory).createBoard(anyInt(), any(Player[].class));
@@ -72,22 +72,12 @@ public class GameTreeTest {
         StrategyBoard copy = mockBoard(computer, null);
         when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
         board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
+        when(board.winningMove(any(Player.class))).thenReturn(Optional.of(winMove));
 
         GameTree node = new GameTreeImpl(board, human, computer, boardFactory);
-        assertThat(node.getValue(), is(equalTo(constants.WIN_WEIGHT)));
+        assertThat(node.getMaxValue(), is(equalTo(constants.WIN_WEIGHT)));
     }
 
-
-    @Test
-    public void should() throws NotVacantException {
-        Player[] players = new Player[constants.SIDE * constants.SIDE];
-        BoardFactory boardFactory = new BoardFactoryImpl();
-        StrategyBoard strategyBoard = boardFactory.createBoard(constants.SIDE, players);
-        strategyBoard.set(0,2,computer);
-
-        GameTree gameTree = new GameTreeImpl(strategyBoard, computer, human, boardFactory);
-        System.out.println(gameTree.getValue());
-    }
 
     @Test
     public void shouldGetWinningMoveOfFirstPlayerForChild() throws NotVacantException {
@@ -95,8 +85,9 @@ public class GameTreeTest {
         StrategyBoard copy = mockBoard(computer, null);
         when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
         board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
-        new GameTreeImpl(board, human, computer, boardFactory);
+        when(board.winningMove(any(Player.class))).thenReturn(Optional.of(winMove));
 
+        new GameTreeImpl(board, human, computer, boardFactory);
         verify(board).winningMove(human);
     }
 
@@ -106,8 +97,9 @@ public class GameTreeTest {
         StrategyBoard copy = mockBoard(computer, null);
         when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
         board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
-        new GameTreeImpl(board, human, computer, boardFactory);
+        when(board.winningMove(computer)).thenReturn(Optional.of(winMove));
 
+        new GameTreeImpl(board, human, computer, boardFactory);
         verify(board).winningMove(computer);
     }
 
@@ -117,9 +109,47 @@ public class GameTreeTest {
         StrategyBoard copy = mockBoard(computer, null);
         when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
         board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
-        new GameTreeImpl(board, human, computer, boardFactory);
 
+        new GameTreeImpl(board, human, computer, boardFactory);
         verify(board).filterMoves(human);
+    }
+
+    @Test
+    public void shouldBeAbleToGetTheMaxValueOfAGame() {
+        when(board.getWinner()).thenReturn(computer);
+        GameTree node = new GameTreeImpl(board, computer, human, boardFactory);
+        assertThat(node.getMaxValue(), is(equalTo(constants.WIN_WEIGHT)));
+    }
+
+    @Test
+    public void shouldBeAbleToGetTheMinValueOfAGame() {
+        when(board.getWinner()).thenReturn(human);
+        GameTree node = new GameTreeImpl(board, computer, human, boardFactory);
+        assertThat(node.getMinValue(), is(equalTo(constants.LOSE_WEIGHT)));
+    }
+
+    @Test
+    public void shouldSumMaxValuesOfChildrenWithParentGettingValueLeadingToAWin() {
+        Integer[] winMove = {1, 1};
+        StrategyBoard copy = mockBoard(computer, null);
+        when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
+        board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
+        when(board.winningMove(any(Player.class))).thenReturn(Optional.of(winMove));
+
+        GameTree node = new GameTreeImpl(board, human, computer, boardFactory);
+        assertThat(node.getMaxValue(), is(equalTo(constants.WIN_WEIGHT)));
+    }
+
+    @Test
+    public void shouldSumMinValuesOfChildrenWithParentGettingValueLeadingToAWin() {
+        Integer[] winMove = {1, 1};
+        StrategyBoard copy = mockBoard(human, null);
+        when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
+        board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
+        when(board.winningMove(any(Player.class))).thenReturn(Optional.of(winMove));
+
+        GameTree node = new GameTreeImpl(board, human, computer, boardFactory);
+        assertThat(node.getMinValue(), is(equalTo(constants.LOSE_WEIGHT)));
     }
 
     private StrategyBoard mockBoard(Player player, List<Integer[]> vacancies) {

@@ -4,18 +4,18 @@ import exceptions.NotVacantException;
 import factories.BoardFactory;
 import lang.constants;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GameTreeImpl implements GameTree {
-    private int value = 0;
     private List<GameTree> children;
     private StrategyBoard board;
     private final Player player1;
     private final Player player2;
     private BoardFactory boardFactory;
+    private int max = 0;
+    private int min = 0;
 
     public GameTreeImpl(StrategyBoard board, Player player1, Player player2, BoardFactory boardFactory) {
         this.board = board;
@@ -27,42 +27,41 @@ public class GameTreeImpl implements GameTree {
     }
 
     @Override
-    public int getValue() {
-        return value + children.stream()
-                .map(GameTree::getValue)
-                .reduce(0, (value1, value2) -> value1 + value2);
+    public int getMaxValue() {
+        return max + sumValues(maxValue());
+    }
+
+    @Override
+    public int getMinValue() {
+        return min + sumValues(minValue());
     }
 
     private void setValue() {
         Player winner = board.getWinner();
-        if (winner != null) value = winWeight(winner);
-        else if (board.getVacancies().size() == 0) value = constants.DRAW_WEIGHT;
+        if (winner != null) winWeight(winner);
+        else if (board.getVacancies().size() == 0) max = min = constants.DRAW_WEIGHT;
         else children = setChildren();
     }
 
-    private int winWeight(Player winner) {
-        return winner instanceof ComputerPlayer ? constants.WIN_WEIGHT : constants.LOSE_WEIGHT;
+    private void winWeight(Player winner) {
+        if (winner instanceof ComputerPlayer) max = constants.WIN_WEIGHT;
+        else min = constants.LOSE_WEIGHT;
     }
 
     private List<GameTree> setChildren() {
         List<GameTree> children = new ArrayList<>();
-        Optional<Integer[]> winMove = board.winningMove(player2);
-        Optional<Integer[]> loseMove = board.winningMove(player1);
-        if (winMove.isPresent())  children.add(makeChild(winMove));
-        if (loseMove.isPresent())  children.add(makeChild(loseMove));
-        if (children.isEmpty()) children = makeChildren();
+        Optional<Integer[]> winMove = board.winningMove(player1);
+        if (!winMove.isPresent()) winMove = board.winningMove(player2);
+        if (!winMove.isPresent()) {
+            children = collectChildren(board.filterMoves(player2));
+            children.addAll(collectChildren(board.filterMoves(player1)));
+        }
+        else children.add(makeChild(winMove));
         return children;
     }
 
-    private List<GameTree> makeChildren() {
-        List<GameTree> children;
-        children = collectChildren(board.filterMoves(player1));
-        if (children.isEmpty()) children = collectChildren(board.getVacancies());
-        return children;
-    }
-
-    private List<GameTree> collectChildren(List<Integer[]> stream) {
-        return stream.stream().map(move -> makeChild(Optional.of(move)))
+    private List<GameTree> collectChildren(List<Integer[]> moves) {
+        return moves.stream().map(move -> makeChild(Optional.of(move)))
                 .collect(Collectors.toList());
     }
 
@@ -83,5 +82,19 @@ public class GameTreeImpl implements GameTree {
             e.printStackTrace();
         }
         return copy;
+    }
+
+    private Integer sumValues(Function<GameTree, Integer> value) {
+        return children.stream()
+                .map(value)
+                .reduce(0, (value1, value2) -> value1 + value2);
+    }
+
+    private Function<GameTree, Integer> maxValue() {
+        return GameTree::getMaxValue;
+    }
+
+    private Function<GameTree, Integer> minValue() {
+        return GameTree::getMinValue;
     }
 }

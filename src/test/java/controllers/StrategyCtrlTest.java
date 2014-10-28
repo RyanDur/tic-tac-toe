@@ -51,8 +51,8 @@ public class StrategyCtrlTest {
         List<Integer[]> moves = Arrays.asList(move1,move2);
         GameTree gameTree1 = mock(GameTree.class);
         GameTree gameTree2 = mock(GameTree.class);
-        when(gameTree1.getValue()).thenReturn(10);
-        when(gameTree2.getValue()).thenReturn(20);
+        when(gameTree1.getMaxValue()).thenReturn(10);
+        when(gameTree2.getMaxValue()).thenReturn(20);
         when(strategyGameCtrl.filterMoves(any(Player.class))).thenReturn(moves);
         when(strategyGameCtrl.getTree(any(Player.class), any(Player.class), any(Integer[].class))).thenReturn(gameTree1,gameTree2);
 

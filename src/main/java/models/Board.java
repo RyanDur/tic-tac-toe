@@ -11,4 +11,6 @@ public interface Board {
     Player[] getBoard();
 
     Player getWinner();
+
+    Player get(Integer row, Integer column);
 }
