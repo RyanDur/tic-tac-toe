@@ -22,7 +22,7 @@ public class PlayerCtrlTest {
     private PlayerFactory playerFactory;
     private PlayerCtrl playerCtrl;
     private Player player1;
-    private StrategyCtrl strategyCtrl;
+    private StrategyGameCtrl strategyGameCtrl;
 
     @Before
     public void setup() {
@@ -33,9 +33,9 @@ public class PlayerCtrlTest {
         playerFactory = mock(PlayerFactory.class);
         ComputerPlayer computer = mock(ComputerPlayer.class);
         when(playerFactory.createPlayer(anyString(), anyInt())).thenReturn(player1, player2);
-        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class), any(StrategyCtrl.class))).thenReturn(computer);
-        strategyCtrl = mock(StrategyCtrl.class);
-        playerCtrl = new PlayerCtrlImpl(playerFactory, strategyCtrl);
+        when(playerFactory.createComputerPlayer(anyString(), anyInt(), any(Player.class), any(StrategyGameCtrl.class))).thenReturn(computer);
+        strategyGameCtrl = mock(StrategyGameCtrl.class);
+        playerCtrl = new PlayerCtrlImpl(playerFactory, strategyGameCtrl);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class PlayerCtrlTest {
     public void shouldBeAbleToSetupAOnePlayerGame() {
         playerCtrl.setupOnePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
         verify(playerFactory).createPlayer(constants.GAME_PIECE_ONE, constants.SIDE);
-        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_TWO, constants.SIDE, player1, strategyCtrl);
+        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_TWO, constants.SIDE, player1, strategyGameCtrl);
     }
 
     @Test
@@ -69,13 +69,13 @@ public class PlayerCtrlTest {
     public void shouldBeAbleToSpecifyHumanPlayerAsPlayerOne() {
         playerCtrl.setupOnePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
         verify(playerFactory).createPlayer(constants.GAME_PIECE_ONE, constants.SIDE);
-        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_TWO, constants.SIDE, player1, strategyCtrl);
+        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_TWO, constants.SIDE, player1, strategyGameCtrl);
     }
 
     @Test
     public void shouldBeAbleToSpecifyComputerPlayerAsPlayerOne() {
         playerCtrl.setupOnePlayer(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE);
         verify(playerFactory).createPlayer(constants.GAME_PIECE_TWO, constants.SIDE);
-        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_ONE, constants.SIDE, player1, strategyCtrl);
+        verify(playerFactory).createComputerPlayer(constants.GAME_PIECE_ONE, constants.SIDE, player1, strategyGameCtrl);
     }
 }

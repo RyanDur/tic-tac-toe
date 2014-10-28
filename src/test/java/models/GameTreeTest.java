@@ -80,18 +80,6 @@ public class GameTreeTest {
 
 
     @Test
-    public void shouldGetWinningMoveOfFirstPlayerForChild() throws NotVacantException {
-        Integer[] winMove = {1, 1};
-        StrategyBoard copy = mockBoard(computer, null);
-        when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
-        board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
-        when(board.winningMove(any(Player.class))).thenReturn(Optional.of(winMove));
-
-        new GameTreeImpl(board, human, computer, boardFactory);
-        verify(board).winningMove(human);
-    }
-
-    @Test
     public void shouldGetWinningMoveOfSecondPlayerForChild() throws NotVacantException {
         Integer[] winMove = {1, 1};
         StrategyBoard copy = mockBoard(computer, null);
@@ -101,17 +89,6 @@ public class GameTreeTest {
 
         new GameTreeImpl(board, human, computer, boardFactory);
         verify(board).winningMove(computer);
-    }
-
-    @Test
-    public void shouldGetBestMovesOfFirstPlayerForChildren() throws NotVacantException {
-        Integer[] winMove = {1, 1};
-        StrategyBoard copy = mockBoard(computer, null);
-        when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(copy);
-        board = mockBoard(null, Arrays.<Integer[]>asList(winMove));
-
-        new GameTreeImpl(board, human, computer, boardFactory);
-        verify(board).filterMoves(human);
     }
 
     @Test
