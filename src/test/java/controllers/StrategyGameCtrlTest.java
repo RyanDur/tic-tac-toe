@@ -1,136 +1,62 @@
 package controllers;
 
-import exceptions.NotVacantException;
-import factories.BoardFactory;
-import factories.GameTreeFactory;
 import lang.constants;
 import models.GameTree;
 import models.Player;
-import models.StrategyBoard;
+import models.StrategyGame;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class StrategyGameCtrlTest {
 
     private StrategyGameCtrl strategyGameCtrl;
-    private BoardFactory boardFactory;
-    private StrategyBoard strategyBoard;
-    private GameTreeFactory gameTreeFactory;
-    private Player computer;
+    private Player[] board;
+    private Player player;
+    private StrategyGame strategyGame;
 
     @Before
     public void setup() {
-        computer = mock(Player.class);
-        boardFactory = mock(BoardFactory.class);
-        gameTreeFactory = mock(GameTreeFactory.class);
-        strategyGameCtrl = new StrategyGameCtrlImpl(boardFactory, gameTreeFactory);
-        Player[] players = {};
-        strategyBoard = mock(StrategyBoard.class);
-        when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(strategyBoard);
-        strategyGameCtrl.setBoard(constants.SIDE, players);
+        strategyGame = mock(StrategyGame.class);
+        strategyGameCtrl = new StrategyGameCtrlImpl(strategyGame);
+        board = new Player[]{};
+        player = mock(Player.class);
+        strategyGameCtrl.setBoard(board);
     }
 
     @Test
-    public void shouldBeAbleToSetTheBoardTo() {
-        verify(boardFactory).createBoard(anyInt(), any(Player[].class));
-    }
-
-    @Test
-    public void shouldBeAbleTeGetAGameTreeBasedOnAMove() throws NotVacantException {
-        Player opponent = mock(Player.class);
-        Integer[] move = {1,2};
-        GameTree gameTree = mock(GameTree.class);
-        when(gameTreeFactory.createTree(strategyBoard, computer, opponent,boardFactory)).thenReturn(gameTree);
-        assertThat(strategyGameCtrl.getTree(computer, opponent, move), is(equalTo(gameTree)));
-        verify(strategyBoard).set(anyInt(), anyInt(), any(Player.class));
-        verify(gameTreeFactory).createTree(strategyBoard, computer, opponent,boardFactory);
+    public void shouldCreateANewStrategyGameWhenSettingTheBoard() {
+        verify(strategyGame).setBoard(constants.SIDE, board);
     }
 
     @Test
     public void shouldBeAbleToGetTheWinningMove() {
-        strategyGameCtrl.winningMove(computer);
-        verify(strategyBoard).winningMove(computer);
+        strategyGameCtrl.findWinningMove(player);
+        verify(strategyGame).winningMove(player);
     }
 
     @Test
-    public void shouldBeAbleToFilterMovesOfBord() {
-        strategyGameCtrl.filterMoves(computer);
-        verify(strategyBoard).filterMoves(computer);
-    }
+    public void shouldBeAbleToGetTheBestMove() {
+        Integer[] move1 = {1,2};
+        Integer[] move2 = {1,1};
+        List<Integer[]> moves = Arrays.asList(move1,move2);
+        GameTree gameTree1 = mock(GameTree.class);
+        GameTree gameTree2 = mock(GameTree.class);
+        when(gameTree1.getMaxValue()).thenReturn(10);
+        when(gameTree2.getMaxValue()).thenReturn(20);
+        when(strategyGame.filterMoves(any(Player.class))).thenReturn(moves);
+        when(strategyGame.getTree(any(Player.class), any(Player.class), any(Integer[].class))).thenReturn(gameTree1,gameTree2);
 
-    @Test
-    public void shouldBeAbleToSeeIfABoardIsEmpty() {
-        when(strategyBoard.getBoard()).thenReturn(new Player[]{});
-        assertThat(strategyGameCtrl.boardEmpty(), is(true));
-    }
-
-    @Test
-    public void shouldBeAbleToSeeIfABoardIsNotEmpty() {
-        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class)});
-        assertThat(strategyGameCtrl.boardEmpty(), is(false));
-    }
-
-    @Test
-    public void shouldBeAbleToSeeIfABoardHasToFewPieces() {
-        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class)});
-        assertThat(strategyGameCtrl.toFewPieces(), is(true));
-    }
-
-    @Test
-    public void shouldBeAbleToSeeIfABoardDoesNotHaveToFewPieces() {
-        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class),mock(Player.class),mock(Player.class)});
-        assertThat(strategyGameCtrl.toFewPieces(), is(false));
-    }
-
-    @Test
-    public void shouldBeAbleToGetTheCenter() {
-        Integer[] center = constants.CENTER;
-        when(strategyBoard.get(center[0],center[1])).thenReturn(null);
-        assertThat(strategyGameCtrl.centerOrCorner().get(), is(equalTo(center)));
-    }
-
-    @Test
-    public void shouldBeAbleToGetACorner() {
-        Integer[] center = constants.CENTER;
-        when(strategyBoard.get(center[0],center[1])).thenReturn(mock(Player.class));
-        assertThat(constants.CORNERS, hasItem(strategyGameCtrl.centerOrCorner().get()));
-    }
-
-    @Test
-    public void shouldBeAbleToCheckIfAMoveIsPresent() {
-        Optional<Integer[]> move = Optional.of(new Integer[]{1,2});
-        assertThat(strategyGameCtrl.noBest(move), is(false));
-    }
-
-    @Test
-    public void shouldBeAbleToCheckIfAMoveIsNotPresentThenTheBoardShouldNotBeEmpty() {
-        Optional<Integer[]> move = Optional.empty();
-        when(strategyBoard.getBoard()).thenReturn(new Player[constants.SIDE*constants.SIDE]);
-        assertThat(strategyGameCtrl.noBest(move), is(false));
-    }
-
-    @Test
-    public void shouldBeAbleToCheckIfAMoveIsNotPresent() {
-        Optional<Integer[]> move = Optional.empty();
-        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class)});
-        assertThat(strategyGameCtrl.noBest(move), is(true));
-    }
-
-    @Test
-    public void shouldBeAbleToGetAnyMove() {
-        List<Integer[]> vacancies = Arrays.<Integer[]>asList(constants.CENTER);
-        when(strategyBoard.getVacancies()).thenReturn(vacancies);
-
-        assertThat(strategyGameCtrl.anyMove().get(), is(equalTo(constants.CENTER)));
+        assertThat(strategyGameCtrl.getBestMove(player, player).get(), is(equalTo(move2)));
     }
 }
