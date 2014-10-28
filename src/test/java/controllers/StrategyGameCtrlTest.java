@@ -3,7 +3,6 @@ package controllers;
 import lang.constants;
 import models.GameTree;
 import models.Player;
-import models.StrategyGame;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,12 +22,12 @@ public class StrategyGameCtrlTest {
     private StrategyGameCtrl strategyGameCtrl;
     private Player[] board;
     private Player player;
-    private StrategyGame strategyGame;
+    private StrategyBoardCtrl strategyBoardCtrl;
 
     @Before
     public void setup() {
-        strategyGame = mock(StrategyGame.class);
-        strategyGameCtrl = new StrategyGameCtrlImpl(strategyGame);
+        strategyBoardCtrl = mock(StrategyBoardCtrl.class);
+        strategyGameCtrl = new StrategyGameCtrlImpl(strategyBoardCtrl);
         board = new Player[]{};
         player = mock(Player.class);
         strategyGameCtrl.setBoard(board);
@@ -36,13 +35,13 @@ public class StrategyGameCtrlTest {
 
     @Test
     public void shouldCreateANewStrategyGameWhenSettingTheBoard() {
-        verify(strategyGame).setBoard(constants.SIDE, board);
+        verify(strategyBoardCtrl).setBoard(constants.SIDE, board);
     }
 
     @Test
     public void shouldBeAbleToGetTheWinningMove() {
         strategyGameCtrl.findWinningMove(player);
-        verify(strategyGame).winningMove(player);
+        verify(strategyBoardCtrl).winningMove(player);
     }
 
     @Test
@@ -54,8 +53,8 @@ public class StrategyGameCtrlTest {
         GameTree gameTree2 = mock(GameTree.class);
         when(gameTree1.getMaxValue()).thenReturn(10);
         when(gameTree2.getMaxValue()).thenReturn(20);
-        when(strategyGame.filterMoves(any(Player.class))).thenReturn(moves);
-        when(strategyGame.getTree(any(Player.class), any(Player.class), any(Integer[].class))).thenReturn(gameTree1,gameTree2);
+        when(strategyBoardCtrl.filterMoves(any(Player.class))).thenReturn(moves);
+        when(strategyBoardCtrl.getTree(any(Player.class), any(Player.class), any(Integer[].class))).thenReturn(gameTree1,gameTree2);
 
         assertThat(strategyGameCtrl.getBestMove(player, player).get(), is(equalTo(move2)));
     }

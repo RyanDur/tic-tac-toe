@@ -1,17 +1,20 @@
-package models;
+package controllers;
 
 import com.google.inject.Inject;
 import exceptions.NotVacantException;
 import factories.BoardFactory;
 import factories.GameTreeFactory;
 import lang.constants;
+import models.GameTree;
+import models.Player;
+import models.StrategyBoard;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-public class StrategyGameImpl implements StrategyGame {
+public class StrategyBoardCtrlImpl implements StrategyBoardCtrl {
     private BoardFactory boardFactory;
     private GameTreeFactory gameTreeFactory;
     private StrategyBoard strategyBoard;
@@ -19,7 +22,7 @@ public class StrategyGameImpl implements StrategyGame {
     private Random random;
 
     @Inject
-    public StrategyGameImpl(BoardFactory boardFactory, GameTreeFactory gameTreeFactory) {
+    public StrategyBoardCtrlImpl(BoardFactory boardFactory, GameTreeFactory gameTreeFactory) {
         this.boardFactory = boardFactory;
         this.gameTreeFactory = gameTreeFactory;
         random = new Random();

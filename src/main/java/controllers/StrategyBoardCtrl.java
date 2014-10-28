@@ -1,4 +1,4 @@
-package models;
+package controllers;
 
 import models.GameTree;
 import models.Player;
@@ -6,7 +6,7 @@ import models.Player;
 import java.util.List;
 import java.util.Optional;
 
-public interface StrategyGame {
+public interface StrategyBoardCtrl {
     void setBoard(int side, Player[] board);
 
     GameTree getTree(Player player, Player opponent, Integer[] move);
