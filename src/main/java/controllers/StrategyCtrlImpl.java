@@ -36,7 +36,7 @@ public class StrategyCtrlImpl implements StrategyCtrl {
     }
 
     private Optional<Integer[]> bestMoveOf(Player computer, Player opponent) {
-        return strategyGame.filterMoves(computer).stream()
+        return strategyGame.filterMoves(opponent).stream()
                 .max((move1, move2) -> strategyGame.getTree(computer, opponent, move1).getMaxValue() -
                         strategyGame.getTree(computer, opponent, move2).getMaxValue());
     }

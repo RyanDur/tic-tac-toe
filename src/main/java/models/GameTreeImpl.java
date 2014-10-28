@@ -50,13 +50,9 @@ public class GameTreeImpl implements GameTree {
 
     private List<GameTree> setChildren() {
         List<GameTree> children = new ArrayList<>();
-        Optional<Integer[]> winMove = board.winningMove(player1);
-        if (!winMove.isPresent()) winMove = board.winningMove(player2);
-        if (!winMove.isPresent()) {
-            children = collectChildren(board.filterMoves(player2));
-            children.addAll(collectChildren(board.filterMoves(player1)));
-        }
-        else children.add(makeChild(winMove));
+        Optional<Integer[]> winMove = board.winningMove(player2);
+        if (winMove.isPresent()) children.add(makeChild(winMove));
+        else children = collectChildren(board.getVacancies());
         return children;
     }
 
@@ -75,7 +71,6 @@ public class GameTreeImpl implements GameTree {
 
     private StrategyBoard playMove(Integer[] win) {
         StrategyBoard copy = boardFactory.createBoard(constants.SIDE, board.getBoard());
-        copy.setBoard(board.getBoard());
         try {
             copy.set(win[0], win[1], player2);
         } catch (NotVacantException e) {
