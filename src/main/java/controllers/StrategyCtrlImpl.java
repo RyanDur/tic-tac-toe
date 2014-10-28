@@ -28,8 +28,16 @@ public class StrategyCtrlImpl implements StrategyCtrl {
 
     @Override
     public Optional<Integer[]> getBestMove(Player computer, Player opponent) {
-        return Optional.of(strategyGame.filterMoves(computer).stream()
-                .max((move1, move2) -> strategyGame.getTree(computer, opponent, move1).getValue() -
-                        strategyGame.getTree(computer, opponent, move2).getValue()).get());
+        if(strategyGame.boardEmpty()) return strategyGame.getCorner();
+        if(strategyGame.toFewPieces()) return strategyGame.centerOrCorner();
+        Optional<Integer[]> move = bestMoveOf(computer, opponent);
+        if(strategyGame.noBest(move)) return strategyGame.anyMove();
+        return move;
+    }
+
+    private Optional<Integer[]> bestMoveOf(Player computer, Player opponent) {
+        return strategyGame.filterMoves(computer).stream()
+                .max((move1, move2) -> strategyGame.getTree(computer, opponent, move1).getMaxValue() -
+                        strategyGame.getTree(computer, opponent, move2).getMaxValue());
     }
 }

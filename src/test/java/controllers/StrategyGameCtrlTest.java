@@ -10,14 +10,15 @@ import models.StrategyBoard;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class StrategyGameCtrlTest {
 
@@ -65,5 +66,71 @@ public class StrategyGameCtrlTest {
     public void shouldBeAbleToFilterMovesOfBord() {
         strategyGameCtrl.filterMoves(computer);
         verify(strategyBoard).filterMoves(computer);
+    }
+
+    @Test
+    public void shouldBeAbleToSeeIfABoardIsEmpty() {
+        when(strategyBoard.getBoard()).thenReturn(new Player[]{});
+        assertThat(strategyGameCtrl.boardEmpty(), is(true));
+    }
+
+    @Test
+    public void shouldBeAbleToSeeIfABoardIsNotEmpty() {
+        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class)});
+        assertThat(strategyGameCtrl.boardEmpty(), is(false));
+    }
+
+    @Test
+    public void shouldBeAbleToSeeIfABoardHasToFewPieces() {
+        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class)});
+        assertThat(strategyGameCtrl.toFewPieces(), is(true));
+    }
+
+    @Test
+    public void shouldBeAbleToSeeIfABoardDoesNotHaveToFewPieces() {
+        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class),mock(Player.class),mock(Player.class)});
+        assertThat(strategyGameCtrl.toFewPieces(), is(false));
+    }
+
+    @Test
+    public void shouldBeAbleToGetTheCenter() {
+        Integer[] center = constants.CENTER;
+        when(strategyBoard.get(center[0],center[1])).thenReturn(null);
+        assertThat(strategyGameCtrl.centerOrCorner().get(), is(equalTo(center)));
+    }
+
+    @Test
+    public void shouldBeAbleToGetACorner() {
+        Integer[] center = constants.CENTER;
+        when(strategyBoard.get(center[0],center[1])).thenReturn(mock(Player.class));
+        assertThat(constants.CORNERS, hasItem(strategyGameCtrl.centerOrCorner().get()));
+    }
+
+    @Test
+    public void shouldBeAbleToCheckIfAMoveIsPresent() {
+        Optional<Integer[]> move = Optional.of(new Integer[]{1,2});
+        assertThat(strategyGameCtrl.noBest(move), is(false));
+    }
+
+    @Test
+    public void shouldBeAbleToCheckIfAMoveIsNotPresentThenTheBoardShouldNotBeEmpty() {
+        Optional<Integer[]> move = Optional.empty();
+        when(strategyBoard.getBoard()).thenReturn(new Player[constants.SIDE*constants.SIDE]);
+        assertThat(strategyGameCtrl.noBest(move), is(false));
+    }
+
+    @Test
+    public void shouldBeAbleToCheckIfAMoveIsNotPresent() {
+        Optional<Integer[]> move = Optional.empty();
+        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class)});
+        assertThat(strategyGameCtrl.noBest(move), is(true));
+    }
+
+    @Test
+    public void shouldBeAbleToGetAnyMove() {
+        List<Integer[]> vacancies = Arrays.<Integer[]>asList(constants.CENTER);
+        when(strategyBoard.getVacancies()).thenReturn(vacancies);
+
+        assertThat(strategyGameCtrl.anyMove().get(), is(equalTo(constants.CENTER)));
     }
 }
