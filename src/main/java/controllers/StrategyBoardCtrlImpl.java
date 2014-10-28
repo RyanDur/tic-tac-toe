@@ -29,7 +29,7 @@ public class StrategyBoardCtrlImpl implements StrategyBoardCtrl {
     }
 
     @Override
-    public void setBoard(int side, Player[] board) {
+    public void setBoard(int side, String[] board) {
         this.side = side;
         strategyBoard = getStrategyBoard(board);
     }
@@ -38,7 +38,7 @@ public class StrategyBoardCtrlImpl implements StrategyBoardCtrl {
     public GameTree getTree(Player player, Player opponent, Integer[] move) {
         StrategyBoard copy = getStrategyBoard(strategyBoard.getBoard());
         try {
-            copy.set(move[0], move[1], player);
+            copy.set(move[0], move[1], player.getPiece());
         } catch (NotVacantException e) {
             e.printStackTrace();
         }
@@ -88,11 +88,11 @@ public class StrategyBoardCtrlImpl implements StrategyBoardCtrl {
         return Optional.of(strategyBoard.getVacancies().get(0));
     }
 
-    private int countPieces(Player[] board) {
+    private int countPieces(String[] board) {
         return (int) Arrays.stream(board).filter(player -> player != null).count();
     }
 
-    private StrategyBoard getStrategyBoard(Player[] board) {
+    private StrategyBoard getStrategyBoard(String[] board) {
         return boardFactory.createBoard(side, board);
     }
 

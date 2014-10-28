@@ -2,7 +2,6 @@ package views.elements;
 
 import javafx.scene.Parent;
 import lang.constants;
-import models.Player;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -11,8 +10,6 @@ import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
 import static org.loadui.testfx.Assertions.verifyThat;
 import static org.loadui.testfx.controls.Commons.hasText;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class HeaderTest extends GuiTest {
 
@@ -67,17 +64,13 @@ public class HeaderTest extends GuiTest {
 
     @Test
     public void shouldBeAbleToDisplayTheWinnerForX() {
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
-        header.displayWinner(player);
+        header.displayWinner(constants.GAME_PIECE_ONE);
         verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_ONE + constants.HAS_WON_MESSAGE));
     }
 
     @Test
     public void shouldBeAbleToDisplayTheWinnerForO() {
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        header.displayWinner(player);
+        header.displayWinner(constants.GAME_PIECE_TWO);
         verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
     }
 

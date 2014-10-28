@@ -16,11 +16,11 @@ public class GameImpl implements Game {
 
     @Override
     public void set(Player player) throws NotVacantException {
-        board.set(player.getX(), player.getY(), player);
+        board.set(player.getX(), player.getY(), player.getPiece());
     }
 
     @Override
-    public Player getWinner() {
+    public String getWinner() {
         return board.getWinner();
     }
 
@@ -30,7 +30,7 @@ public class GameImpl implements Game {
     }
 
     @Override
-    public Player[] getBoard() {
+    public String[] getBoard() {
         return board.getBoard();
     }
 

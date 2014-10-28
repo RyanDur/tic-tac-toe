@@ -18,7 +18,7 @@ public class ComputerPlayerImpl extends PlayerImpl implements ComputerPlayer {
     }
 
     @Override
-    public void calculateBestMove(Player[] board) throws OutOfBoundsException, NotVacantException {
+    public void calculateBestMove(String[] board) throws OutOfBoundsException, NotVacantException {
         strategyGameCtrl.setBoard(board);
         Optional<Integer[]> found = strategyGameCtrl.findWinningMove(this);
         if (!found.isPresent()) found = strategyGameCtrl.findWinningMove(opponent);

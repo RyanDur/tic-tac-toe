@@ -32,15 +32,15 @@ public class StrategyBoardCtrlTest {
         boardFactory = mock(BoardFactory.class);
         gameTreeFactory = mock(GameTreeFactory.class);
         strategyBoardCtrl = new StrategyBoardCtrlImpl(boardFactory, gameTreeFactory);
-        Player[] players = {};
+        String[] players = {};
         strategyBoard = mock(StrategyBoard.class);
-        when(boardFactory.createBoard(anyInt(), any(Player[].class))).thenReturn(strategyBoard);
+        when(boardFactory.createBoard(anyInt(), any(String[].class))).thenReturn(strategyBoard);
         strategyBoardCtrl.setBoard(constants.SIDE, players);
     }
 
     @Test
     public void shouldBeAbleToSetTheBoardTo() {
-        verify(boardFactory).createBoard(anyInt(), any(Player[].class));
+        verify(boardFactory).createBoard(anyInt(), any(String[].class));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class StrategyBoardCtrlTest {
         GameTree gameTree = mock(GameTree.class);
         when(gameTreeFactory.createTree(strategyBoard, computer, opponent,boardFactory)).thenReturn(gameTree);
         assertThat(strategyBoardCtrl.getTree(computer, opponent, move), is(equalTo(gameTree)));
-        verify(strategyBoard).set(anyInt(), anyInt(), any(Player.class));
+        verify(strategyBoard).set(anyInt(), anyInt(), anyString());
         verify(gameTreeFactory).createTree(strategyBoard, computer, opponent,boardFactory);
     }
 
@@ -68,25 +68,25 @@ public class StrategyBoardCtrlTest {
 
     @Test
     public void shouldBeAbleToSeeIfABoardIsEmpty() {
-        when(strategyBoard.getBoard()).thenReturn(new Player[]{});
+        when(strategyBoard.getBoard()).thenReturn(new String[]{});
         assertThat(strategyBoardCtrl.boardEmpty(), is(true));
     }
 
     @Test
     public void shouldBeAbleToSeeIfABoardIsNotEmpty() {
-        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class)});
+        when(strategyBoard.getBoard()).thenReturn(new String[]{anyString()});
         assertThat(strategyBoardCtrl.boardEmpty(), is(false));
     }
 
     @Test
     public void shouldBeAbleToSeeIfABoardHasToFewPieces() {
-        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class)});
+        when(strategyBoard.getBoard()).thenReturn(new String[]{anyString()});
         assertThat(strategyBoardCtrl.toFewPieces(), is(true));
     }
 
     @Test
     public void shouldBeAbleToSeeIfABoardDoesNotHaveToFewPieces() {
-        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class),mock(Player.class),mock(Player.class)});
+        when(strategyBoard.getBoard()).thenReturn(new String[]{anyString(),anyString(),anyString()});
         assertThat(strategyBoardCtrl.toFewPieces(), is(false));
     }
 
@@ -100,7 +100,7 @@ public class StrategyBoardCtrlTest {
     @Test
     public void shouldBeAbleToGetACorner() {
         Integer[] center = constants.CENTER;
-        when(strategyBoard.get(center[0],center[1])).thenReturn(mock(Player.class));
+        when(strategyBoard.get(center[0],center[1])).thenReturn(anyString());
         assertThat(constants.CORNERS, hasItem(strategyBoardCtrl.centerOrCorner().get()));
     }
 
@@ -113,14 +113,14 @@ public class StrategyBoardCtrlTest {
     @Test
     public void shouldBeAbleToCheckIfAMoveIsNotPresentThenTheBoardShouldNotBeEmpty() {
         Optional<Integer[]> move = Optional.empty();
-        when(strategyBoard.getBoard()).thenReturn(new Player[constants.SIDE*constants.SIDE]);
+        when(strategyBoard.getBoard()).thenReturn(new String[constants.SIDE*constants.SIDE]);
         assertThat(strategyBoardCtrl.noBest(move), is(false));
     }
 
     @Test
     public void shouldBeAbleToCheckIfAMoveIsNotPresent() {
         Optional<Integer[]> move = Optional.empty();
-        when(strategyBoard.getBoard()).thenReturn(new Player[]{mock(Player.class)});
+        when(strategyBoard.getBoard()).thenReturn(new String[]{anyString()});
         assertThat(strategyBoardCtrl.noBest(move), is(true));
     }
 

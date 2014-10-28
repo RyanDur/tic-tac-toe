@@ -26,6 +26,7 @@ public class GameCtrlTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
     private BoardFactory boardFactory;
+    private String pieceOne = constants.GAME_PIECE_ONE;
 
     @Before
     public void setup() {
@@ -85,7 +86,7 @@ public class GameCtrlTest {
 
     @Test
     public void shouldBeAbleToTellIfTheGameIsOverIfThereIsAWinner() {
-        when(mockGame.getWinner()).thenReturn(mockPlayer);
+        when(mockGame.getWinner()).thenReturn(pieceOne);
         when(mockGame.full()).thenReturn(false);
         assertThat(gameCtrl.gameOver(), is(true));
     }
@@ -99,11 +100,11 @@ public class GameCtrlTest {
 
     @Test
     public void shouldBeAbleToGetTheWinner() throws OutOfTurnException, NotVacantException {
-        when(mockGame.getWinner()).thenReturn(mockPlayer);
+        when(mockGame.getWinner()).thenReturn(pieceOne);
         when(mockGame.full()).thenReturn(false);
         gameCtrl.setPiece(mockPlayer);
         gameCtrl.gameOver();
-        assertThat(gameCtrl.getWinner(), is(equalTo(mockPlayer)));
+        assertThat(gameCtrl.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
@@ -116,7 +117,7 @@ public class GameCtrlTest {
 
     @Test
     public void shouldBeAbleToGetACopyOfTheBoard() {
-        Player[] expected = new Player[constants.SIDE * constants.SIDE];
+        String[] expected = new String[constants.SIDE * constants.SIDE];
         when(mockGame.getBoard()).thenReturn(expected);
         assertThat(mockGame.getBoard(), is(equalTo(expected)));
     }

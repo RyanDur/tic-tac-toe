@@ -9,19 +9,21 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ComputerPlayerTest {
 
     private StrategyGameCtrl strategyGameCtrl;
-    private Player[] board;
+    private String[] board;
     private ComputerPlayer computer;
     private Player human;
 
     @Before
     public void setup() {
         strategyGameCtrl = mock(StrategyGameCtrl.class);
-        board = new Player[constants.SIDE * constants.SIDE];
+        board = new String[constants.SIDE * constants.SIDE];
         human = mock(Player.class);
         computer = new ComputerPlayerImpl(constants.GAME_PIECE_ONE, constants.SIDE, human, strategyGameCtrl);
     }

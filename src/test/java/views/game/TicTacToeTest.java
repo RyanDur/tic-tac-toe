@@ -8,7 +8,6 @@ import factories.ViewFactory;
 import factories.ViewFactoryImpl;
 import javafx.scene.Parent;
 import lang.constants;
-import models.Player;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -28,7 +27,7 @@ public class TicTacToeTest extends GuiTest {
     private final String gameId = "#game";
     private String twoPlayer = "2 Player";
     private GamePlayCtrl game;
-    private Player[] board = new Player[constants.SIDE * constants.SIDE];
+    private String[] board = new String[constants.SIDE * constants.SIDE];
     private String center = "#cell4";
     private String reset = "Reset";
 
@@ -36,6 +35,8 @@ public class TicTacToeTest extends GuiTest {
     public ExpectedException exception = ExpectedException.none();
     private String replay = "Replay";
     private String centerLeft = "#cell3";
+    private String pieceOne = constants.GAME_PIECE_ONE;
+    private String pieceTwo = constants.GAME_PIECE_TWO;
 
 
     @Override
@@ -168,33 +169,27 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldDisplayWinnerWhenGameIsOverForXInOnePlayerMode() {
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
-        when(game.getWinner()).thenReturn(player);
+        when(game.getWinner()).thenReturn(pieceOne);
         when(game.over()).thenReturn(true);
         click(onePlayer);
-        click(constants.GAME_PIECE_ONE);
+        click(pieceOne);
         click(center);
         verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_ONE + constants.HAS_WON_MESSAGE));
     }
 
     @Test
     public void shouldDisplayWinnerWhenGameIsOverForOInOnePlayerMode() {
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        when(game.getWinner()).thenReturn(player);
+        when(game.getWinner()).thenReturn(pieceTwo);
         when(game.over()).thenReturn(true);
         click(onePlayer);
-        click(constants.GAME_PIECE_TWO);
+        click(pieceTwo);
         click(center);
         verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
     }
 
     @Test
     public void shouldDisplayWinnerWhenGameIsOverForXInTwoPlayerMode() {
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
-        when(game.getWinner()).thenReturn(player);
+        when(game.getWinner()).thenReturn(pieceOne);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
@@ -203,9 +198,7 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldDisplayWinnerWhenGameIsOverForOInTwoPlayerMode() {
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        when(game.getWinner()).thenReturn(player);
+        when(game.getWinner()).thenReturn(pieceTwo);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
@@ -214,9 +207,7 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldDisplayTheMenuWhenResetIsClicked() {
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        when(game.getWinner()).thenReturn(player);
+        when(game.getWinner()).thenReturn(pieceOne);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
@@ -227,9 +218,7 @@ public class TicTacToeTest extends GuiTest {
     @Test
     public void shouldRemoveMessageIfAnyWhenPlayerClicksOnEmptySpaceIsClicked() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
         doThrow(new NotVacantException()).when(game).set(1,1);
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        when(game.getWinner()).thenReturn(player);
+        when(game.getWinner()).thenReturn(pieceOne);
         click(twoPlayer);
         click(center);
         verifyThat(constants.MESSAGES_ID, hasText(constants.NOT_VACANT_MESSAGE));
@@ -239,9 +228,7 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldRemoveMessageWhenResetIsClicked() {
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        when(game.getWinner()).thenReturn(player);
+        when(game.getWinner()).thenReturn(pieceTwo);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
@@ -253,9 +240,7 @@ public class TicTacToeTest extends GuiTest {
     @Test
     public void shouldRemoveTheGameWhenResetIsClicked() {
         exception.expect(NoNodesFoundException.class);
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        when(game.getWinner()).thenReturn(player);
+        when(game.getWinner()).thenReturn(pieceOne);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
@@ -265,9 +250,7 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldResetTheGameWhenReplayIsChosen() {
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        when(game.getWinner()).thenReturn(player);
+        when(game.getWinner()).thenReturn(pieceOne);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
@@ -277,9 +260,7 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldRemoveMessageWhenReplayIsChosen() {
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        when(game.getWinner()).thenReturn(player);
+        when(game.getWinner()).thenReturn(pieceTwo);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
@@ -290,9 +271,7 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldNotRemoveWinMessageWhenPlayerHasWonButStillTryingToClickOnASpace() {
-        Player player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_TWO);
-        when(game.getWinner()).thenReturn(player);
+        when(game.getWinner()).thenReturn(pieceTwo);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);

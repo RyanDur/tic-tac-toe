@@ -7,5 +7,5 @@ import models.StrategyBoard;
 public interface BoardFactory {
     Board createBoard(int side);
 
-    StrategyBoard createBoard(int side, Player[] board);
+    StrategyBoard createBoard(int side, String[] board);
 }

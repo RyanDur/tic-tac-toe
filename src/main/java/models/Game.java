@@ -7,9 +7,9 @@ public interface Game {
 
     int getNumOfPieces();
 
-    Player getWinner();
+    String getWinner();
 
     boolean full();
 
-    Player[] getBoard();
+    String[] getBoard();
 }

@@ -37,8 +37,8 @@ public class GameTreeImpl implements GameTree {
     }
 
     private void setValue() {
-        Player winner = board.getWinner();
-        if (winner != null) winWeight(winner);
+        String winner = board.getWinner();
+        if (winner != null) winWeight(player1);
         else if (board.getVacancies().size() == 0) max = min = constants.DRAW_WEIGHT;
         else children = setChildren();
     }
@@ -72,7 +72,7 @@ public class GameTreeImpl implements GameTree {
     private StrategyBoard playMove(Integer[] win) {
         StrategyBoard copy = boardFactory.createBoard(constants.SIDE, board.getBoard());
         try {
-            copy.set(win[0], win[1], player2);
+            copy.set(win[0], win[1], player2.getPiece());
         } catch (NotVacantException e) {
             e.printStackTrace();
         }

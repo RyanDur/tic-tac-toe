@@ -17,7 +17,7 @@ public class StrategyGameCtrlImpl implements StrategyGameCtrl {
     }
 
     @Override
-    public void setBoard(Player[] board) {
+    public void setBoard(String[] board) {
         strategyBoardCtrl.setBoard(side, board);
     }
 

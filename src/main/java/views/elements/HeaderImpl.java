@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import lang.constants;
-import models.Player;
 
 import java.io.IOException;
 
@@ -56,9 +55,9 @@ public class HeaderImpl extends Parent implements Header {
     }
 
     @Override
-    public void displayWinner(Player player) {
+    public void displayWinner(String player) {
         if (player == null) setMessage(constants.DRAW_MESSAGE);
-        else setMessage(player.getPiece() + constants.HAS_WON_MESSAGE);
+        else setMessage(player + constants.HAS_WON_MESSAGE);
     }
 
     private HBox getFXML() {

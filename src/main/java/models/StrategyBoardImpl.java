@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
     private int side;
 
-    public StrategyBoardImpl(int side, Player[] board) {
+    public StrategyBoardImpl(int side, String[] board) {
         super(side);
         this.side = side;
         setBoard(board);
@@ -19,7 +19,7 @@ public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
 
     @Override
     public List<Integer[]> getVacancies() {
-        Player[] board = getBoard();
+        String[] board = getBoard();
         return IntStream.range(0, board.length).
                 filter(index -> board[index] == null).boxed().
                 map(num -> new Integer[]{calcRow(num), calcColumn(num)}).
@@ -52,13 +52,13 @@ public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
     }
 
     private Predicate<Integer[]> winMove(Player player) {
-        return vacancy -> playVacancy(player, vacancy).getWinner() == player;
+        return vacancy -> player.getPiece().equals(playVacancy(player, vacancy).getWinner());
     }
 
     private StrategyBoard playVacancy(Player player, Integer[] vacancy) {
         StrategyBoard strategyBoard = new StrategyBoardImpl(side, getBoard());
         try {
-            strategyBoard.set(vacancy[0], vacancy[1], player);
+            strategyBoard.set(vacancy[0], vacancy[1], player.getPiece());
         } catch (NotVacantException e) {
             e.printStackTrace();
         }

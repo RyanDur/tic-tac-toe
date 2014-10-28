@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StrategyBoardCtrl {
-    void setBoard(int side, Player[] board);
+    void setBoard(int side, String[] board);
 
     GameTree getTree(Player player, Player opponent, Integer[] move);
 

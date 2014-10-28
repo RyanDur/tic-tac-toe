@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class GamePlayCtrlTest {
@@ -55,14 +54,14 @@ public class GamePlayCtrlTest {
     public void shouldBeAbleToAllowTheComputerToPlayFirstIfItIsX() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
         when(computer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         gamePlayCtrl.onePlayer(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE);
-        verify(computer).calculateBestMove(any(Player[].class));
+        verify(computer).calculateBestMove(any(String[].class));
         verify(gameCtrl).setPiece(computer);
     }
 
     @Test
     public void shouldNotBeAbleToAllowTheComputerToPlayFirstIfItIsO() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
         gamePlayCtrl.onePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
-        verify(computer, never()).calculateBestMove(any(Player[].class));
+        verify(computer, never()).calculateBestMove(any(String[].class));
         verify(gameCtrl, never()).setPiece(computer);
     }
 
@@ -86,7 +85,7 @@ public class GamePlayCtrlTest {
 
     @Test
     public void shouldSetPlayerXOnFirstMoveForTwoPlayer() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
-        when(gameCtrl.getBoard()).thenReturn(new Player[]{});
+        when(gameCtrl.getBoard()).thenReturn(new String[]{});
         int row = 1;
         int column = 2;
         gamePlayCtrl.twoPlayer();
@@ -97,7 +96,7 @@ public class GamePlayCtrlTest {
 
     @Test
     public void shouldSetPlayerOOnSecondMoveForTwoPlayer() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
-        when(gameCtrl.getBoard()).thenReturn(new Player[]{player1});
+        when(gameCtrl.getBoard()).thenReturn(new String[]{constants.GAME_PIECE_ONE});
         int row = 1;
         int column = 2;
         gamePlayCtrl.twoPlayer();
@@ -108,7 +107,7 @@ public class GamePlayCtrlTest {
 
     @Test
     public void shouldSetPlayer1ThenComputerPlayer() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
-        Player[] board = {};
+        String[] board = {};
         when(gameCtrl.getBoard()).thenReturn(board);
         InOrder inOrder = inOrder(player1, computer, gameCtrl);
         int row = 1;
@@ -123,7 +122,7 @@ public class GamePlayCtrlTest {
 
     @Test
     public void shouldNotCallComputerIfGameOver() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
-        Player[] board = {};
+        String[] board = {};
         when(gameCtrl.getBoard()).thenReturn(board);
         when(gameCtrl.gameOver()).thenReturn(true);
         InOrder inOrder = inOrder(player1, computer, gameCtrl);
@@ -148,7 +147,7 @@ public class GamePlayCtrlTest {
         when(computer.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         gamePlayCtrl.onePlayer(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE);
         gamePlayCtrl.reset();
-        verify(computer, times(2)).calculateBestMove(any(Player[].class));
+        verify(computer, times(2)).calculateBestMove(any(String[].class));
     }
 
     @Test

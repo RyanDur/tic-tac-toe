@@ -11,7 +11,7 @@ public interface GameCtrl {
 
     boolean gameOver();
 
-    Player getWinner();
+    String getWinner();
 
-    Player[] getBoard();
+    String[] getBoard();
 }

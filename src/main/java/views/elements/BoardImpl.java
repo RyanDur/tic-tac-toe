@@ -14,10 +14,10 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class BoardImpl extends Parent implements Board {
-    private Function<MouseEvent, Player[]> play;
+    private Function<MouseEvent, String[]> play;
     private GridPane grid;
 
-    public BoardImpl(Player[] board, Function<MouseEvent, Player[]> play) {
+    public BoardImpl(String[] board, Function<MouseEvent, String[]> play) {
         BorderPane borderPane = getFXML();
         this.play = play;
         grid = (GridPane) borderPane.getCenter();
@@ -25,17 +25,17 @@ public class BoardImpl extends Parent implements Board {
         this.getChildren().add(borderPane);
     }
 
-    private void fillBoard(Player[] board) {
+    private void fillBoard(String[] board) {
         grid.getChildren().stream().filter(space -> space instanceof Label)
                 .forEach(cell -> setSpace(board, (Label) cell));
     }
 
-    private void setSpace(Player[] board, Label cell) {
-        Player player = board[calc(getRow(cell), getColumn(cell))];
+    private void setSpace(String[] board, Label cell) {
+        String player = board[calc(getRow(cell), getColumn(cell))];
         if (player == null) {
             cell.setText(constants.EMPTY);
             cell.setOnMouseClicked(click -> fillBoard(play.apply(click)));
-        } else cell.setText(player.getPiece());
+        } else cell.setText(player);
     }
 
     private int calc(int row, int column) {

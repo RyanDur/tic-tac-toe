@@ -15,5 +15,5 @@ public interface Header {
 
     void setButtonsVisibility(boolean visible);
 
-    void displayWinner(Player player);
+    void displayWinner(String player);
 }

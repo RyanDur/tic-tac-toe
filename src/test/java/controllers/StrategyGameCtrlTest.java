@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class StrategyGameCtrlTest {
 
     private StrategyGameCtrl strategyGameCtrl;
-    private Player[] board;
+    private String[] board;
     private Player player;
     private StrategyBoardCtrl strategyBoardCtrl;
 
@@ -28,7 +28,7 @@ public class StrategyGameCtrlTest {
     public void setup() {
         strategyBoardCtrl = mock(StrategyBoardCtrl.class);
         strategyGameCtrl = new StrategyGameCtrlImpl(strategyBoardCtrl);
-        board = new Player[]{};
+        board = new String[]{};
         player = mock(Player.class);
         strategyGameCtrl.setBoard(board);
     }

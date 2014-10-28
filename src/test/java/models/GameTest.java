@@ -15,6 +15,7 @@ import static org.mockito.Mockito.*;
 
 public class GameTest {
 
+    private final String piece = constants.GAME_PIECE_ONE;
     private Game game;
     private Player mockPlayer;
 
@@ -34,23 +35,23 @@ public class GameTest {
     @Test
     public void shouldBeAbleToSetAPieceOnTheBoard() throws NotVacantException {
         game.set(mockPlayer);
-        verify(board).set(anyInt(), anyInt(), any(Player.class));
+        verify(board).set(anyInt(), anyInt(), anyString());
     }
 
     @Test
     public void shouldKnowTheNumberOfPiecesPlacedOnTheBoard() throws NotVacantException {
-        Player[] players = new Player[constants.SIDE * constants.SIDE];
-        players[0] = mockPlayer;
-        players[1] = mockPlayer;
-        players[2] = mockPlayer;
-        players[3] = mockPlayer;
+        String[] players = new String[constants.SIDE * constants.SIDE];
+        players[0] = piece;
+        players[1] = piece;
+        players[2] = piece;
+        players[3] = piece;
         when(board.getBoard()).thenReturn(players);
         assertThat(game.getNumOfPieces(), is(equalTo(4)));
     }
 
     @Test
     public void shouldBeAbleToRetrieveACopyOfTheBoard() {
-        Player[] players = new Player[constants.SIDE * constants.SIDE];
+        String[] players = new String[constants.SIDE * constants.SIDE];
         when(board.getBoard()).thenReturn(players);
         assertThat(game.getBoard(), is(equalTo(players)));
     }
@@ -63,22 +64,22 @@ public class GameTest {
 
     @Test
     public void shouldBeAbleToTellIfABoardIsNotFull() {
-        when(board.getBoard()).thenReturn(new Player[constants.SIDE * constants.SIDE]);
+        when(board.getBoard()).thenReturn(new String[constants.SIDE * constants.SIDE]);
         assertThat(game.full(), is(false));
     }
 
     @Test
     public void shouldBeAbleToTellIfABoardIsFull() {
-        when(board.getBoard()).thenReturn(new Player[]{
-                mock(Player.class),
-                mock(Player.class),
-                mock(Player.class),
-                mock(Player.class),
-                mock(Player.class),
-                mock(Player.class),
-                mock(Player.class),
-                mock(Player.class),
-                mock(Player.class)});
+        when(board.getBoard()).thenReturn(new String[]{
+                piece,
+                piece,
+                piece,
+                piece,
+                piece,
+                piece,
+                piece,
+                piece,
+                piece});
         assertThat(game.full(), is(true));
     }
 }

@@ -4,13 +4,13 @@ import exceptions.NotVacantException;
 
 public interface Board {
 
-    void set(int row, int column, Player player) throws NotVacantException;
+    void set(int row, int column, String player) throws NotVacantException;
 
-    void setBoard(Player[] board);
+    void setBoard(String[] board);
 
-    Player[] getBoard();
+    String[] getBoard();
 
-    Player getWinner();
+    String getWinner();
 
-    Player get(Integer row, Integer column);
+    String get(Integer row, Integer column);
 }

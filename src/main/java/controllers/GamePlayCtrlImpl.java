@@ -49,12 +49,12 @@ public class GamePlayCtrlImpl implements GamePlayCtrl {
     }
 
     @Override
-    public Player getWinner() {
+    public String getWinner() {
         return gameCtrl.getWinner();
     }
 
     @Override
-    public Player[] getBoard() {
+    public String[] getBoard() {
         return gameCtrl.getBoard();
     }
 

@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public interface ViewFactory {
-    Board createBoard(Player[] board, Function<MouseEvent, Player[]> play);
+    Board createBoard(String[] board, Function<MouseEvent, String[]> play);
 
     Menu createMenu(BiConsumer<String, String> onePlayer, EventHandler<MouseEvent> twoPlayer);
 }

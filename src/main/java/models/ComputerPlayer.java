@@ -5,5 +5,5 @@ import exceptions.OutOfBoundsException;
 
 public interface ComputerPlayer extends Player {
 
-    void calculateBestMove(Player[] players) throws OutOfBoundsException, NotVacantException;
+    void calculateBestMove(String[] players) throws OutOfBoundsException, NotVacantException;
 }

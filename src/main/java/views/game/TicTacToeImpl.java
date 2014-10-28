@@ -16,7 +16,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import lang.constants;
-import models.Player;
 import views.elements.Header;
 
 import java.io.IOException;
@@ -70,7 +69,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
         };
     }
 
-    private Function<MouseEvent, Player[]> play(GamePlayCtrl game) {
+    private Function<MouseEvent, String[]> play(GamePlayCtrl game) {
         return click -> {
             try {
                 if (!game.over()) {

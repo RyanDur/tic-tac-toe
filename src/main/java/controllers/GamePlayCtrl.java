@@ -14,9 +14,9 @@ public interface GamePlayCtrl {
 
     void set(int row, int column) throws OutOfBoundsException, OutOfTurnException, NotVacantException;
 
-    Player getWinner();
+    String getWinner();
 
-    Player[] getBoard();
+    String[] getBoard();
 
     void setup();
 

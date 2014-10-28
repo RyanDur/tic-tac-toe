@@ -4,7 +4,6 @@ import controllers.GameCtrl;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import lang.constants;
-import models.Player;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -18,8 +17,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class BoardTest extends GuiTest {
-    private Player player;
-    private Player[] board;
+    private String player;
+    private String[] board;
     private GameCtrl gameCtrl;
 
     @Rule
@@ -27,19 +26,16 @@ public class BoardTest extends GuiTest {
 
     @Override
     protected Parent getRootNode() {
-        this.board = new Player[constants.SIDE * constants.SIDE];
-        player = mock(Player.class);
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
+        this.board = new String[constants.SIDE * constants.SIDE];
+        player = constants.GAME_PIECE_ONE;
         gameCtrl = mock(GameCtrl.class);
         when(gameCtrl.getBoard()).thenReturn(this.board);
-        Function<MouseEvent, Player[]> play = mockPlay();
-        Board board = new BoardImpl(this.board, play);
-        return (Parent) board;
+        Function<MouseEvent, String[]> play = mockPlay();
+        return new BoardImpl(this.board, play);
     }
 
     @Test
     public void shouldBeAbleToChooseAPlaceOnTheBoard() {
-        when(player.getPiece()).thenReturn(constants.GAME_PIECE_ONE);
         when(gameCtrl.getBoard()).thenReturn(board);
         for (int i = 0; i < board.length; i++) {
             String id = "#cell" + i;
@@ -61,7 +57,7 @@ public class BoardTest extends GuiTest {
     @Test
     public void shouldBeAbleToClearTheBoard() throws InterruptedException {
         int index = 2;
-        Player[] board1 = new Player[constants.SIDE * constants.SIDE];
+        String[] board1 = new String[constants.SIDE * constants.SIDE];
         board[index] = player;
         String id = "#cell" + index;
         click(id);
@@ -71,7 +67,7 @@ public class BoardTest extends GuiTest {
         verifyThat(id, hasText(constants.EMPTY));
     }
 
-    private Function<MouseEvent, Player[]> mockPlay() {
+    private Function<MouseEvent, String[]> mockPlay() {
         return e -> gameCtrl.getBoard();
     }
 }

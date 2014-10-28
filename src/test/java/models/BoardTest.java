@@ -10,21 +10,20 @@ import org.junit.rules.ExpectedException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.mockito.Mockito.mock;
 
 public class BoardTest {
 
     private Board board;
-    private Player[] players;
-    private Player player;
+    private String[] players;
+    private String player;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setup() {
-        player = mock(Player.class);
-        players = new Player[constants.SIDE * constants.SIDE];
+        player = constants.GAME_PIECE_ONE;
+        players = new String[constants.SIDE * constants.SIDE];
         board = new BoardImpl(constants.SIDE);
     }
 

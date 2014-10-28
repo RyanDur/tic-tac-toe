@@ -5,7 +5,7 @@ import models.Player;
 import java.util.Optional;
 
 public interface StrategyGameCtrl {
-    void setBoard(Player[] board);
+    void setBoard(String[] board);
 
     Optional<Integer[]> findWinningMove(Player computer);
 
