@@ -1,13 +1,11 @@
-package controllers;
+package models;
 
 import com.google.inject.Inject;
 import exceptions.NotVacantException;
+import exceptions.OutOfTurnException;
 import factories.BoardFactory;
 import factories.GameTreeFactory;
 import lang.constants;
-import models.GameTree;
-import models.Player;
-import models.StrategyBoard;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,23 +33,23 @@ public class StrategyBoardCtrlImpl implements StrategyBoardCtrl {
     }
 
     @Override
-    public GameTree getTree(Player player, Player opponent, Integer[] move) {
+    public GameTree getTree(String player, String opponent, Integer[] move) {
         StrategyBoard copy = getStrategyBoard(strategyBoard.getBoard());
         try {
-            copy.set(move[0], move[1], player.getPiece());
-        } catch (NotVacantException e) {
+            copy.set(move[0], move[1], player);
+        } catch (NotVacantException | OutOfTurnException e) {
             e.printStackTrace();
         }
         return gameTreeFactory.createTree(copy, player, opponent, boardFactory);
     }
 
     @Override
-    public Optional<Integer[]> winningMove(Player player) {
+    public Optional<Integer[]> winningMove(String player) {
         return strategyBoard.winningMove(player);
     }
 
     @Override
-    public List<Integer[]> filterMoves(Player player) {
+    public List<Integer[]> filterMoves(String player) {
         return strategyBoard.filterMoves(player);
     }
 

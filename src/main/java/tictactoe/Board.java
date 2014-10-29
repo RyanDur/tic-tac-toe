@@ -1,10 +1,11 @@
-package models;
+package tictactoe;
 
 import exceptions.NotVacantException;
+import exceptions.OutOfTurnException;
 
 public interface Board {
 
-    void set(int row, int column, String player) throws NotVacantException;
+    void set(int row, int column, String player) throws NotVacantException, OutOfTurnException;
 
     void setBoard(String[] board);
 

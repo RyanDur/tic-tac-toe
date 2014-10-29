@@ -9,13 +9,13 @@ import javafx.scene.layout.GridPane;
 import lang.constants;
 
 import java.io.IOException;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class MenuImpl extends Parent implements Menu {
     private final Button right;
     private final Button left;
 
-    public MenuImpl(BiConsumer<String, String> onePlayer, EventHandler<MouseEvent> twoPlayer) {
+    public MenuImpl(Consumer<String> onePlayer, EventHandler<MouseEvent> twoPlayer) {
         GridPane nav = getFXML();
         right = (Button) nav.lookup(constants.RIGHT_BUTTON_ID);
         left = (Button) nav.lookup(constants.LEFT_BUTTON_ID);
@@ -28,12 +28,12 @@ public class MenuImpl extends Parent implements Menu {
         right.setOnMouseClicked(twoPlayer);
     }
 
-    private void setOnePlayer(BiConsumer<String, String> onePlayer) {
+    private void setOnePlayer(Consumer<String> computer) {
         left.setOnMouseClicked(event -> {
             left.setText(constants.GAME_PIECE_ONE);
             right.setText(constants.GAME_PIECE_TWO);
-            left.setOnMouseClicked(event2 -> onePlayer.accept(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO));
-            right.setOnMouseClicked(event2 -> onePlayer.accept(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE));
+            left.setOnMouseClicked(event2 -> computer.accept(constants.GAME_PIECE_TWO));
+            right.setOnMouseClicked(event2 -> computer.accept(constants.GAME_PIECE_ONE));
         });
     }
 

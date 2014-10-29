@@ -1,6 +1,8 @@
 package models;
 
+import tictactoe.BoardImpl;
 import exceptions.NotVacantException;
+import exceptions.OutOfTurnException;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,19 +29,19 @@ public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
     }
 
     @Override
-    public Optional<Integer[]> winningMove(Player player) {
+    public Optional<Integer[]> winningMove(String player) {
         return find(winMove(player));
     }
 
     @Override
-    public List<Integer[]> filterMoves(Player player) {
+    public List<Integer[]> filterMoves(String player) {
         return generatePossibleMoves(player, getVacancies()).stream()
                 .filter(game -> game.winningMove(player).isPresent())
                 .map(game -> game.winningMove(player).get())
                 .collect(Collectors.toList());
     }
 
-    private List<StrategyBoard> generatePossibleMoves(Player player, List<Integer[]> vacancies) {
+    private List<StrategyBoard> generatePossibleMoves(String player, List<Integer[]> vacancies) {
         return vacancies.stream()
                 .map(vacancy -> playVacancy(player, vacancy))
                 .collect(Collectors.toList());
@@ -51,15 +53,15 @@ public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
                 findFirst();
     }
 
-    private Predicate<Integer[]> winMove(Player player) {
-        return vacancy -> player.getPiece().equals(playVacancy(player, vacancy).getWinner());
+    private Predicate<Integer[]> winMove(String player) {
+        return vacancy -> player.equals(playVacancy(player, vacancy).getWinner());
     }
 
-    private StrategyBoard playVacancy(Player player, Integer[] vacancy) {
+    private StrategyBoard playVacancy(String player, Integer[] vacancy) {
         StrategyBoard strategyBoard = new StrategyBoardImpl(side, getBoard());
         try {
-            strategyBoard.set(vacancy[0], vacancy[1], player.getPiece());
-        } catch (NotVacantException e) {
+            strategyBoard.set(vacancy[0], vacancy[1], player);
+        } catch (NotVacantException | OutOfTurnException e) {
             e.printStackTrace();
         }
         return strategyBoard;

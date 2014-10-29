@@ -1,7 +1,7 @@
 package views.game;
 
 import com.google.inject.Inject;
-import controllers.GamePlayCtrl;
+import tictactoe.Game;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
@@ -19,18 +19,18 @@ import lang.constants;
 import views.elements.Header;
 
 import java.io.IOException;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class TicTacToeImpl extends Parent implements TicTacToe {
     private Pane centerPane;
-    private GamePlayCtrl game;
+    private Game game;
     private Header header;
     private ViewFactory viewFactory;
     private final BorderPane ticTacToe;
 
     @Inject
-    public TicTacToeImpl(GamePlayCtrl game, ViewFactory viewFactory, Header header) {
+    public TicTacToeImpl(Game game, ViewFactory viewFactory, Header header) {
         ticTacToe = getFXML();
         this.getChildren().add(ticTacToe);
         this.viewFactory = viewFactory;
@@ -50,26 +50,22 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     private EventHandler<MouseEvent> resetGame() {
         return event -> {
             clearHeader(header);
-            game.reset();
             setupBoard();
         };
     }
 
     private EventHandler<MouseEvent> setTwoPlayer() {
-        return event -> {
-            game.twoPlayer();
+        return event -> setupBoard();
+    }
+
+    private Consumer<String> setOnePlayer() {
+        return (piece) -> {
+            game.setComputer(piece);
             setupBoard();
         };
     }
 
-    private BiConsumer<String, String> setOnePlayer() {
-        return (player1, player2) -> {
-            game.onePlayer(player1, player2);
-            setupBoard();
-        };
-    }
-
-    private Function<MouseEvent, String[]> play(GamePlayCtrl game) {
+    private Function<MouseEvent, String[]> play(Game game) {
         return click -> {
             try {
                 if (!game.over()) {
@@ -89,6 +85,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     }
 
     private void setupBoard() {
+        game.setup();
         swapCenter((Node) viewFactory.createBoard(game.getBoard(), play(game)));
     }
 

@@ -1,8 +1,8 @@
 package modules;
 
 import com.google.inject.AbstractModule;
-import controllers.StrategyBoardCtrl;
-import controllers.StrategyBoardCtrlImpl;
+import models.StrategyBoardCtrl;
+import models.StrategyBoardCtrlImpl;
 
 public class StrategyCtrlModule extends AbstractModule {
     @Override

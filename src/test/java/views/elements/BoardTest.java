@@ -1,6 +1,6 @@
 package views.elements;
 
-import controllers.GameCtrl;
+import tictactoe.Game;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import lang.constants;
@@ -17,9 +17,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class BoardTest extends GuiTest {
+    private final String cell = "#cell";
     private String player;
     private String[] board;
-    private GameCtrl gameCtrl;
+    private Game gameCtrl;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -28,7 +29,7 @@ public class BoardTest extends GuiTest {
     protected Parent getRootNode() {
         this.board = new String[constants.SIDE * constants.SIDE];
         player = constants.GAME_PIECE_ONE;
-        gameCtrl = mock(GameCtrl.class);
+        gameCtrl = mock(Game.class);
         when(gameCtrl.getBoard()).thenReturn(this.board);
         Function<MouseEvent, String[]> play = mockPlay();
         return new BoardImpl(this.board, play);
@@ -38,7 +39,7 @@ public class BoardTest extends GuiTest {
     public void shouldBeAbleToChooseAPlaceOnTheBoard() {
         when(gameCtrl.getBoard()).thenReturn(board);
         for (int i = 0; i < board.length; i++) {
-            String id = "#cell" + i;
+            String id = cell + i;
             board[i] = player;
             click(id);
             verifyThat(id, hasText(constants.GAME_PIECE_ONE));
@@ -49,7 +50,7 @@ public class BoardTest extends GuiTest {
     public void shouldBeAbleToSetupTheBoard() {
         int index = 2;
         board[index] = player;
-        String id = "#cell" + index;
+        String id = cell + index;
         click(id);
         verifyThat(id, hasText(constants.GAME_PIECE_ONE));
     }
@@ -59,7 +60,7 @@ public class BoardTest extends GuiTest {
         int index = 2;
         String[] board1 = new String[constants.SIDE * constants.SIDE];
         board[index] = player;
-        String id = "#cell" + index;
+        String id = cell + index;
         click(id);
         verifyThat(id, hasText(constants.GAME_PIECE_ONE));
         when(gameCtrl.getBoard()).thenReturn(board1);

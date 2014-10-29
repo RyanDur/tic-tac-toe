@@ -1,6 +1,7 @@
 package models;
 
 import exceptions.NotVacantException;
+import exceptions.OutOfTurnException;
 import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,23 +13,22 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class StrategyBoardTest {
 
     private final String pieceOne = constants.GAME_PIECE_ONE;
-    private Player player1;
+    private String player1;
     private String[] players;
 
     @Before
     public void setup() {
-        player1 = mock(Player.class);
+        player1 = constants.GAME_PIECE_ONE;
         players = new String[constants.SIDE * constants.SIDE];
     }
 
     @Test
-    public void shouldBeAbleToGetTheWinner() throws NotVacantException {
+    public void shouldBeAbleToGetTheWinner() throws NotVacantException, OutOfTurnException {
         players[0] = pieceOne;
         players[1] = pieceOne;
         StrategyBoard board = new StrategyBoardImpl(constants.SIDE, players);
@@ -55,7 +55,7 @@ public class StrategyBoardTest {
     public void shouldBeAbleToGetTheWinningMoveForFirstRow() {
         players[0] = pieceOne;
         players[1] = pieceOne;
-        when(player1.getPiece()).thenReturn(pieceOne);
+        when(player1).thenReturn(pieceOne);
         StrategyBoard board = new StrategyBoardImpl(constants.SIDE, players);
         Integer[] expected = {0, 2};
         assertThat(board.winningMove(player1).get(), is(equalTo(expected)));
@@ -65,7 +65,7 @@ public class StrategyBoardTest {
     public void shouldBeAbleToGetTheWinningMoveForSecondRow() {
         players[3] = pieceOne;
         players[5] = pieceOne;
-        when(player1.getPiece()).thenReturn(pieceOne);
+        when(player1).thenReturn(pieceOne);
         StrategyBoard board = new StrategyBoardImpl(constants.SIDE, players);
         Integer[] expected = {1, 1};
         assertThat(board.winningMove(player1).get(), is(equalTo(expected)));
@@ -73,7 +73,6 @@ public class StrategyBoardTest {
 
     @Test
     public void shouldBeAbleToFilterTheBestMovesFromTheWorstIfPlayerIsInACorner() {
-        when(player1.getPiece()).thenReturn(pieceOne);
         players[0] = pieceOne;
         StrategyBoard board = new StrategyBoardImpl(constants.SIDE, players);
         Integer[] expected1 = {0, 2};
@@ -90,7 +89,7 @@ public class StrategyBoardTest {
 
     @Test
     public void shouldBeAbleToFilterTheBestMovesFromTheWorstIfPlayerIsOnASide() {
-        when(player1.getPiece()).thenReturn(pieceOne);
+        when(player1).thenReturn(pieceOne);
         players[1] = pieceOne;
         StrategyBoard board = new StrategyBoardImpl(constants.SIDE, players);
         Integer[] expected1 = {0, 2};
@@ -105,7 +104,7 @@ public class StrategyBoardTest {
 
     @Test
     public void shouldBeAbleToFilterTheBestMovesFromTheWorstIfPlayerIsInTheMiddle() {
-        when(player1.getPiece()).thenReturn(pieceOne);
+
         players[4] = pieceOne;
         StrategyBoard board = new StrategyBoardImpl(constants.SIDE, players);
         Integer[] expected1 = {0, 0};
@@ -124,7 +123,6 @@ public class StrategyBoardTest {
 
     @Test
     public void shouldBeAbleToFilterTheBestMovesFromTheWorstIfPlayerIsBlockedByAnother() {
-        when(player1.getPiece()).thenReturn(pieceOne);
         players[0] = pieceOne;
         players[4] = constants.GAME_PIECE_TWO;
         StrategyBoard board = new StrategyBoardImpl(constants.SIDE, players);

@@ -1,7 +1,6 @@
 package factories;
 
-import models.Board;
-import models.Player;
+import tictactoe.Board;
 import models.StrategyBoard;
 
 public interface BoardFactory {

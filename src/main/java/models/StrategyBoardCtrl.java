@@ -1,7 +1,6 @@
-package controllers;
+package models;
 
 import models.GameTree;
-import models.Player;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,11 +8,11 @@ import java.util.Optional;
 public interface StrategyBoardCtrl {
     void setBoard(int side, String[] board);
 
-    GameTree getTree(Player player, Player opponent, Integer[] move);
+    GameTree getTree(String player, String opponent, Integer[] move);
 
-    Optional<Integer[]> winningMove(Player player);
+    Optional<Integer[]> winningMove(String player);
 
-    List<Integer[]> filterMoves(Player computer);
+    List<Integer[]> filterMoves(String computer);
 
     boolean boardEmpty();
 

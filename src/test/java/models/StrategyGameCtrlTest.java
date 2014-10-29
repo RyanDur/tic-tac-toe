@@ -1,8 +1,10 @@
-package controllers;
+package models;
 
 import lang.constants;
 import models.GameTree;
-import models.Player;
+import models.StrategyBoardCtrl;
+import models.StrategyGameCtrl;
+import models.StrategyGameCtrlImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +23,7 @@ public class StrategyGameCtrlTest {
 
     private StrategyGameCtrl strategyGameCtrl;
     private String[] board;
-    private Player player;
+    private String player;
     private StrategyBoardCtrl strategyBoardCtrl;
 
     @Before
@@ -29,7 +31,7 @@ public class StrategyGameCtrlTest {
         strategyBoardCtrl = mock(StrategyBoardCtrl.class);
         strategyGameCtrl = new StrategyGameCtrlImpl(strategyBoardCtrl);
         board = new String[]{};
-        player = mock(Player.class);
+        player = constants.GAME_PIECE_ONE;
         strategyGameCtrl.setBoard(board);
     }
 
@@ -53,8 +55,8 @@ public class StrategyGameCtrlTest {
         GameTree gameTree2 = mock(GameTree.class);
         when(gameTree1.getMaxValue()).thenReturn(10);
         when(gameTree2.getMaxValue()).thenReturn(20);
-        when(strategyBoardCtrl.filterMoves(any(Player.class))).thenReturn(moves);
-        when(strategyBoardCtrl.getTree(any(Player.class), any(Player.class), any(Integer[].class))).thenReturn(gameTree1,gameTree2);
+        when(strategyBoardCtrl.filterMoves(any(String.class))).thenReturn(moves);
+        when(strategyBoardCtrl.getTree(any(String.class), any(String.class), any(Integer[].class))).thenReturn(gameTree1,gameTree2);
 
         assertThat(strategyGameCtrl.getBestMove(player, player).get(), is(equalTo(move2)));
     }

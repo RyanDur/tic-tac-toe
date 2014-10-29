@@ -1,5 +1,7 @@
 package factories;
 
+import tictactoe.Board;
+import tictactoe.BoardImpl;
 import models.*;
 
 public class BoardFactoryImpl implements BoardFactory {

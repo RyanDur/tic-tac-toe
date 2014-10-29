@@ -1,14 +1,11 @@
-package controllers;
+package tictactoe;
 
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
-import models.Player;
 
-public interface GamePlayCtrl {
-    void twoPlayer();
-
-    void onePlayer(String player1, String player2);
+public interface Game {
+    void setComputer(String piece);
 
     boolean over();
 

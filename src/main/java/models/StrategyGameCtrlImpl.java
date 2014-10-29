@@ -1,8 +1,7 @@
-package controllers;
+package models;
 
 import com.google.inject.Inject;
 import lang.constants;
-import models.Player;
 
 import java.util.Optional;
 
@@ -22,12 +21,12 @@ public class StrategyGameCtrlImpl implements StrategyGameCtrl {
     }
 
     @Override
-    public Optional<Integer[]> findWinningMove(Player player) {
+    public Optional<Integer[]> findWinningMove(String player) {
         return strategyBoardCtrl.winningMove(player);
     }
 
     @Override
-    public Optional<Integer[]> getBestMove(Player computer, Player opponent) {
+    public Optional<Integer[]> getBestMove(String computer, String opponent) {
         if(strategyBoardCtrl.boardEmpty()) return strategyBoardCtrl.getCorner();
         if(strategyBoardCtrl.toFewPieces()) return strategyBoardCtrl.centerOrCorner();
         Optional<Integer[]> move = bestMoveOf(computer, opponent);
@@ -35,7 +34,7 @@ public class StrategyGameCtrlImpl implements StrategyGameCtrl {
         return move;
     }
 
-    private Optional<Integer[]> bestMoveOf(Player computer, Player opponent) {
+    private Optional<Integer[]> bestMoveOf(String computer, String opponent) {
         return strategyBoardCtrl.filterMoves(opponent).stream()
                 .max((move1, move2) -> strategyBoardCtrl.getTree(computer, opponent, move1).getMaxValue() -
                         strategyBoardCtrl.getTree(computer, opponent, move2).getMaxValue());

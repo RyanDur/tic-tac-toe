@@ -1,6 +1,7 @@
-package controllers;
+package models;
 
 import exceptions.NotVacantException;
+import exceptions.OutOfTurnException;
 import factories.BoardFactory;
 import factories.GameTreeFactory;
 import lang.constants;
@@ -24,11 +25,11 @@ public class StrategyBoardCtrlTest {
     private BoardFactory boardFactory;
     private StrategyBoard strategyBoard;
     private GameTreeFactory gameTreeFactory;
-    private Player computer;
+    private String computer;
 
     @Before
     public void setup() {
-        computer = mock(Player.class);
+        computer = constants.GAME_PIECE_TWO;
         boardFactory = mock(BoardFactory.class);
         gameTreeFactory = mock(GameTreeFactory.class);
         strategyBoardCtrl = new StrategyBoardCtrlImpl(boardFactory, gameTreeFactory);
@@ -44,8 +45,8 @@ public class StrategyBoardCtrlTest {
     }
 
     @Test
-    public void shouldBeAbleTeGetAGameTreeBasedOnAMove() throws NotVacantException {
-        Player opponent = mock(Player.class);
+    public void shouldBeAbleTeGetAGameTreeBasedOnAMove() throws NotVacantException, OutOfTurnException {
+        String opponent = constants.GAME_PIECE_TWO;
         Integer[] move = {1,2};
         GameTree gameTree = mock(GameTree.class);
         when(gameTreeFactory.createTree(strategyBoard, computer, opponent,boardFactory)).thenReturn(gameTree);

@@ -1,6 +1,6 @@
 package views.game;
 
-import controllers.GamePlayCtrl;
+import tictactoe.Game;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
@@ -26,7 +26,7 @@ public class TicTacToeTest extends GuiTest {
     private final String menuId = "#menu";
     private final String gameId = "#game";
     private String twoPlayer = "2 Player";
-    private GamePlayCtrl game;
+    private Game game;
     private String[] board = new String[constants.SIDE * constants.SIDE];
     private String center = "#cell4";
     private String reset = "Reset";
@@ -41,7 +41,7 @@ public class TicTacToeTest extends GuiTest {
 
     @Override
     protected Parent getRootNode() {
-        game = mock(GamePlayCtrl.class);
+        game = mock(Game.class);
         when(game.getBoard()).thenReturn(board);
         ViewFactory viewFactory = new ViewFactoryImpl();
         Header header = new HeaderImpl();
@@ -61,12 +61,6 @@ public class TicTacToeTest extends GuiTest {
     }
 
     @Test
-    public void shouldCreateTwoPlayersWhenTwoPlayerModeIsChosen() {
-        click(twoPlayer);
-        verify(game).twoPlayer();
-    }
-
-    @Test
     public void shouldDisplayBoardWhenPlayerChoosesXInOnePlayerMode() {
         click(onePlayer);
         click(constants.GAME_PIECE_ONE);
@@ -77,7 +71,7 @@ public class TicTacToeTest extends GuiTest {
     public void shouldCreateAHumanAndComputerWhenPlayerChoosesXInOnePlayerMode() {
         click(onePlayer);
         click(constants.GAME_PIECE_ONE);
-        verify(game).onePlayer(constants.GAME_PIECE_ONE, constants.GAME_PIECE_TWO);
+        verify(game).setComputer(constants.GAME_PIECE_TWO);
     }
 
     @Test
@@ -91,7 +85,7 @@ public class TicTacToeTest extends GuiTest {
     public void shouldCreateAComputerAndHumanWhenPlayerChoosesXInOnePlayerMode() {
         click(onePlayer);
         click(constants.GAME_PIECE_TWO);
-        verify(game).onePlayer(constants.GAME_PIECE_TWO, constants.GAME_PIECE_ONE);
+        verify(game).setComputer(constants.GAME_PIECE_ONE);
     }
 
     @Test

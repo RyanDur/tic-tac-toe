@@ -6,7 +6,7 @@ import views.elements.*;
 import views.elements.Board;
 import views.elements.BoardImpl;
 
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ViewFactoryImpl implements ViewFactory {
@@ -16,7 +16,7 @@ public class ViewFactoryImpl implements ViewFactory {
     }
 
     @Override
-    public Menu createMenu(BiConsumer<String, String> onePlayer, EventHandler<MouseEvent> twoPlayer) {
+    public Menu createMenu(Consumer<String> onePlayer, EventHandler<MouseEvent> twoPlayer) {
         return new MenuImpl(onePlayer, twoPlayer);
     }
 }

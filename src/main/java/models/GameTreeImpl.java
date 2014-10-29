@@ -1,6 +1,7 @@
 package models;
 
 import exceptions.NotVacantException;
+import exceptions.OutOfTurnException;
 import factories.BoardFactory;
 import lang.constants;
 
@@ -11,13 +12,13 @@ import java.util.stream.Collectors;
 public class GameTreeImpl implements GameTree {
     private List<GameTree> children;
     private StrategyBoard board;
-    private final Player player1;
-    private final Player player2;
+    private final String player1;
+    private final String player2;
     private BoardFactory boardFactory;
     private int max = 0;
     private int min = 0;
 
-    public GameTreeImpl(StrategyBoard board, Player player1, Player player2, BoardFactory boardFactory) {
+    public GameTreeImpl(StrategyBoard board, String player1, String player2, BoardFactory boardFactory) {
         this.board = board;
         this.player1 = player1;
         this.player2 = player2;
@@ -43,9 +44,9 @@ public class GameTreeImpl implements GameTree {
         else children = setChildren();
     }
 
-    private void winWeight(Player winner) {
-        if (winner instanceof ComputerPlayer) max = constants.WIN_WEIGHT;
-        else min = constants.LOSE_WEIGHT;
+    private void winWeight(String winner) {
+        max = constants.WIN_WEIGHT;
+        min = constants.LOSE_WEIGHT;
     }
 
     private List<GameTree> setChildren() {
@@ -72,8 +73,8 @@ public class GameTreeImpl implements GameTree {
     private StrategyBoard playMove(Integer[] win) {
         StrategyBoard copy = boardFactory.createBoard(constants.SIDE, board.getBoard());
         try {
-            copy.set(win[0], win[1], player2.getPiece());
-        } catch (NotVacantException e) {
+            copy.set(win[0], win[1], player2);
+        } catch (NotVacantException | OutOfTurnException e) {
             e.printStackTrace();
         }
         return copy;
