@@ -26,7 +26,7 @@ public class GameImpl implements Game {
 
     @Override
     public boolean full() {
-        return getNumOfPieces() == (side * side);
+        return board.full();
     }
 
     @Override

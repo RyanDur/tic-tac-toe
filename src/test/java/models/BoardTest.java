@@ -183,4 +183,30 @@ public class BoardTest {
         board.set(2, 2, player);
         assertThat(board.getWinner(), is(equalTo(null)));
     }
+
+    @Test
+    public void shouldBeAbleToTellIfTheBoardIsFull() {
+        players[0] = player;
+        players[1] = player;
+        players[2] = player;
+        players[3] = player;
+        players[4] = player;
+        players[5] = player;
+        players[6] = player;
+        players[7] = player;
+        players[8] = player;
+        board.setBoard(players);
+        assertThat(board.full(), is(true));
+    }
+
+    @Test
+    public void shouldBeAbleToTellIfTheBoardIsNotFull() {
+        players[0] = player;
+        players[1] = player;
+        players[2] = player;
+        players[7] = player;
+        players[8] = player;
+        board.setBoard(players);
+        assertThat(board.full(), is(false));
+    }
 }

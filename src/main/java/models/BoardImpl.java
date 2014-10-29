@@ -44,6 +44,13 @@ public class BoardImpl implements Board {
         return board[calculate(row, column)];
     }
 
+    @Override
+    public boolean full() {
+        return Arrays.stream(getBoard())
+                .filter(piece -> piece != null)
+                .count() == board.length;
+    }
+
     private boolean isWinner(int row, int column, String player) {
         return check(row(board, player, row)) ||
                 check(column(board, player, column)) ||

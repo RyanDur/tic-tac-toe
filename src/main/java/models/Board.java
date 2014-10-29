@@ -13,4 +13,6 @@ public interface Board {
     String getWinner();
 
     String get(Integer row, Integer column);
+
+    boolean full();
 }
