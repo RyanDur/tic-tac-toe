@@ -1,6 +1,7 @@
 package models;
 
 import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import lang.constants;
 import org.junit.Before;
@@ -28,7 +29,7 @@ public class StrategyBoardTest {
     }
 
     @Test
-    public void shouldBeAbleToGetTheWinner() throws NotVacantException, OutOfTurnException {
+    public void shouldBeAbleToGetTheWinner() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
         players[0] = pieceOne;
         players[1] = pieceOne;
         StrategyBoard board = new StrategyBoardImpl(constants.SIDE, players);

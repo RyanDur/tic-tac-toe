@@ -2,6 +2,7 @@ package models;
 
 import com.google.inject.Inject;
 import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import factories.BoardFactory;
 import factories.GameTreeFactory;
@@ -37,7 +38,7 @@ public class StrategyBoardCtrlImpl implements StrategyBoardCtrl {
         StrategyBoard copy = getStrategyBoard(strategyBoard.getBoard());
         try {
             copy.set(move[0], move[1], player);
-        } catch (NotVacantException | OutOfTurnException e) {
+        } catch (NotVacantException | OutOfTurnException | OutOfBoundsException e) {
             e.printStackTrace();
         }
         return gameTreeFactory.createTree(copy, player, opponent, boardFactory);
@@ -66,7 +67,11 @@ public class StrategyBoardCtrlImpl implements StrategyBoardCtrl {
     @Override
     public Optional<Integer[]> centerOrCorner() {
         Integer[] center = constants.CENTER;
-        if(strategyBoard.get(center[0], center[1])  == null) return Optional.of(center);
+        try {
+            if(strategyBoard.get(center[0], center[1])  == null) return Optional.of(center);
+        } catch (OutOfBoundsException e) {
+            e.printStackTrace();
+        }
         return getCorner();
     }
 

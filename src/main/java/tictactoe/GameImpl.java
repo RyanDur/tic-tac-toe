@@ -52,24 +52,19 @@ public class GameImpl implements Game {
         if (computersTurn()) computerMove();
     }
 
-    @Override
-    public void reset() {
-        setup();
+    private String getPiece() {
+        return board.getNumberOfPieces() % 2 == 0 ? constants.GAME_PIECE_ONE : constants.GAME_PIECE_TWO;
     }
 
     private boolean computersTurn() {
         return getPiece().equals(computer.getPiece());
     }
 
-    private String getPiece() {
-        return board.getNumberOfPieces() % 2 == 0 ? constants.GAME_PIECE_ONE : constants.GAME_PIECE_TWO;
-    }
-
     private void computerMove() {
         try {
             computer.calculateBestMove(getBoard());
             board.set(computer.getRow(), computer.getColumn(), computer.getPiece());
-        } catch (NotVacantException | OutOfTurnException e) {
+        } catch (NotVacantException | OutOfTurnException | OutOfBoundsException e) {
             e.printStackTrace();
         }
     }

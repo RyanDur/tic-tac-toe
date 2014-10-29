@@ -124,14 +124,14 @@ public class GameTest {
         when(board.getWinner()).thenReturn(pieceOne);
         when(computer.getPiece()).thenReturn(pieceOne);
         game.setup();
-        game.reset();
+        game.setup();
         verify(computer, times(2)).calculateBestMove(any(String[].class));
     }
 
     @Test
     public void shouldBeAbleToRestTheGame() throws OutOfBoundsException, NotVacantException {
         game.setup();
-        game.reset();
+        game.setup();
         verify(boardFactory, times(2)).createBoard(anyInt());
     }
 }

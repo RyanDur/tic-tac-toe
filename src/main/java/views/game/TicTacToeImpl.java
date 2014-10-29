@@ -41,17 +41,11 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     }
 
     private EventHandler<MouseEvent> resetMenu() {
-        return event -> {
-            clearHeader(header);
-            setupMenu();
-        };
+        return event -> setupMenu();
     }
 
     private EventHandler<MouseEvent> resetGame() {
-        return event -> {
-            clearHeader(header);
-            setupBoard();
-        };
+        return event -> setupBoard();
     }
 
     private EventHandler<MouseEvent> setTwoPlayer() {
@@ -85,11 +79,13 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     }
 
     private void setupBoard() {
+        clearHeader(header);
         game.setup();
         swapCenter((Node) viewFactory.createBoard(game.getBoard(), play(game)));
     }
 
     private void setupMenu() {
+        clearHeader(header);
         swapCenter((Node) viewFactory.createMenu(setOnePlayer(), setTwoPlayer()));
     }
 

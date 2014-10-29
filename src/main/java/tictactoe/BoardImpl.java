@@ -1,6 +1,7 @@
 package tictactoe;
 
 import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import lang.constants;
 
@@ -19,11 +20,10 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public void set(int row, int column, String piece) throws NotVacantException, OutOfTurnException {
+    public void set(int row, int column, String piece) throws NotVacantException, OutOfTurnException, OutOfBoundsException {
         if (!validTurn(piece)) throw new OutOfTurnException();
-        int spot = calculate(row, column);
-        if (board[spot] != null) throw new NotVacantException();
-        board[spot] = piece;
+        if (get(row, column) != null) throw new NotVacantException();
+        board[calc(row, column)] = piece;
         if (isWinner(row, column, piece)) winner = piece;
     }
 
@@ -43,8 +43,9 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public String get(Integer row, Integer column) {
-        return board[calculate(row, column)];
+    public String get(Integer row, Integer column) throws OutOfBoundsException {
+        if (outOfBounds(row, column)) throw new OutOfBoundsException();
+        return board[calc(row, column)];
     }
 
     @Override
@@ -60,47 +61,44 @@ public class BoardImpl implements Board {
     }
 
     private boolean isWinner(int row, int column, String piece) {
-        return check(row(board, piece, row)) ||
-                check(column(board, piece, column)) ||
-                check(leftDiagonal(board, piece)) ||
-                check(rightDiagonal(board, piece));
+        return check(row(piece, row)) ||
+                check(column(piece, column)) ||
+                check(leftDiagonal(piece)) ||
+                check(rightDiagonal(piece));
     }
 
-    private boolean check(IntPredicate predicate) {
+    private boolean check(IntPredicate vector) {
         return side == IntStream.range(0, side).
-                filter(predicate).count();
+                filter(vector).count();
     }
 
-    private IntPredicate rightDiagonal(String[] board, String piece) {
-        return i -> piece.equals(board[calculate(i, (side - 1) - i)]);
+    private IntPredicate rightDiagonal(String piece) {
+        return index -> piece.equals(board[calc(index, (side - 1) - index)]);
     }
 
-    private IntPredicate leftDiagonal(String[] board, String piece) {
-        return i -> piece.equals(board[calculate(i, i)]);
+    private IntPredicate leftDiagonal(String piece) {
+        return index -> piece.equals(board[calc(index, index)]);
     }
 
-    private IntPredicate column(String[] board, String piece, int y) {
-        return i -> piece.equals(board[calculate(i, y)]);
+    private IntPredicate column(String piece, int column) {
+        return index -> piece.equals(board[calc(index, column)]);
     }
 
-    private IntPredicate row(String[] board, String piece, int x) {
-        return i -> piece.equals(board[calculate(x, i)]);
+    private IntPredicate row(String piece, int row) {
+        return index -> piece.equals(board[calc(row, index)]);
     }
 
-    private int calculate(int x, int y) {
+    private int calc(int x, int y) {
         return (x * side) + y;
     }
 
     private boolean validTurn(String piece) {
         int numOfPieces = getNumberOfPieces();
-        boolean result = true;
+        return (numOfPieces % 2 == 0 && piece.equals(constants.GAME_PIECE_ONE)) ||
+                (numOfPieces % 2 != 0 && piece.equals(constants.GAME_PIECE_TWO));
+    }
 
-        if (numOfPieces == 0) {
-            if (piece.equals(constants.GAME_PIECE_TWO)) result = false;
-        } else if (numOfPieces % 2 == 0) {
-            if (piece.equals(constants.GAME_PIECE_TWO)) result = false;
-        } else if (piece.equals(constants.GAME_PIECE_ONE)) result = false;
-
-        return result;
+    private boolean outOfBounds(Integer row, Integer column) {
+        return row > side-1 || column > side-1 || row < 0 || column < 0;
     }
 }

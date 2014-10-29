@@ -16,6 +16,4 @@ public interface Game {
     String[] getBoard();
 
     void setup();
-
-    void reset();
 }

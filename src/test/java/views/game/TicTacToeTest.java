@@ -48,7 +48,6 @@ public class TicTacToeTest extends GuiTest {
         return new TicTacToeImpl(game, viewFactory, header);
     }
 
-
     @Test
     public void shouldDisplayAMenuWhenStarted() {
         assertNodeExists(menuId);
@@ -249,7 +248,7 @@ public class TicTacToeTest extends GuiTest {
         click(twoPlayer);
         click(center);
         click(replay);
-        verify(game).reset();
+        verify(game, times(2)).setup();
     }
 
     @Test

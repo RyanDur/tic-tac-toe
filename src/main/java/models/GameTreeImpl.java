@@ -1,6 +1,7 @@
 package models;
 
 import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import factories.BoardFactory;
 import lang.constants;
@@ -74,7 +75,7 @@ public class GameTreeImpl implements GameTree {
         StrategyBoard copy = boardFactory.createBoard(constants.SIDE, board.getBoard());
         try {
             copy.set(win[0], win[1], player2);
-        } catch (NotVacantException | OutOfTurnException e) {
+        } catch (NotVacantException | OutOfTurnException | OutOfBoundsException e) {
             e.printStackTrace();
         }
         return copy;

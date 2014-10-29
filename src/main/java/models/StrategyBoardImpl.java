@@ -1,5 +1,6 @@
 package models;
 
+import exceptions.OutOfBoundsException;
 import tictactoe.BoardImpl;
 import exceptions.NotVacantException;
 import exceptions.OutOfTurnException;
@@ -61,7 +62,7 @@ public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
         StrategyBoard strategyBoard = new StrategyBoardImpl(side, getBoard());
         try {
             strategyBoard.set(vacancy[0], vacancy[1], player);
-        } catch (NotVacantException | OutOfTurnException e) {
+        } catch (NotVacantException | OutOfTurnException | OutOfBoundsException e) {
             e.printStackTrace();
         }
         return strategyBoard;

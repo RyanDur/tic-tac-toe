@@ -1,11 +1,11 @@
 package models;
 
 import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import factories.BoardFactory;
 import factories.GameTreeFactory;
 import lang.constants;
-import models.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,7 +45,7 @@ public class StrategyBoardCtrlTest {
     }
 
     @Test
-    public void shouldBeAbleTeGetAGameTreeBasedOnAMove() throws NotVacantException, OutOfTurnException {
+    public void shouldBeAbleTeGetAGameTreeBasedOnAMove() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
         String opponent = constants.GAME_PIECE_TWO;
         Integer[] move = {1,2};
         GameTree gameTree = mock(GameTree.class);
@@ -92,14 +92,14 @@ public class StrategyBoardCtrlTest {
     }
 
     @Test
-    public void shouldBeAbleToGetTheCenter() {
+    public void shouldBeAbleToGetTheCenter() throws OutOfBoundsException {
         Integer[] center = constants.CENTER;
         when(strategyBoard.get(center[0],center[1])).thenReturn(null);
         assertThat(strategyBoardCtrl.centerOrCorner().get(), is(equalTo(center)));
     }
 
     @Test
-    public void shouldBeAbleToGetACorner() {
+    public void shouldBeAbleToGetACorner() throws OutOfBoundsException {
         Integer[] center = constants.CENTER;
         when(strategyBoard.get(center[0],center[1])).thenReturn(anyString());
         assertThat(constants.CORNERS, hasItem(strategyBoardCtrl.centerOrCorner().get()));
