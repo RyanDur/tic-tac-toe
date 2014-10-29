@@ -209,4 +209,20 @@ public class BoardTest {
         board.setBoard(players);
         assertThat(board.full(), is(false));
     }
+
+    @Test
+    public void shouldBeAbleToGetTheNumberOfPiecesOnTheBoard() {
+        players[0] = player;
+        players[1] = player;
+        players[2] = player;
+        players[7] = player;
+        players[8] = player;
+        board.setBoard(players);
+        assertThat(board.getNumberOfPieces(), is(equalTo(5)));
+    }
+
+    @Test
+    public void shouldBeAbleToGetTheNumberOfPiecesForAnEmptyBoard() {
+        assertThat(board.getNumberOfPieces(), is(equalTo(0)));
+    }
 }

@@ -15,4 +15,6 @@ public interface Board {
     String get(Integer row, Integer column);
 
     boolean full();
+
+    int getNumberOfPieces();
 }

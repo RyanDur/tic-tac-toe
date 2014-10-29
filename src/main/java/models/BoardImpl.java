@@ -46,9 +46,14 @@ public class BoardImpl implements Board {
 
     @Override
     public boolean full() {
-        return Arrays.stream(getBoard())
+        return getNumberOfPieces() == board.length;
+    }
+
+    @Override
+    public int getNumberOfPieces() {
+        return (int) Arrays.stream(getBoard())
                 .filter(piece -> piece != null)
-                .count() == board.length;
+                .count();
     }
 
     private boolean isWinner(int row, int column, String player) {
