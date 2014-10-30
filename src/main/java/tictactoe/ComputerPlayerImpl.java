@@ -2,29 +2,28 @@ package tictactoe;
 
 import com.google.inject.Inject;
 import lang.constants;
-import models.StrategyGameCtrl;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ComputerPlayerImpl implements ComputerPlayer {
-    private StrategyGameCtrl strategyGameCtrl;
+    private ComputerAI ai;
     private int row;
     private int column;
     private String piece;
     private String opponent;
 
     @Inject
-    public ComputerPlayerImpl(StrategyGameCtrl strategyGameCtrl) {
-        this.strategyGameCtrl = strategyGameCtrl;
+    public ComputerPlayerImpl(ComputerAI ai) {
+        this.ai = ai;
     }
 
     @Override
     public void calculateBestMove(Board board) {
-        strategyGameCtrl.setBoard(board);
-        Optional<Integer[]> found = strategyGameCtrl.findWinningMove(piece);
-        if (!found.isPresent()) found = strategyGameCtrl.findWinningMove(opponent);
-        if (!found.isPresent()) found = strategyGameCtrl.getBestMove(piece, opponent);
+        ai.setBoard(board);
+        Optional<Integer[]> found = ai.findWinningMove(piece);
+        if (!found.isPresent()) found = ai.findWinningMove(opponent);
+        if (!found.isPresent()) found = ai.getBestMove(piece, opponent);
         found.ifPresent(setMove());
     }
 

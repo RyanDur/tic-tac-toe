@@ -6,10 +6,10 @@ import tictactoe.ComputerPlayerImpl;
 import factories.BoardFactory;
 import factories.BoardFactoryImpl;
 
-public class GamePlayCtrlModule extends AbstractModule {
+public class GameModule extends AbstractModule {
     @Override
     protected void configure() {
-        install(new ComputerCtrlModule());
+        install(new ComputerPlayerModule());
         bind(BoardFactory.class).to(BoardFactoryImpl.class);
         bind(ComputerPlayer.class).to(ComputerPlayerImpl.class);
     }
