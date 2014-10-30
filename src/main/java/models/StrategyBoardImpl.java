@@ -17,7 +17,6 @@ public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
     public StrategyBoardImpl(int side, String[] board) {
         super(side);
         this.side = side;
-        setBoard(board);
     }
 
     @Override

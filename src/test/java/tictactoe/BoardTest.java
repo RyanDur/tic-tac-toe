@@ -4,6 +4,7 @@ import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import lang.constants;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,12 +33,6 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldBeAbleToGetASetPiece() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        board.set(1, 1, pieceOne);
-        assertThat(board.get(1,1), is(equalTo(pieceOne)));
-    }
-
-    @Test
     public void shouldNotBeAbleToSetAPlayerOnATakenSpot() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
         exception.expect(NotVacantException.class);
         board.set(1, 1, pieceOne);
@@ -53,213 +48,175 @@ public class BoardTest {
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnFirstRow() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[0] = pieceOne;
-        players[1] = pieceOne;
-        board.setBoard(players);
+        board.set(0, 0, pieceOne);
+        board.set(2, 0, pieceTwo);
+        board.set(0, 1, pieceOne);
+        board.set(2, 1, pieceTwo);
         board.set(0, 2, pieceOne);
         assertThat(board.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstRow() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[0] = pieceOne;
-        players[2] = pieceOne;
-        board.setBoard(players);
+        board.set(0, 0, pieceOne);
+        board.set(2, 0, pieceTwo);
+        board.set(0, 1, pieceOne);
+        board.set(2, 1, pieceTwo);
         board.set(1, 0, pieceOne);
         assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnFirstColumn() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[0] = pieceOne;
-        players[3] = pieceOne;
-        board.setBoard(players);
+        board.set(0, 0, pieceOne);
+        board.set(2, 2, pieceTwo);
+        board.set(1, 0, pieceOne);
+        board.set(2, 1, pieceTwo);
         board.set(2, 0, pieceOne);
         assertThat(board.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstColumn() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[0] = pieceOne;
-        players[2] = pieceOne;
-        board.setBoard(players);
+        board.set(0, 0, pieceOne);
+        board.set(2, 2, pieceTwo);
+        board.set(1, 0, pieceOne);
+        board.set(2, 1, pieceTwo);
         board.set(1, 1, pieceOne);
         assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnSecondRow() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[4] = pieceOne;
-        players[5] = pieceOne;
-        board.setBoard(players);
         board.set(1, 0, pieceOne);
+        board.set(2, 2, pieceTwo);
+        board.set(1, 1, pieceOne);
+        board.set(2, 1, pieceTwo);
+        board.set(1, 2, pieceOne);
         assertThat(board.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondRow() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[4] = pieceOne;
-        players[5] = pieceOne;
-        board.setBoard(players);
-        board.set(0, 0, pieceOne);
+        board.set(1, 0, pieceOne);
+        board.set(2, 2, pieceTwo);
+        board.set(1, 1, pieceOne);
+        board.set(2, 1, pieceTwo);
+        board.set(0, 2, pieceOne);
         assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnSecondColumn() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[1] = pieceOne;
-        players[7] = pieceOne;
-        board.setBoard(players);
+        board.set(0, 1, pieceOne);
+        board.set(2, 2, pieceTwo);
         board.set(1, 1, pieceOne);
+        board.set(2, 0, pieceTwo);
+        board.set(2, 1, pieceOne);
         assertThat(board.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondColumn() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[4] = pieceOne;
-        players[7] = pieceOne;
-        board.setBoard(players);
-        board.set(0, 0, pieceOne);
+        board.set(0, 1, pieceOne);
+        board.set(2, 2, pieceTwo);
+        board.set(1, 1, pieceOne);
+        board.set(2, 0, pieceTwo);
+        board.set(1, 2, pieceOne);
         assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnThirdRow() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[6] = pieceOne;
-        players[7] = pieceOne;
-        board.setBoard(players);
+        board.set(2, 0, pieceOne);
+        board.set(0, 2, pieceTwo);
+        board.set(2, 1, pieceOne);
+        board.set(0, 1, pieceTwo);
         board.set(2, 2, pieceOne);
         assertThat(board.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdRow() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[6] = pieceOne;
-        players[7] = pieceOne;
-        board.setBoard(players);
+        board.set(2, 0, pieceOne);
+        board.set(0, 2, pieceTwo);
+        board.set(2, 1, pieceOne);
+        board.set(0, 1, pieceTwo);
         board.set(0, 0, pieceOne);
         assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnThirdColumn() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[5] = pieceOne;
-        players[8] = pieceOne;
-        board.setBoard(players);
         board.set(0, 2, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(1, 2, pieceOne);
+        board.set(0, 0, pieceTwo);
+        board.set(2, 2, pieceOne);
         assertThat(board.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdColumn() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[2] = pieceOne;
-        players[8] = pieceOne;
-        board.setBoard(players);
-        board.set(0, 0, pieceOne);
+        board.set(0, 2, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(1, 2, pieceOne);
+        board.set(0, 0, pieceTwo);
+        board.set(1, 1, pieceOne);
         assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnTheLeftDiagonal() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[0] = pieceOne;
-        players[4] = pieceOne;
-        board.setBoard(players);
+        board.set(0, 0, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(1, 1, pieceOne);
+        board.set(0, 2, pieceTwo);
         board.set(2, 2, pieceOne);
         assertThat(board.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnTheLeftDiagonal() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[4] = pieceOne;
-        players[8] = pieceOne;
-        board.setBoard(players);
-        board.set(1, 0, pieceOne);
+        board.set(0, 0, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(1, 1, pieceOne);
+        board.set(0, 2, pieceTwo);
+        board.set(2, 1, pieceOne);
         assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnTheRightDiagonal() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[2] = pieceOne;
-        players[6] = pieceOne;
-        board.setBoard(players);
+        board.set(0, 2, pieceOne);
+        board.set(0, 1, pieceTwo);
         board.set(1, 1, pieceOne);
+        board.set(1, 2, pieceTwo);
+        board.set(2, 0, pieceOne);
         assertThat(board.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnTheRightDiagonal() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        players[2] = pieceOne;
-        players[4] = pieceOne;
-        board.setBoard(players);
+        board.set(0, 2, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(1, 1, pieceOne);
+        board.set(1, 2, pieceTwo);
         board.set(2, 2, pieceOne);
         assertThat(board.getWinner(), is(equalTo(null)));
     }
 
     @Test
-    public void shouldBeAbleToTellIfTheBoardIsFull() {
-        players[0] = pieceOne;
-        players[1] = pieceOne;
-        players[2] = pieceOne;
-        players[3] = pieceOne;
-        players[4] = pieceOne;
-        players[5] = pieceOne;
-        players[6] = pieceOne;
-        players[7] = pieceOne;
-        players[8] = pieceOne;
-        board.setBoard(players);
-        assertThat(board.full(), is(true));
-    }
-
-    @Test
-    public void shouldBeAbleToTellIfTheBoardIsNotFull() {
-        players[0] = pieceOne;
-        players[1] = pieceOne;
-        players[2] = pieceOne;
-        players[7] = pieceOne;
-        players[8] = pieceOne;
-        board.setBoard(players);
-        assertThat(board.full(), is(false));
-    }
-
-    @Test
-    public void shouldBeAbleToGetTheNumberOfPiecesOnTheBoard() {
-        players[0] = pieceOne;
-        players[1] = pieceOne;
-        players[2] = pieceOne;
-        players[7] = pieceOne;
-        players[8] = pieceOne;
-        board.setBoard(players);
-        assertThat(board.getNumberOfPieces(), is(equalTo(5)));
-    }
-
-    @Test
-    public void shouldBeAbleToGetTheNumberOfPiecesForAnEmptyBoard() {
-        assertThat(board.getNumberOfPieces(), is(equalTo(0)));
-    }
-
-    @Test
     public void shouldNotBeAbleToPlaceOOnTheBoardFirst() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
         exception.expect(OutOfTurnException.class);
-        board.set(1,1,constants.GAME_PIECE_TWO);
+        board.set(1, 1, constants.GAME_PIECE_TWO);
     }
 
     @Test
     public void shouldNotBeAbleToPlaceAPieceXOnTheBoardOutOfTurn() throws NotVacantException, OutOfTurnException, OutOfBoundsException {
         exception.expect(OutOfTurnException.class);
-        board.set(1,1,constants.GAME_PIECE_ONE);
-        board.set(1,0,constants.GAME_PIECE_ONE);
-    }
-
-    @Test
-    public void shouldNotBeAbleToGetAPieceFromOutsideTheBoard() throws OutOfBoundsException {
-        exception.expect(OutOfBoundsException.class);
-        board.get(9,9);
-    }
-
-    @Test
-    public void shouldNotBeAbleToGetAPieceFromSmallerThanTheBoard() throws OutOfBoundsException {
-        exception.expect(OutOfBoundsException.class);
-        board.get(-1,-1);
+        board.set(1, 1, constants.GAME_PIECE_ONE);
+        board.set(1, 0, constants.GAME_PIECE_ONE);
     }
 
     @Test
@@ -272,5 +229,31 @@ public class BoardTest {
     public void shouldNotBeAbleToSetAPieceFromSmallerThanTheBoard() throws OutOfBoundsException, NotVacantException, OutOfTurnException {
         exception.expect(OutOfBoundsException.class);
         board.set(-4, -7, pieceOne);
+    }
+
+    @Test
+    public void shouldGetAllTheSpacesOfAVacantBoard() {
+        assertThat(board.getVacancies().size(), CoreMatchers.is(CoreMatchers.equalTo(players.length)));
+    }
+
+    @Test
+    public void shouldBeAbleToGetTheVacantSpacesOfABoardBoard() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
+        board.set(0, 0, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(0, 2, pieceOne);
+        assertThat(board.getVacancies().size(), CoreMatchers.is(CoreMatchers.equalTo(players.length - constants.SIDE)));
+    }
+
+    @Test
+    public void shouldBeAbleToGetTheNumberOfPiecesOnAnEmptyBoard() {
+        assertThat(board.numOfPieces(), is(equalTo(0)));
+    }
+
+    @Test
+    public void shouldBeAbleToGetTheNumberOfPiecesOnTheBoard() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
+        board.set(0, 0, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(0, 2, pieceOne);
+        assertThat(board.numOfPieces(), is(equalTo(3)));
     }
 }

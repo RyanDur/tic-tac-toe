@@ -67,11 +67,7 @@ public class StrategyBoardCtrlImpl implements StrategyBoardCtrl {
     @Override
     public Optional<Integer[]> centerOrCorner() {
         Integer[] center = constants.CENTER;
-        try {
-            if(strategyBoard.get(center[0], center[1])  == null) return Optional.of(center);
-        } catch (OutOfBoundsException e) {
-            e.printStackTrace();
-        }
+        //            if(strategyBoard.get(center[0], center[1])  == null) return Optional.of(center);
         return getCorner();
     }
 

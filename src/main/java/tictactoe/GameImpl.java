@@ -27,7 +27,7 @@ public class GameImpl implements Game {
 
     @Override
     public boolean over() {
-        return getWinner() != null || board.full();
+        return getWinner() != null || board.numOfPieces() == getBoard().length;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class GameImpl implements Game {
     }
 
     private String getPiece() {
-        return board.getNumberOfPieces() % 2 == 0 ? constants.GAME_PIECE_ONE : constants.GAME_PIECE_TWO;
+        return board.numOfPieces() % 2 == 0 ? constants.GAME_PIECE_ONE : constants.GAME_PIECE_TWO;
     }
 
     private boolean computersTurn() {

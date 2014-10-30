@@ -49,7 +49,7 @@ public class GameTest {
     public void shouldBeAbleToCheckIfGameIsOver() {
         game.setup();
         game.over();
-        verify(board).full();
+        verify(board, times(2)).numOfPieces();
         verify(board).getWinner();
     }
 
@@ -79,9 +79,9 @@ public class GameTest {
     @Test
     public void shouldSetPlayerOOnSecondMoveForTwoPlayer() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
         game.setup();
-        when(board.getNumberOfPieces()).thenReturn(1);
         int row = 1;
         int column = 2;
+        when(board.numOfPieces()).thenReturn(1);
         game.set(row, column);
         verify(board).set(row, column, pieceTwo);
     }
@@ -93,8 +93,9 @@ public class GameTest {
         game.setComputer(pieceTwo);
         game.setup();
         int row = 1;
-        int column = 2;
-        when(board.getNumberOfPieces()).thenReturn(0,1);
+        int column  = 2;
+
+        when(board.numOfPieces()).thenReturn(0,1);
         game.set(row, column);
 
         inOrder.verify(board).set(row, column, pieceOne);
@@ -110,8 +111,7 @@ public class GameTest {
         int column = 2;
         game.setup();
 
-        when(board.getNumberOfPieces()).thenReturn(0, 1);
-        game.setComputer(pieceTwo);
+        when(board.numOfPieces()).thenReturn(0,1);
         game.set(row, column);
 
         inOrder.verify(board).set(row, column, pieceOne);
