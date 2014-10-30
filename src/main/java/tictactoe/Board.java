@@ -17,4 +17,6 @@ public interface Board {
     List<Integer[]> getVacancies();
 
     int numOfPieces();
+
+    Board copy();
 }

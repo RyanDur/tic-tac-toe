@@ -17,8 +17,13 @@ public class BoardImpl implements Board {
     private String winner;
 
     public BoardImpl(int side) {
-        this.board = new String[side * side];
         this.side = side;
+        this.board = new String[side * side];
+    }
+
+    private BoardImpl(int side, String[] board) {
+        this.side = side;
+        this.board = board;
     }
 
     @Override
@@ -51,10 +56,17 @@ public class BoardImpl implements Board {
 
     @Override
     public int numOfPieces() {
-        return (getBoard().length - getVacancies().size());
+        return (int) Arrays.stream(getBoard())
+                .filter(piece -> piece != null)
+                .count();
     }
 
-    private String get(Integer row, Integer column) {
+    @Override
+    public Board copy() {
+        return new BoardImpl(side, getBoard());
+    }
+
+    private String get(int row, int column) {
         return board[calc(row, column)];
     }
 
@@ -86,8 +98,8 @@ public class BoardImpl implements Board {
         return index -> piece.equals(get(row, index));
     }
 
-    private int calc(int x, int y) {
-        return (x * side) + y;
+    private int calc(int row, int column) {
+        return (row * side) + column;
     }
 
     private boolean validTurn(String piece) {
@@ -96,8 +108,8 @@ public class BoardImpl implements Board {
                 (numOfPieces % 2 != 0 && piece.equals(constants.GAME_PIECE_TWO));
     }
 
-    private boolean outOfBounds(Integer row, Integer column) {
-        return row > side-1 || column > side-1 || row < 0 || column < 0;
+    private boolean outOfBounds(int row, int column) {
+        return row > side - 1 || column > side - 1 || row < 0 || column < 0;
     }
 
     private int calcColumn(int vacancy) {

@@ -256,4 +256,13 @@ public class BoardTest {
         board.set(0, 2, pieceOne);
         assertThat(board.numOfPieces(), is(equalTo(3)));
     }
+
+    @Test
+    public void shouldBeAbleToMakeACopyOfTheBoard() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
+        board.set(0, 0, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(0, 2, pieceOne);
+        Board copy = board.copy();
+        assertThat(copy.getBoard(), is(equalTo(board.getBoard())));
+    }
 }
