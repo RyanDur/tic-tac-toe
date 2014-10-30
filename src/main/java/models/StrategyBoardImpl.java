@@ -1,15 +1,14 @@
 package models;
 
-import exceptions.OutOfBoundsException;
-import tictactoe.BoardImpl;
 import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
+import tictactoe.BoardImpl;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
     private int side;
@@ -17,15 +16,6 @@ public class StrategyBoardImpl extends BoardImpl implements StrategyBoard {
     public StrategyBoardImpl(int side, String[] board) {
         super(side);
         this.side = side;
-    }
-
-    @Override
-    public List<Integer[]> getVacancies() {
-        String[] board = getBoard();
-        return IntStream.range(0, board.length).
-                filter(index -> board[index] == null).boxed().
-                map(num -> new Integer[]{calcRow(num), calcColumn(num)}).
-                collect(Collectors.toList());
     }
 
     @Override

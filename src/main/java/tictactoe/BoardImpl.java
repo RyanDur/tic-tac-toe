@@ -98,10 +98,6 @@ public class BoardImpl implements Board {
         return index -> piece.equals(get(row, index));
     }
 
-    private int calc(int row, int column) {
-        return (row * side) + column;
-    }
-
     private boolean validTurn(String piece) {
         int numOfPieces = numOfPieces();
         return (numOfPieces % 2 == 0 && piece.equals(constants.GAME_PIECE_ONE)) ||
@@ -110,6 +106,10 @@ public class BoardImpl implements Board {
 
     private boolean outOfBounds(int row, int column) {
         return row > side - 1 || column > side - 1 || row < 0 || column < 0;
+    }
+
+    private int calc(int row, int column) {
+        return (row * side) + column;
     }
 
     private int calcColumn(int vacancy) {
