@@ -1,23 +1,20 @@
 package models;
 
 import com.google.inject.Inject;
-import lang.constants;
+import tictactoe.Board;
 
 import java.util.Optional;
 
 public class StrategyGameCtrlImpl implements StrategyGameCtrl {
-    private int side;
     private StrategyBoardCtrl strategyBoardCtrl;
 
     @Inject
     public StrategyGameCtrlImpl(StrategyBoardCtrl strategyBoardCtrl) {
         this.strategyBoardCtrl = strategyBoardCtrl;
-        this.side = constants.SIDE;
     }
 
     @Override
-    public void setBoard(String[] board) {
-        strategyBoardCtrl.setBoard(side, board);
+    public void setBoard(Board board) {
     }
 
     @Override

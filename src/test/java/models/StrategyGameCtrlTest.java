@@ -1,12 +1,9 @@
 package models;
 
 import lang.constants;
-import models.GameTree;
-import models.StrategyBoardCtrl;
-import models.StrategyGameCtrl;
-import models.StrategyGameCtrlImpl;
 import org.junit.Before;
 import org.junit.Test;
+import tictactoe.Board;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,14 +12,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class StrategyGameCtrlTest {
 
     private StrategyGameCtrl strategyGameCtrl;
-    private String[] board;
+    private Board board;
     private String player;
     private StrategyBoardCtrl strategyBoardCtrl;
 
@@ -30,14 +25,14 @@ public class StrategyGameCtrlTest {
     public void setup() {
         strategyBoardCtrl = mock(StrategyBoardCtrl.class);
         strategyGameCtrl = new StrategyGameCtrlImpl(strategyBoardCtrl);
-        board = new String[]{};
+        board = mock(Board.class);
         player = constants.GAME_PIECE_ONE;
         strategyGameCtrl.setBoard(board);
     }
 
     @Test
     public void shouldCreateANewStrategyGameWhenSettingTheBoard() {
-        verify(strategyBoardCtrl).setBoard(constants.SIDE, board);
+        verify(strategyBoardCtrl).setBoard(board);
     }
 
     @Test

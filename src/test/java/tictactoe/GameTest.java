@@ -33,7 +33,7 @@ public class GameTest {
     public void shouldBeAbleToAllowTheComputerToPlayFirstIfItIsX() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
         when(computer.getPiece()).thenReturn(pieceOne);
         game.setup();
-        verify(computer).calculateBestMove(any(String[].class));
+        verify(computer).calculateBestMove(any(Board.class));
         verify(board).set(0, 0, pieceOne);
     }
 
@@ -41,7 +41,7 @@ public class GameTest {
     public void shouldNotBeAbleToAllowTheComputerToPlayFirstIfItIsO() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
         when(computer.getPiece()).thenReturn(pieceTwo);
         game.setup();
-        verify(computer, never()).calculateBestMove(any(String[].class));
+        verify(computer, never()).calculateBestMove(any(Board.class));
         verify(board, never()).set(anyInt(), anyInt(), anyString());
     }
 
@@ -99,7 +99,7 @@ public class GameTest {
         game.set(row, column);
 
         inOrder.verify(board).set(row, column, pieceOne);
-        inOrder.verify(computer).calculateBestMove(any(String[].class));
+        inOrder.verify(computer).calculateBestMove(any(Board.class));
         inOrder.verify(board).set(0, 0, pieceTwo);
     }
 
@@ -115,7 +115,7 @@ public class GameTest {
         game.set(row, column);
 
         inOrder.verify(board).set(row, column, pieceOne);
-        inOrder.verify(computer, never()).calculateBestMove(any(String[].class));
+        inOrder.verify(computer, never()).calculateBestMove(any(Board.class));
         inOrder.verify(board, never()).set(anyInt(), anyInt(), anyString());
     }
 
@@ -125,7 +125,7 @@ public class GameTest {
         when(computer.getPiece()).thenReturn(pieceOne);
         game.setup();
         game.setup();
-        verify(computer, times(2)).calculateBestMove(any(String[].class));
+        verify(computer, times(2)).calculateBestMove(any(Board.class));
     }
 
     @Test

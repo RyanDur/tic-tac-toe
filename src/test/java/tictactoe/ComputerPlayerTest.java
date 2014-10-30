@@ -20,11 +20,13 @@ public class ComputerPlayerTest {
     private final String pieceTwo = constants.GAME_PIECE_TWO;
     private StrategyGameCtrl game;
     private ComputerPlayer computer;
+    private Board board;
 
     @Before
     public void setup() {
         game = mock(StrategyGameCtrl.class);
         computer = new ComputerPlayerImpl(game);
+        board = mock(Board.class);
     }
 
     @Test
@@ -39,7 +41,6 @@ public class ComputerPlayerTest {
         when(game.getBestMove(anyString(), anyString())).thenReturn(Optional.of(new Integer[]{1,2}));
         computer.setPiece(pieceOne);
         InOrder inOrder = inOrder(game);
-        String[] board = {};
         computer.calculateBestMove(board);
 
         inOrder.verify(game).setBoard(board);
@@ -57,7 +58,6 @@ public class ComputerPlayerTest {
         when(game.getBestMove(anyString(), anyString())).thenReturn(Optional.empty());
         computer.setPiece(pieceOne);
         InOrder inOrder = inOrder(game);
-        String[] board = {};
         computer.calculateBestMove(board);
 
         inOrder.verify(game).setBoard(board);
@@ -75,7 +75,6 @@ public class ComputerPlayerTest {
         when(game.getBestMove(anyString(), anyString())).thenReturn(Optional.empty());
         computer.setPiece(pieceOne);
         InOrder inOrder = inOrder(game);
-        String[] board = {};
         computer.calculateBestMove(board);
 
         inOrder.verify(game).setBoard(board);

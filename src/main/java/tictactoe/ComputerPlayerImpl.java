@@ -20,7 +20,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     }
 
     @Override
-    public void calculateBestMove(String[] board) {
+    public void calculateBestMove(Board board) {
         strategyGameCtrl.setBoard(board);
         Optional<Integer[]> found = strategyGameCtrl.findWinningMove(piece);
         if (!found.isPresent()) found = strategyGameCtrl.findWinningMove(opponent);

@@ -7,6 +7,7 @@ import exceptions.OutOfTurnException;
 import factories.BoardFactory;
 import factories.GameTreeFactory;
 import lang.constants;
+import tictactoe.Board;
 
 import java.util.Arrays;
 import java.util.List;
@@ -85,6 +86,11 @@ public class StrategyBoardCtrlImpl implements StrategyBoardCtrl {
     @Override
     public Optional<Integer[]> anyMove() {
         return Optional.of(strategyBoard.getVacancies().get(0));
+    }
+
+    @Override
+    public void setBoard(Board board) {
+
     }
 
     private int countPieces(String[] board) {

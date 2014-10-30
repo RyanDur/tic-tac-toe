@@ -1,7 +1,7 @@
 package tictactoe;
 
 public interface ComputerPlayer {
-    void calculateBestMove(String[] board);
+    void calculateBestMove(Board board);
 
     void setPiece(String piece);
 

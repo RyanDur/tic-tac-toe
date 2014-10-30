@@ -1,6 +1,6 @@
 package models;
 
-import models.GameTree;
+import tictactoe.Board;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,4 +25,6 @@ public interface StrategyBoardCtrl {
     boolean noBest(Optional<Integer[]> move);
 
     Optional<Integer[]> anyMove();
+
+    void setBoard(Board board);
 }
