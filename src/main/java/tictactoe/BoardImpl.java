@@ -12,18 +12,21 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class BoardImpl implements Board {
-    private final int side;
+    private int side;
     private String[] board;
     private String winner;
 
-    public BoardImpl(int side) {
-        this.side = side;
-        this.board = new String[side * side];
+    public BoardImpl() {
     }
 
     private BoardImpl(int side, String[] board) {
         this.side = side;
         this.board = board;
+    }
+
+    @Override
+    public void setup(int side) {
+        board = new String[side * side];
     }
 
     @Override
@@ -46,12 +49,13 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public List<Integer[]> getVacancies() {
+    public List<List<Integer>> getVacancies() {
         String[] board = getBoard();
         return IntStream.range(0, board.length)
                 .filter(index -> empty(board[index])).boxed()
-                .map(num -> new Integer[]{calcRow(num), calcColumn(num)})
+                .map(num -> Arrays.asList(calcRow(num), calcColumn(num)))
                 .collect(Collectors.toList());
+
     }
 
     @Override

@@ -14,9 +14,11 @@ public interface Board {
 
     String getWinner();
 
-    List<Integer[]> getVacancies();
+    List<List<Integer>> getVacancies();
 
     int numOfPieces();
 
     Board copy();
+
+    void setup(int side);
 }

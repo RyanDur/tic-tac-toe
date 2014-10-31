@@ -29,7 +29,7 @@ public class BoardTest {
         pieceOne = constants.GAME_PIECE_ONE;
         pieceTwo = constants.GAME_PIECE_TWO;
         players = new String[constants.SIDE * constants.SIDE];
-        board = new BoardImpl(constants.SIDE);
+        board = new BoardImpl();
     }
 
     @Test
@@ -264,5 +264,15 @@ public class BoardTest {
         board.set(0, 2, pieceOne);
         Board copy = board.copy();
         assertThat(copy.getBoard(), is(equalTo(board.getBoard())));
+    }
+
+    @Test
+    public void shouldBeAbleToClearTheBoard() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
+        board.set(0, 0, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(0, 2, pieceOne);
+        assertThat(board.numOfPieces(), is(equalTo(3)));
+        board.setup(constants.SIDE);
+        assertThat(board.numOfPieces(), is(equalTo(0)));
     }
 }

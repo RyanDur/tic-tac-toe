@@ -3,7 +3,6 @@ package tictactoe;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
-import factories.BoardFactory;
 import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,17 +15,15 @@ public class GameTest {
     private final String pieceOne = constants.GAME_PIECE_ONE;
     private final String pieceTwo = constants.GAME_PIECE_TWO;
     private Game game;
-    private BoardFactory boardFactory;
-    private final Board board = mock(Board.class);
+    private Board board;
     private ComputerPlayer computer;
 
     @Before
     public void setup() {
-        computer = mock(ComputerPlayer.class);
-        boardFactory = mock(BoardFactory.class);
-        game = new GameImpl(boardFactory, computer);
+        board = mock(Board.class);
         when(board.getBoard()).thenReturn(new String[constants.SIDE * constants.SIDE]);
-        when(boardFactory.createBoard(anyInt())).thenReturn(board);
+        computer = mock(ComputerPlayer.class);
+        game = new GameImpl(board, computer);
     }
 
     @Test
@@ -134,6 +131,6 @@ public class GameTest {
     public void shouldBeAbleToRestTheGame() throws OutOfBoundsException, NotVacantException {
         game.setup();
         game.setup();
-        verify(boardFactory, times(2)).createBoard(anyInt());
+        verify(board, times(2)).setup(constants.SIDE);
     }
 }

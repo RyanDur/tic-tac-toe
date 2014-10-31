@@ -5,19 +5,23 @@ import com.google.inject.Singleton;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
-import factories.BoardFactory;
 import lang.constants;
 
 @Singleton
 public class GameImpl implements Game {
-    private BoardFactory boardFactory;
     private ComputerPlayer computer;
     private Board board;
 
     @Inject
-    public GameImpl(BoardFactory boardFactory, ComputerPlayer computer) {
-        this.boardFactory = boardFactory;
+    public GameImpl(Board board, ComputerPlayer computer) {
+        this.board = board;
         this.computer = computer;
+    }
+
+    @Override
+    public void setup() {
+        board.setup(constants.SIDE);
+        if (computersTurn()) computerMove();
     }
 
     @Override
@@ -44,12 +48,6 @@ public class GameImpl implements Game {
     @Override
     public String[] getBoard() {
         return board.getBoard();
-    }
-
-    @Override
-    public void setup() {
-        board = boardFactory.createBoard(constants.SIDE);
-        if (computersTurn()) computerMove();
     }
 
     private String getPiece() {
