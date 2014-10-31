@@ -13,6 +13,7 @@ import org.junit.rules.ExpectedException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNull.nullValue;
 
 public class BoardTest {
 
@@ -30,6 +31,7 @@ public class BoardTest {
         pieceTwo = constants.GAME_PIECE_TWO;
         players = new String[constants.SIDE * constants.SIDE];
         board = new BoardImpl();
+        board.setup(constants.SIDE);
     }
 
     @Test
@@ -63,7 +65,7 @@ public class BoardTest {
         board.set(0, 1, pieceOne);
         board.set(2, 1, pieceTwo);
         board.set(1, 0, pieceOne);
-        assertThat(board.getWinner(), is(equalTo(null)));
+        assertThat(board.getWinner(), is(nullValue()));
     }
 
     @Test
@@ -83,7 +85,7 @@ public class BoardTest {
         board.set(1, 0, pieceOne);
         board.set(2, 1, pieceTwo);
         board.set(1, 1, pieceOne);
-        assertThat(board.getWinner(), is(equalTo(null)));
+        assertThat(board.getWinner(), is(nullValue()));
     }
 
     @Test
@@ -103,7 +105,7 @@ public class BoardTest {
         board.set(1, 1, pieceOne);
         board.set(2, 1, pieceTwo);
         board.set(0, 2, pieceOne);
-        assertThat(board.getWinner(), is(equalTo(null)));
+        assertThat(board.getWinner(), is(nullValue()));
     }
 
     @Test
@@ -123,7 +125,7 @@ public class BoardTest {
         board.set(1, 1, pieceOne);
         board.set(2, 0, pieceTwo);
         board.set(1, 2, pieceOne);
-        assertThat(board.getWinner(), is(equalTo(null)));
+        assertThat(board.getWinner(), is(nullValue()));
     }
 
     @Test
@@ -143,7 +145,7 @@ public class BoardTest {
         board.set(2, 1, pieceOne);
         board.set(0, 1, pieceTwo);
         board.set(0, 0, pieceOne);
-        assertThat(board.getWinner(), is(equalTo(null)));
+        assertThat(board.getWinner(), is(nullValue()));
     }
 
     @Test
@@ -163,7 +165,7 @@ public class BoardTest {
         board.set(1, 2, pieceOne);
         board.set(0, 0, pieceTwo);
         board.set(1, 1, pieceOne);
-        assertThat(board.getWinner(), is(equalTo(null)));
+        assertThat(board.getWinner(), is(nullValue()));
     }
 
     @Test
@@ -183,7 +185,7 @@ public class BoardTest {
         board.set(1, 1, pieceOne);
         board.set(0, 2, pieceTwo);
         board.set(2, 1, pieceOne);
-        assertThat(board.getWinner(), is(equalTo(null)));
+        assertThat(board.getWinner(), is(nullValue()));
     }
 
     @Test
@@ -203,7 +205,7 @@ public class BoardTest {
         board.set(1, 1, pieceOne);
         board.set(1, 2, pieceTwo);
         board.set(2, 2, pieceOne);
-        assertThat(board.getWinner(), is(equalTo(null)));
+        assertThat(board.getWinner(), is(nullValue()));
     }
 
     @Test
@@ -274,5 +276,17 @@ public class BoardTest {
         assertThat(board.numOfPieces(), is(equalTo(3)));
         board.setup(constants.SIDE);
         assertThat(board.numOfPieces(), is(equalTo(0)));
+    }
+
+    @Test
+    public void shouldResetTheWinnerWhenSettingUpTheBoard() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
+        board.set(0, 2, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(1, 1, pieceOne);
+        board.set(1, 2, pieceTwo);
+        board.set(2, 0, pieceOne);
+        assertThat(board.getWinner(), is(equalTo(pieceOne)));
+        board.setup(constants.SIDE);
+        assertThat(board.getWinner(), is(nullValue()));
     }
 }

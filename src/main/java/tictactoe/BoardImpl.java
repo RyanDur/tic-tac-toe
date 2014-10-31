@@ -26,6 +26,8 @@ public class BoardImpl implements Board {
 
     @Override
     public void setup(int side) {
+        this.side = side;
+        winner = null;
         board = new String[side * side];
     }
 
@@ -55,7 +57,6 @@ public class BoardImpl implements Board {
                 .filter(index -> empty(board[index])).boxed()
                 .map(num -> Arrays.asList(calcRow(num), calcColumn(num)))
                 .collect(Collectors.toList());
-
     }
 
     @Override
