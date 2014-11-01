@@ -1,46 +1,38 @@
 package tictactoe;
 
-import com.google.inject.Inject;
+import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
+import exceptions.OutOfTurnException;
 import lang.constants;
 
-import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ComputerPlayerImpl implements ComputerPlayer {
-    private ComputerAI ai;
-    private int row;
-    private int column;
     private String piece;
-    private String opponent;
-
-    @Inject
-    public ComputerPlayerImpl(ComputerAI ai) {
-        this.ai = ai;
-    }
+    private List<Integer> vacancy;
 
     @Override
     public void calculateBestMove(Board board) {
-        ai.setBoard(board);
-        Optional<Integer[]> found = ai.findWinningMove(piece);
-        if (!found.isPresent()) found = ai.findWinningMove(opponent);
-        if (!found.isPresent()) found = ai.getBestMove(piece, opponent);
-        found.ifPresent(setMove());
+        vacancy = filterMoves(piece, board).stream().max((move1, move2) ->
+                getWeight(piece, playMove(piece, move1, board)) -
+                        getWeight(piece, playMove(piece, move2, board))).get();
     }
 
     @Override
     public void setPiece(String piece) {
         this.piece = piece;
-        setOpponent(piece);
     }
 
     @Override
     public int getRow() {
-        return row;
+        return vacancy.get(0);
     }
 
     @Override
     public int getColumn() {
-        return column;
+        return vacancy.get(1);
     }
 
     @Override
@@ -48,15 +40,50 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         return piece;
     }
 
-    private Consumer<Integer[]> setMove() {
-        return vacancy -> {
-            row = vacancy[0];
-            column = vacancy[1];
-        };
+    private int getWeight(String piece, Board board) {
+        if (board.gameOver()) return score(board, piece);
+        return getBoards(getOpponent(piece), board).stream()
+                .mapToInt(childBoard -> getWeight(getOpponent(piece), childBoard)).sum();
     }
 
-    private void setOpponent(String piece) {
-        opponent = piece.equals(constants.GAME_PIECE_ONE) ?
+    private int score(Board board, String piece) {
+        if (board.getWinner() == null) return constants.DRAW_WEIGHT;
+        return (getPiece().equals(piece)) ? constants.WIN_WEIGHT : constants.LOSE_WEIGHT;
+    }
+
+    private List<Board> getBoards(String piece, Board board) {
+        List<List<Integer>> moves = filterMoves(piece, board);
+        return collectBoards(piece, moves.stream(), board);
+    }
+
+    private List<List<Integer>> filterMoves(String piece, Board board) {
+        List<List<Integer>> moves = findWinningMoves(piece, board);
+        if (moves.isEmpty()) moves = board.getVacancies();
+        return moves;
+    }
+
+    private List<Board> collectBoards(String piece, Stream<List<Integer>> moves, Board board) {
+        return moves.map(move -> playMove(piece, move, board)).collect(Collectors.toList());
+    }
+
+    private List<List<Integer>> findWinningMoves(String piece, Board board) {
+        return board.getVacancies().stream()
+                .filter(move -> playMove(piece, move, board).getWinner() != null)
+                .collect(Collectors.toList());
+    }
+
+    private Board playMove(String piece, List<Integer> move, Board board) {
+        Board copy = board.copy();
+        try {
+            copy.set(move.get(0), move.get(1), piece);
+        } catch (NotVacantException | OutOfBoundsException | OutOfTurnException e) {
+            e.printStackTrace();
+        }
+        return copy;
+    }
+
+    private String getOpponent(String piece) {
+        return constants.GAME_PIECE_ONE.equals(piece) ?
                 constants.GAME_PIECE_TWO : constants.GAME_PIECE_ONE;
     }
 }
