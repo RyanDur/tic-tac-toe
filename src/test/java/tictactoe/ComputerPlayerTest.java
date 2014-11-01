@@ -1,17 +1,18 @@
 package tictactoe;
 
+import exceptions.NotVacantException;
+import exceptions.OutOfBoundsException;
+import exceptions.OutOfTurnException;
 import lang.constants;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ComputerPlayerTest {
 
@@ -32,13 +33,12 @@ public class ComputerPlayerTest {
     }
 
     @Test
-    public void shouldBeAbleToCalculateTheBestMove() {
+    public void shouldBeAbleToCalculateTheBestMove() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
         Board copy = mock(Board.class);
         when(board.getVacancies()).thenReturn(Arrays.asList(Arrays.asList(1,2)));
         when(board.copy()).thenReturn(copy);
         computer.setPiece(pieceOne);
-        List<Integer> move = computer.calculateBestMove(board).get();
-        assertThat(move.get(0), is(equalTo(1)));
-        assertThat(move.get(1), is(equalTo(2)));
+        computer.calculateBestMove(board);
+        verify(copy, times(2)).set(1,2,pieceOne);
     }
 }
