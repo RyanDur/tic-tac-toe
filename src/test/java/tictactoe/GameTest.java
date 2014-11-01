@@ -8,6 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 import static org.mockito.Mockito.*;
 
 public class GameTest {
@@ -28,10 +31,11 @@ public class GameTest {
 
     @Test
     public void shouldBeAbleToAllowTheComputerToPlayFirstIfItIsX() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
+        when(computer.calculateBestMove(any(Board.class))).thenReturn(Optional.of(Arrays.asList(1,2)));
         when(computer.getPiece()).thenReturn(pieceOne);
         game.setup();
         verify(computer).calculateBestMove(any(Board.class));
-        verify(board).set(0, 0, pieceOne);
+        verify(board).set(1, 2, pieceOne);
     }
 
     @Test
@@ -92,12 +96,12 @@ public class GameTest {
         int column  = 2;
 
         when(board.numOfPieces()).thenReturn(0,1);
+        when(computer.calculateBestMove(any(Board.class))).thenReturn(Optional.of(Arrays.asList(1,2)));
         game.set(row, column);
-
         inOrder.verify(board).set(row, column, pieceOne);
         inOrder.verify(board).copy();
         inOrder.verify(computer).calculateBestMove(any(Board.class));
-        inOrder.verify(board).set(0, 0, pieceTwo);
+        inOrder.verify(board).set(1, 2, pieceTwo);
     }
 
     @Test
@@ -119,6 +123,7 @@ public class GameTest {
 
     @Test
     public void shouldCheckToSeeIfTheComputerPlayerShouldGoIfGameReset() throws OutOfBoundsException, NotVacantException {
+        when(computer.calculateBestMove(any(Board.class))).thenReturn(Optional.of(Arrays.asList(1,2)));
         when(board.getWinner()).thenReturn(pieceOne);
         when(computer.getPiece()).thenReturn(pieceOne);
         game.setup();

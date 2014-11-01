@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -36,8 +37,8 @@ public class ComputerPlayerTest {
         when(board.getVacancies()).thenReturn(Arrays.asList(Arrays.asList(1,2)));
         when(board.copy()).thenReturn(copy);
         computer.setPiece(pieceOne);
-        computer.calculateBestMove(board);
-        assertThat(computer.getRow(), is(equalTo(1)));
-        assertThat(computer.getColumn(), is(equalTo(2)));
+        List<Integer> move = computer.calculateBestMove(board).get();
+        assertThat(move.get(0), is(equalTo(1)));
+        assertThat(move.get(1), is(equalTo(2)));
     }
 }

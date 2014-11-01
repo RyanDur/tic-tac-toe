@@ -6,33 +6,23 @@ import exceptions.OutOfTurnException;
 import lang.constants;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ComputerPlayerImpl implements ComputerPlayer {
     private String piece;
-    private List<Integer> vacancy;
 
     @Override
-    public void calculateBestMove(Board board) {
-        vacancy = filterMoves(piece, board).stream().max((move1, move2) ->
+    public Optional<List<Integer>> calculateBestMove(Board board) {
+        return filterMoves(piece, board).stream().max((move1, move2) ->
                 getWeight(piece, playMove(piece, move1, board)) -
-                        getWeight(piece, playMove(piece, move2, board))).get();
+                        getWeight(piece, playMove(piece, move2, board)));
     }
 
     @Override
     public void setPiece(String piece) {
         this.piece = piece;
-    }
-
-    @Override
-    public int getRow() {
-        return vacancy.get(0);
-    }
-
-    @Override
-    public int getColumn() {
-        return vacancy.get(1);
     }
 
     @Override

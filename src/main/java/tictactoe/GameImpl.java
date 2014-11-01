@@ -7,6 +7,9 @@ import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import lang.constants;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 @Singleton
 public class GameImpl implements Game {
     private ComputerPlayer computer;
@@ -64,11 +67,17 @@ public class GameImpl implements Game {
     }
 
     private void computerMove() {
-        try {
-            computer.calculateBestMove(board.copy());
-            board.set(computer.getRow(), computer.getColumn(), computer.getPiece());
-        } catch (NotVacantException | OutOfTurnException | OutOfBoundsException e) {
-            e.printStackTrace();
-        }
+        computer.calculateBestMove(board.copy())
+                .ifPresent(playMove());
+    }
+
+    private Consumer<List<Integer>> playMove() {
+        return move -> {
+            try {
+                board.set(move.get(0), move.get(1), computer.getPiece());
+            } catch (NotVacantException | OutOfBoundsException | OutOfTurnException e) {
+                e.printStackTrace();
+            }
+        };
     }
 }
