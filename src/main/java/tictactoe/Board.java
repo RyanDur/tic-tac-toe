@@ -21,4 +21,6 @@ public interface Board {
     Board copy();
 
     void setup(int side);
+
+    boolean gameOver();
 }

@@ -32,6 +32,11 @@ public class BoardImpl implements Board {
     }
 
     @Override
+    public boolean gameOver() {
+        return getWinner() != null || numOfPieces() == getBoard().length;
+    }
+
+    @Override
     public void set(int row, int column, String piece) throws NotVacantException, OutOfTurnException, OutOfBoundsException {
         if (outOfBounds(row, column)) throw new OutOfBoundsException();
         if (!validTurn(piece)) throw new OutOfTurnException();

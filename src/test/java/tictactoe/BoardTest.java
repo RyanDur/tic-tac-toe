@@ -289,4 +289,28 @@ public class BoardTest {
         board.setup(constants.SIDE);
         assertThat(board.getWinner(), is(nullValue()));
     }
+
+    @Test
+    public void shouldBeAbleToTellIfAGameIsOverIfThereIsAWinner() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
+        board.set(0, 2, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(1, 1, pieceOne);
+        board.set(1, 2, pieceTwo);
+        board.set(2, 0, pieceOne);
+        assertThat(board.gameOver(), is(equalTo(true)));
+    }
+
+    @Test
+    public void shouldBeAbleToTellIfAGameIsOverIfTheBoardIsFull() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
+        board.set(0, 2, pieceOne);
+        board.set(0, 1, pieceTwo);
+        board.set(1, 1, pieceOne);
+        board.set(1, 2, pieceTwo);
+        board.set(2, 1, pieceOne);
+        board.set(2, 0, pieceTwo);
+        board.set(1, 0, pieceOne);
+        board.set(0, 0, pieceTwo);
+        board.set(2, 2, pieceOne);
+        assertThat(board.gameOver(), is(equalTo(true)));
+    }
 }

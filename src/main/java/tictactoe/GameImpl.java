@@ -31,7 +31,7 @@ public class GameImpl implements Game {
 
     @Override
     public boolean over() {
-        return getWinner() != null || board.numOfPieces() == getBoard().length;
+        return board.gameOver();
     }
 
     @Override

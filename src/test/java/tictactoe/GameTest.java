@@ -46,8 +46,7 @@ public class GameTest {
     public void shouldBeAbleToCheckIfGameIsOver() {
         game.setup();
         game.over();
-        verify(board, times(2)).numOfPieces();
-        verify(board).getWinner();
+        verify(board).gameOver();
     }
 
     @Test
