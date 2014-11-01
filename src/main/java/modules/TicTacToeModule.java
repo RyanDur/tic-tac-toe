@@ -3,17 +3,15 @@ package modules;
 import com.google.inject.AbstractModule;
 import tictactoe.Game;
 import tictactoe.GameImpl;
-import factories.ViewFactory;
-import factories.ViewFactoryImpl;
-import views.elements.Header;
-import views.elements.HeaderImpl;
+import views.elements.*;
 
 public class TicTacToeModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new GameModule());
         bind(Game.class).to(GameImpl.class);
-        bind(ViewFactory.class).to(ViewFactoryImpl.class);
         bind(Header.class).to(HeaderImpl.class);
+        bind(Menu.class).to(MenuImpl.class);
+        bind(Board.class).to(BoardImpl.class);
     }
 }

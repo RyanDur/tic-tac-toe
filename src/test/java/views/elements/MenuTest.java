@@ -18,13 +18,16 @@ import static org.mockito.Mockito.verify;
 
 public class MenuTest extends GuiTest {
     private Game game;
+    private Menu menu;
 
     @Override
     protected Parent getRootNode() {
         game = mock(Game.class);
         Consumer<String> onePlayer = game::setComputer;
         EventHandler<MouseEvent> twoPlayer = e -> game.setup();
-        Menu menu = new MenuImpl(onePlayer, twoPlayer);
+        menu = new MenuImpl();
+        menu.setOnePlayer(onePlayer);
+        menu.setTwoPlayer(twoPlayer);
         return (Parent) menu;
     }
 
@@ -53,5 +56,14 @@ public class MenuTest extends GuiTest {
         click(constants.ONE_PLAYER);
         click(constants.GAME_PIECE_TWO);
         verify(game).setComputer(constants.GAME_PIECE_ONE);
+    }
+
+    @Test
+    public void shouldBeAbleToResetTheMenu() {
+        click(constants.ONE_PLAYER);
+        click(constants.GAME_PIECE_TWO);
+        menu.reset();
+        verifyThat(constants.LEFT_BUTTON_ID, hasText(constants.ONE_PLAYER));
+        verifyThat(constants.RIGHT_BUTTON_ID, hasText(constants.TWO_PLAYER));
     }
 }

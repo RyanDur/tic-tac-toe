@@ -1,11 +1,8 @@
 package views.game;
 
-import tictactoe.Game;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
-import factories.ViewFactory;
-import factories.ViewFactoryImpl;
 import javafx.scene.Parent;
 import lang.constants;
 import org.junit.Rule;
@@ -13,8 +10,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.exceptions.NoNodesFoundException;
-import views.elements.Header;
-import views.elements.HeaderImpl;
+import tictactoe.Game;
+import views.elements.*;
 
 import static org.loadui.testfx.Assertions.assertNodeExists;
 import static org.loadui.testfx.Assertions.verifyThat;
@@ -43,9 +40,10 @@ public class TicTacToeTest extends GuiTest {
     protected Parent getRootNode() {
         game = mock(Game.class);
         when(game.getBoard()).thenReturn(board);
-        ViewFactory viewFactory = new ViewFactoryImpl();
         Header header = new HeaderImpl();
-        return new TicTacToeImpl(game, viewFactory, header);
+        Menu menu = new MenuImpl();
+        Board board = new BoardImpl();
+        return new TicTacToeImpl(game, header, menu, board);
     }
 
     @Test

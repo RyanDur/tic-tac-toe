@@ -1,11 +1,9 @@
 package views.game;
 
 import com.google.inject.Inject;
-import tictactoe.Game;
 import exceptions.NotVacantException;
 import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
-import factories.ViewFactory;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -16,7 +14,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import lang.constants;
+import tictactoe.Game;
+import views.elements.Board;
 import views.elements.Header;
+import views.elements.Menu;
 
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -26,14 +27,16 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     private Pane centerPane;
     private Game game;
     private Header header;
-    private ViewFactory viewFactory;
     private final BorderPane ticTacToe;
+    private Menu menu;
+    private Board board;
 
     @Inject
-    public TicTacToeImpl(Game game, ViewFactory viewFactory, Header header) {
+    public TicTacToeImpl(Game game, Header header, Menu menu, Board board) {
         ticTacToe = getFXML();
+        this.menu = menu;
+        this.board = board;
         this.getChildren().add(ticTacToe);
-        this.viewFactory = viewFactory;
         this.game = game;
         centerPane = (Pane) ticTacToe.getCenter();
         this.header = setupHeader(header);
@@ -41,7 +44,11 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     }
 
     private EventHandler<MouseEvent> resetMenu() {
-        return event -> setupMenu();
+        return event -> {
+            game.reset();
+            menu.reset();
+            setupMenu();
+        };
     }
 
     private EventHandler<MouseEvent> resetGame() {
@@ -81,12 +88,16 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     private void setupBoard() {
         clearHeader(header);
         game.setup();
-        swapCenter((Node) viewFactory.createBoard(game.getBoard(), play(game)));
+        board.setPlay(play(game));
+        board.setBoard(game.getBoard());
+        swapCenter((Node) board);
     }
 
     private void setupMenu() {
         clearHeader(header);
-        swapCenter((Node) viewFactory.createMenu(setOnePlayer(), setTwoPlayer()));
+        menu.setOnePlayer(setOnePlayer());
+        menu.setTwoPlayer(setTwoPlayer());
+        swapCenter((Node) menu);
     }
 
     private Header setupHeader(Header header) {

@@ -16,15 +16,19 @@ public class BoardImpl extends Parent implements Board {
     private Function<MouseEvent, String[]> play;
     private GridPane grid;
 
-    public BoardImpl(String[] board, Function<MouseEvent, String[]> play) {
+    public BoardImpl() {
         BorderPane borderPane = getFXML();
-        this.play = play;
         grid = (GridPane) borderPane.getCenter();
-        fillBoard(board);
         this.getChildren().add(borderPane);
     }
 
-    private void fillBoard(String[] board) {
+    @Override
+    public void setPlay(Function<MouseEvent, String[]> play) {
+        this.play = play;
+    }
+
+    @Override
+    public void setBoard(String[] board) {
         grid.getChildren().stream().filter(space -> space instanceof Label)
                 .forEach(cell -> setSpace(board, (Label) cell));
     }
@@ -33,7 +37,7 @@ public class BoardImpl extends Parent implements Board {
         String player = board[calc(getRow(cell), getColumn(cell))];
         if (player == null) {
             cell.setText(constants.EMPTY);
-            cell.setOnMouseClicked(click -> fillBoard(play.apply(click)));
+            cell.setOnMouseClicked(click -> setBoard(play.apply(click)));
         } else cell.setText(player);
     }
 

@@ -1,5 +1,6 @@
 package views.elements;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,25 +16,33 @@ public class MenuImpl extends Parent implements Menu {
     private final Button right;
     private final Button left;
 
-    public MenuImpl(Consumer<String> onePlayer, EventHandler<MouseEvent> twoPlayer) {
+    public MenuImpl() {
         GridPane nav = getFXML();
         right = (Button) nav.lookup(constants.RIGHT_BUTTON_ID);
         left = (Button) nav.lookup(constants.LEFT_BUTTON_ID);
-        setOnePlayer(onePlayer);
-        setTwoPlayer(twoPlayer);
         this.getChildren().add(nav);
     }
 
-    private void setTwoPlayer(EventHandler<MouseEvent> twoPlayer) {
+    @Override
+    public void setTwoPlayer(EventHandler<MouseEvent> twoPlayer) {
         right.setOnMouseClicked(twoPlayer);
     }
 
-    private void setOnePlayer(Consumer<String> computer) {
+    @Override
+    public void setOnePlayer(Consumer<String> computer) {
         left.setOnMouseClicked(event -> {
             left.setText(constants.GAME_PIECE_ONE);
             right.setText(constants.GAME_PIECE_TWO);
             left.setOnMouseClicked(event2 -> computer.accept(constants.GAME_PIECE_TWO));
             right.setOnMouseClicked(event2 -> computer.accept(constants.GAME_PIECE_ONE));
+        });
+    }
+
+    @Override
+    public void reset() {
+        Platform.runLater(() -> {
+            left.setText(constants.ONE_PLAYER);
+            right.setText(constants.TWO_PLAYER);
         });
     }
 

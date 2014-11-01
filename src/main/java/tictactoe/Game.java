@@ -5,6 +5,10 @@ import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 
 public interface Game {
+    void setup();
+
+    void reset();
+
     void setComputer(String piece);
 
     boolean over();
@@ -14,6 +18,4 @@ public interface Game {
     String getWinner();
 
     String[] getBoard();
-
-    void setup();
 }

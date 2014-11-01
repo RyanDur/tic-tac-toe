@@ -25,6 +25,11 @@ public class GameImpl implements Game {
     }
 
     @Override
+    public void reset() {
+        computer.setPiece(null);
+    }
+
+    @Override
     public void setComputer(String piece) {
         computer.setPiece(piece);
     }

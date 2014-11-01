@@ -13,8 +13,7 @@ import java.util.function.Function;
 
 import static org.loadui.testfx.Assertions.verifyThat;
 import static org.loadui.testfx.controls.Commons.hasText;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class BoardTest extends GuiTest {
     private final String cell = "#cell";
@@ -24,6 +23,8 @@ public class BoardTest extends GuiTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
+    private Board boardView;
+    private Function<MouseEvent, String[]> play;
 
     @Override
     protected Parent getRootNode() {
@@ -31,13 +32,24 @@ public class BoardTest extends GuiTest {
         player = constants.GAME_PIECE_ONE;
         gameCtrl = mock(Game.class);
         when(gameCtrl.getBoard()).thenReturn(this.board);
-        Function<MouseEvent, String[]> play = mockPlay();
-        return new BoardImpl(this.board, play);
+        play = mockPlay();
+        boardView = new BoardImpl();
+        boardView.setPlay(play);
+        boardView.setBoard(board);
+        return (Parent) boardView;
+    }
+
+    @Test
+    public void shouldBeAbleToSetThePlayAction() {
+        when(gameCtrl.getBoard()).thenReturn(board);
+        click(cell + 1);
+        verify(gameCtrl).getBoard();
     }
 
     @Test
     public void shouldBeAbleToChooseAPlaceOnTheBoard() {
         when(gameCtrl.getBoard()).thenReturn(board);
+        boardView.setPlay(play);
         for (int i = 0; i < board.length; i++) {
             String id = cell + i;
             board[i] = player;

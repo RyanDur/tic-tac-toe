@@ -132,4 +132,10 @@ public class GameTest {
         game.setup();
         verify(board, times(2)).setup(constants.SIDE);
     }
+
+    @Test
+    public void shouldBeAbleToResetTheGame() {
+        game.reset();
+        verify(computer).setPiece(null);
+    }
 }
