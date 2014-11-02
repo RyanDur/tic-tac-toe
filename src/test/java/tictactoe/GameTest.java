@@ -93,7 +93,6 @@ public class GameTest {
         when(board.numOfPieces()).thenReturn(0,1);
         game.set(row, column);
         inOrder.verify(board).set(row, column, pieceOne);
-        inOrder.verify(board).copy();
         inOrder.verify(computer).calculateBestMove(any(Board.class));
     }
 
@@ -109,9 +108,7 @@ public class GameTest {
         game.set(row, column);
 
         inOrder.verify(board).set(row, column, pieceOne);
-        inOrder.verify(board,never()).copy();
         inOrder.verify(computer, never()).calculateBestMove(any(Board.class));
-        inOrder.verify(board, never()).set(anyInt(), anyInt(), anyString());
     }
 
     @Test
