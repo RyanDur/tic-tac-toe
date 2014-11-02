@@ -8,13 +8,14 @@ import lang.constants;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ComputerPlayerImpl implements ComputerPlayer {
     private String piece;
 
     @Override
     public Board calculateBestMove(Board board) {
-        return board.getVacancies().stream().max((move1, move2) ->
+        return getMoves(piece, board).stream().max((move1, move2) ->
                 getWeight(piece, playMove(piece, move1, board)) -
                         getWeight(piece, playMove(piece, move2, board)))
                 .map(move -> playMove(piece, move, board)).get();
@@ -32,10 +33,10 @@ public class ComputerPlayerImpl implements ComputerPlayer {
 
     private int getWeight(String piece, Board board) {
         if (board.gameOver()) return score(board, piece);
-        return getMoves(getOpponent(piece), board).stream()
+        IntStream weights = getMoves(getOpponent(piece), board).stream()
                 .map(move -> playMove(getOpponent(piece), move, board))
-                .mapToInt(childBoard -> getWeight(getOpponent(piece), childBoard))
-                .sum();
+                .mapToInt(childBoard -> getWeight(getOpponent(piece), childBoard));
+        return getPiece().equals(piece) ? weights.min().getAsInt() : weights.max().getAsInt();
     }
 
     private Set<List<Integer>> getMoves(String piece, Board board) {

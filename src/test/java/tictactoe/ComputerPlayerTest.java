@@ -45,20 +45,6 @@ public class ComputerPlayerTest {
         when(board.copy()).thenReturn(copy);
         computer.setPiece(X);
         computer.calculateBestMove(board);
-        verify(copy).set(1, 2, X);
-    }
-
-    @Test
-    public void should() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
-        Board board = new BoardImpl();
-        board.setup(constants.SIDE);
-        computer.setPiece(O);
-        board.set(1, 1, X);
-        board.set(2, 2, O);
-        board.set(1, 0, X);
-//        board.set(0, 2, O);
-//        board.set(1, 0, X);
-//        board.set(0, 0, O);
-        computer.calculateBestMove(board);
+        verify(copy, times(3)).set(1, 2, X);
     }
 }
