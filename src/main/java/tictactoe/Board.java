@@ -14,7 +14,7 @@ public interface Board {
 
     String getWinner();
 
-    List<List<Integer>> getVacancies();
+    java.util.Set<List<Integer>> getVacancies();
 
     int numOfPieces();
 

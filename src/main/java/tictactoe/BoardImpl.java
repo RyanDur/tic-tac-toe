@@ -7,6 +7,7 @@ import lang.constants;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -56,12 +57,12 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public List<List<Integer>> getVacancies() {
+    public Set<List<Integer>> getVacancies() {
         String[] board = getBoard();
         return IntStream.range(0, board.length)
                 .filter(index -> empty(board[index])).boxed()
                 .map(num -> Arrays.asList(calcRow(num), calcColumn(num)))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override
