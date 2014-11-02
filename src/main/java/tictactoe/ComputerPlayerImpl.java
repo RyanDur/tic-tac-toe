@@ -14,7 +14,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
 
     @Override
     public Board calculateBestMove(Board board) {
-        return filterMoves(piece, board).stream().max((move1, move2) ->
+        return board.getVacancies().stream().max((move1, move2) ->
                 getWeight(piece, playMove(piece, move1, board)) -
                         getWeight(piece, playMove(piece, move2, board)))
                 .map(move -> playMove(piece, move, board)).get();
@@ -48,8 +48,17 @@ public class ComputerPlayerImpl implements ComputerPlayer {
 
     private List<List<Integer>> filterMoves(String piece, Board board) {
         List<List<Integer>> moves = findWinningMoves(piece, board);
+        if (moves.isEmpty()) moves = findLosingMoves(piece, board);
         if (moves.isEmpty()) moves = board.getVacancies();
         return moves;
+    }
+
+    private List<List<Integer>> findLosingMoves(String piece, Board board) {
+        return board.getVacancies().stream()
+                .map(move -> playMove(piece, move, board))
+                .flatMap(childBoard -> findWinningMoves(getOpponent(piece), childBoard).stream())
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     private List<Board> collectBoards(String piece, Stream<List<Integer>> moves, Board board) {
