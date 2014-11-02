@@ -6,6 +6,7 @@ import exceptions.OutOfTurnException;
 import lang.constants;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,33 +43,32 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     }
 
     private List<Board> getBoards(String piece, Board board) {
-        List<List<Integer>> moves = filterMoves(piece, board);
+        Set<List<Integer>> moves = filterMoves(piece, board);
         return collectBoards(piece, moves.stream(), board);
     }
 
-    private List<List<Integer>> filterMoves(String piece, Board board) {
-        List<List<Integer>> moves = findWinningMoves(piece, board);
+    private Set<List<Integer>> filterMoves(String piece, Board board) {
+        Set<List<Integer>> moves = findWinningMoves(piece, board);
         if (moves.isEmpty()) moves = findLosingMoves(piece, board);
         if (moves.isEmpty()) moves = board.getVacancies();
         return moves;
     }
 
-    private List<List<Integer>> findLosingMoves(String piece, Board board) {
+    private Set<List<Integer>> findLosingMoves(String piece, Board board) {
         return board.getVacancies().stream()
                 .map(move -> playMove(piece, move, board))
                 .flatMap(childBoard -> findWinningMoves(getOpponent(piece), childBoard).stream())
-                .distinct()
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     private List<Board> collectBoards(String piece, Stream<List<Integer>> moves, Board board) {
         return moves.map(move -> playMove(piece, move, board)).collect(Collectors.toList());
     }
 
-    private List<List<Integer>> findWinningMoves(String piece, Board board) {
+    private Set<List<Integer>> findWinningMoves(String piece, Board board) {
         return board.getVacancies().stream()
                 .filter(move -> playMove(piece, move, board).getWinner() != null)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     private Board playMove(String piece, List<Integer> move, Board board) {

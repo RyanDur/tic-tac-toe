@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -35,10 +37,13 @@ public class ComputerPlayerTest {
     @Test
     public void shouldBeAbleToCalculateTheBestMove() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
         Board copy = mock(Board.class);
-        when(board.getVacancies()).thenReturn(Arrays.asList(Arrays.asList(1,2)));
+        List<Integer> list = Arrays.asList(1, 2);
+        HashSet<List<Integer>> value = new HashSet<>();
+        value.add(list);
+        when(board.getVacancies()).thenReturn(value);
         when(board.copy()).thenReturn(copy);
         computer.setPiece(pieceOne);
         computer.calculateBestMove(board);
-        verify(copy, times(2)).set(1,2,pieceOne);
+        verify(copy).set(1, 2, pieceOne);
     }
 }
