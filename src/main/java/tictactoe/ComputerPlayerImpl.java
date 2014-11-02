@@ -8,7 +8,6 @@ import lang.constants;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ComputerPlayerImpl implements ComputerPlayer {
     private String piece;
@@ -33,8 +32,17 @@ public class ComputerPlayerImpl implements ComputerPlayer {
 
     private int getWeight(String piece, Board board) {
         if (board.gameOver()) return score(board, piece);
-        return getBoards(getOpponent(piece), board).stream()
-                .mapToInt(childBoard -> getWeight(getOpponent(piece), childBoard)).sum();
+        return getMoves(getOpponent(piece), board).stream()
+                .map(move -> playMove(getOpponent(piece), move, board))
+                .mapToInt(childBoard -> getWeight(getOpponent(piece), childBoard))
+                .sum();
+    }
+
+    private Set<List<Integer>> getMoves(String piece, Board board) {
+        Set<List<Integer>> moves = findWinningMoves(piece, board);
+        if (moves.isEmpty()) moves = findLosingMoves(piece, board);
+        if (moves.isEmpty()) moves = board.getVacancies();
+        return moves;
     }
 
     private int score(Board board, String piece) {
@@ -42,32 +50,16 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         return (getPiece().equals(piece)) ? constants.WIN_WEIGHT : constants.LOSE_WEIGHT;
     }
 
-    private List<Board> getBoards(String piece, Board board) {
-        Set<List<Integer>> moves = filterMoves(piece, board);
-        return collectBoards(piece, moves.stream(), board);
-    }
-
-    private Set<List<Integer>> filterMoves(String piece, Board board) {
-        Set<List<Integer>> moves = findWinningMoves(piece, board);
-        if (moves.isEmpty()) moves = findLosingMoves(piece, board);
-        if (moves.isEmpty()) moves = board.getVacancies();
-        return moves;
+    private Set<List<Integer>> findWinningMoves(String piece, Board board) {
+        return board.getVacancies().stream()
+                .filter(move -> playMove(piece, move, board).getWinner() != null)
+                .collect(Collectors.toSet());
     }
 
     private Set<List<Integer>> findLosingMoves(String piece, Board board) {
         return board.getVacancies().stream()
                 .map(move -> playMove(piece, move, board))
                 .flatMap(childBoard -> findWinningMoves(getOpponent(piece), childBoard).stream())
-                .collect(Collectors.toSet());
-    }
-
-    private List<Board> collectBoards(String piece, Stream<List<Integer>> moves, Board board) {
-        return moves.map(move -> playMove(piece, move, board)).collect(Collectors.toList());
-    }
-
-    private Set<List<Integer>> findWinningMoves(String piece, Board board) {
-        return board.getVacancies().stream()
-                .filter(move -> playMove(piece, move, board).getWinner() != null)
                 .collect(Collectors.toSet());
     }
 

@@ -18,7 +18,8 @@ import static org.mockito.Mockito.*;
 
 public class ComputerPlayerTest {
 
-    private final String pieceOne = constants.GAME_PIECE_ONE;
+    private final String X = constants.GAME_PIECE_ONE;
+    private final String O = constants.GAME_PIECE_TWO;
     private ComputerPlayer computer;
     private Board board;
 
@@ -30,8 +31,8 @@ public class ComputerPlayerTest {
 
     @Test
     public void shouldBeAbelToeSetThePieceOfAComputerPlayer() {
-        computer.setPiece(pieceOne);
-        assertThat(computer.getPiece(), is(equalTo(pieceOne)));
+        computer.setPiece(X);
+        assertThat(computer.getPiece(), is(equalTo(X)));
     }
 
     @Test
@@ -42,8 +43,22 @@ public class ComputerPlayerTest {
         value.add(list);
         when(board.getVacancies()).thenReturn(value);
         when(board.copy()).thenReturn(copy);
-        computer.setPiece(pieceOne);
+        computer.setPiece(X);
         computer.calculateBestMove(board);
-        verify(copy).set(1, 2, pieceOne);
+        verify(copy).set(1, 2, X);
+    }
+
+    @Test
+    public void should() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
+        Board board = new BoardImpl();
+        board.setup(constants.SIDE);
+        computer.setPiece(O);
+        board.set(1, 1, X);
+        board.set(2, 2, O);
+        board.set(1, 0, X);
+//        board.set(0, 2, O);
+//        board.set(1, 0, X);
+//        board.set(0, 0, O);
+        computer.calculateBestMove(board);
     }
 }
