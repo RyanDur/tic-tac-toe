@@ -5,12 +5,19 @@ import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import lang.constants;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ComputerPlayerImpl implements ComputerPlayer {
     private String piece;
+    private final Random random;
+
+    public ComputerPlayerImpl() {
+        random = new Random();
+    }
 
     @Override
     public void setPiece(String piece) {
@@ -25,19 +32,19 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     @Override
     public Board calculateBestMove(Board board) {
         String piece = getPiece();
-        int depth = constants.DEPTH;
-        return getMoves(piece, board).stream().max((move1, move2) ->
-                getWeight(piece, playMove(piece, move1, board), depth) -
-                        getWeight(piece, playMove(piece, move2, board), depth))
-                .map(move -> playMove(piece, move, board)).get();
+        List<List<Integer>> maxMoves = getMoves(piece, board).parallelStream().collect(Collectors
+                .groupingBy(move -> getScore(piece, playMove(piece, move, board)))).entrySet().stream()
+                .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();
+        List<Integer> move = maxMoves.get(random.nextInt(maxMoves.size()));
+        return playMove(piece, move, board);
     }
 
-    private int getWeight(String piece, Board board, int depth) {
-        if (depth == 0 || board.gameOver()) return score(board, piece);
-        IntStream weights = getMoves(getOpponent(piece), board).stream()
+    private int getScore(String piece, Board board) {
+        if (board.gameOver()) return score(board, piece);
+        IntStream scores = getMoves(getOpponent(piece), board).stream()
                 .map(move -> playMove(getOpponent(piece), move, board))
-                .mapToInt(childBoard -> getWeight(getOpponent(piece), childBoard, depth - 1));
-        return getPiece().equals(piece) ? weights.min().getAsInt() : weights.max().getAsInt();
+                .mapToInt(childBoard -> getScore(getOpponent(piece), childBoard));
+        return getPiece().equals(piece) ? scores.min().getAsInt() : scores.max().getAsInt();
     }
 
     private Set<List<Integer>> getMoves(String piece, Board board) {
@@ -66,13 +73,13 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     }
 
     private Board playMove(String piece, List<Integer> move, Board board) {
-        Board copy = board.copy();
+        board = board.copy();
         try {
-            copy.set(move.get(0), move.get(1), piece);
+            board.set(move.get(0), move.get(1), piece);
         } catch (NotVacantException | OutOfBoundsException | OutOfTurnException e) {
             e.printStackTrace();
         }
-        return copy;
+        return board;
     }
 
     private String getOpponent(String piece) {

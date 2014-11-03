@@ -24,5 +24,4 @@ public interface constants {
     String RIGHT_BUTTON_ID = "#right";
     String LEFT_BUTTON_ID = "#left";
     String MENU_VIEW = "/scenes/menu.fxml";
-    int DEPTH = 5;
 }
