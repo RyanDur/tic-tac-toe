@@ -5,21 +5,12 @@ import exceptions.OutOfBoundsException;
 import exceptions.OutOfTurnException;
 import lang.constants;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ComputerPlayerImpl implements ComputerPlayer {
     private String piece;
-
-    @Override
-    public Board calculateBestMove(Board board) {
-        return getMoves(piece, board).stream().max((move1, move2) ->
-                getWeight(piece, playMove(piece, move1, board)) -
-                        getWeight(piece, playMove(piece, move2, board)))
-                .map(move -> playMove(piece, move, board)).get();
-    }
 
     @Override
     public void setPiece(String piece) {
@@ -29,6 +20,15 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     @Override
     public String getPiece() {
         return piece;
+    }
+
+    @Override
+    public Board calculateBestMove(Board board) {
+        String piece = getPiece();
+        return getMoves(piece, board).stream().max((move1, move2) ->
+                getWeight(piece, playMove(piece, move1, board)) -
+                        getWeight(piece, playMove(piece, move2, board)))
+                .map(move -> playMove(piece, move, board)).get();
     }
 
     private int getWeight(String piece, Board board) {
