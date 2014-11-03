@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface Board {
 
-    void set(int row, int column, String player) throws NotVacantException, OutOfTurnException, OutOfBoundsException;
+    void set(int row, int column, Character player) throws NotVacantException, OutOfTurnException, OutOfBoundsException;
 
-    String[] getBoard();
+    Character[] getBoard();
 
-    String getWinner();
+    Character getWinner();
 
     java.util.Set<List<Integer>> getVacancies();
 

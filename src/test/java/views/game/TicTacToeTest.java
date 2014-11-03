@@ -24,7 +24,7 @@ public class TicTacToeTest extends GuiTest {
     private final String gameId = "#game";
     private String twoPlayer = "2 Player";
     private Game game;
-    private String[] board = new String[constants.SIDE * constants.SIDE];
+    private Character[] board = new Character[constants.SIDE * constants.SIDE];
     private String center = "#cell4";
     private String reset = "Reset";
 
@@ -32,8 +32,8 @@ public class TicTacToeTest extends GuiTest {
     public ExpectedException exception = ExpectedException.none();
     private String replay = "Replay";
     private String centerLeft = "#cell3";
-    private String pieceOne = constants.GAME_PIECE_ONE;
-    private String pieceTwo = constants.GAME_PIECE_TWO;
+    private String pieceOne = String.valueOf(constants.GAME_PIECE_ONE);
+    private String pieceTwo = String.valueOf(constants.GAME_PIECE_TWO);
 
 
     @Override
@@ -60,28 +60,28 @@ public class TicTacToeTest extends GuiTest {
     @Test
     public void shouldDisplayBoardWhenPlayerChoosesXInOnePlayerMode() {
         click(onePlayer);
-        click(constants.GAME_PIECE_ONE);
+        click(pieceOne);
         assertNodeExists(gameId);
     }
 
     @Test
     public void shouldCreateAHumanAndComputerWhenPlayerChoosesXInOnePlayerMode() {
         click(onePlayer);
-        click(constants.GAME_PIECE_ONE);
+        click(pieceOne);
         verify(game).setComputer(constants.GAME_PIECE_TWO);
     }
 
     @Test
     public void shouldDisplayBoardWhenPlayerChoosesOInOnePlayerMode() {
         click(onePlayer);
-        click(constants.GAME_PIECE_TWO);
+        click(pieceTwo);
         assertNodeExists(gameId);
     }
 
     @Test
     public void shouldCreateAComputerAndHumanWhenPlayerChoosesXInOnePlayerMode() {
         click(onePlayer);
-        click(constants.GAME_PIECE_TWO);
+        click(pieceTwo);
         verify(game).setComputer(constants.GAME_PIECE_ONE);
     }
 
@@ -96,7 +96,7 @@ public class TicTacToeTest extends GuiTest {
     public void shouldRemoveMenuWhenPlayerChoosesXShowingBoardInOnePlayerMode() {
         exception.expect(NoNodesFoundException.class);
         click(onePlayer);
-        click(constants.GAME_PIECE_ONE);
+        click(pieceOne);
         find(menuId);
     }
 
@@ -104,14 +104,14 @@ public class TicTacToeTest extends GuiTest {
     public void shouldRemoveMenuWhenPlayerChoosesOShowingBoardInOnePlayerMode() {
         exception.expect(NoNodesFoundException.class);
         click(onePlayer);
-        click(constants.GAME_PIECE_TWO);
+        click(pieceTwo);
         find(menuId);
     }
 
     @Test
     public void shouldSetThePlayerWithTheCoordinatesWhenPlayerChoosesInOnePlayerMode() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
         click(onePlayer);
-        click(constants.GAME_PIECE_TWO);
+        click(pieceTwo);
         click(center);
         verify(game).set(1, 1);
     }
@@ -119,7 +119,7 @@ public class TicTacToeTest extends GuiTest {
     @Test
     public void shouldCheckForGameOverWhenPlayerChoosesInOnePlayerMode() {
         click(onePlayer);
-        click(constants.GAME_PIECE_TWO);
+        click(pieceTwo);
         click(center);
         verify(game, times(2)).over();
     }
@@ -128,7 +128,7 @@ public class TicTacToeTest extends GuiTest {
     public void shouldRevealReplayButtonWhenGameOverInOnePlayerMode() {
         when(game.over()).thenReturn(true);
         click(onePlayer);
-        click(constants.GAME_PIECE_ONE);
+        click(pieceOne);
         click(center);
         verifyThat(constants.REPLAY_ID, hasText(replay));
     }
@@ -137,7 +137,7 @@ public class TicTacToeTest extends GuiTest {
     public void shouldRevealResetButtonWhenGameOverInOnePlayerMode() {
         when(game.over()).thenReturn(true);
         click(onePlayer);
-        click(constants.GAME_PIECE_ONE);
+        click(pieceOne);
         click(center);
         verifyThat(constants.RESET_ID, hasText(reset));
     }
@@ -160,45 +160,45 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldDisplayWinnerWhenGameIsOverForXInOnePlayerMode() {
-        when(game.getWinner()).thenReturn(pieceOne);
+        when(game.getWinner()).thenReturn(constants.GAME_PIECE_ONE);
         when(game.over()).thenReturn(true);
         click(onePlayer);
         click(pieceOne);
         click(center);
-        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_ONE + constants.HAS_WON_MESSAGE));
+        verifyThat(constants.MESSAGES_ID, hasText(pieceOne + constants.HAS_WON_MESSAGE));
     }
 
     @Test
     public void shouldDisplayWinnerWhenGameIsOverForOInOnePlayerMode() {
-        when(game.getWinner()).thenReturn(pieceTwo);
+        when(game.getWinner()).thenReturn(constants.GAME_PIECE_TWO);
         when(game.over()).thenReturn(true);
         click(onePlayer);
         click(pieceTwo);
         click(center);
-        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+        verifyThat(constants.MESSAGES_ID, hasText(pieceTwo + constants.HAS_WON_MESSAGE));
     }
 
     @Test
     public void shouldDisplayWinnerWhenGameIsOverForXInTwoPlayerMode() {
-        when(game.getWinner()).thenReturn(pieceOne);
+        when(game.getWinner()).thenReturn(constants.GAME_PIECE_ONE);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
-        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_ONE + constants.HAS_WON_MESSAGE));
+        verifyThat(constants.MESSAGES_ID, hasText(pieceOne + constants.HAS_WON_MESSAGE));
     }
 
     @Test
     public void shouldDisplayWinnerWhenGameIsOverForOInTwoPlayerMode() {
-        when(game.getWinner()).thenReturn(pieceTwo);
+        when(game.getWinner()).thenReturn(constants.GAME_PIECE_TWO);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
-        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+        verifyThat(constants.MESSAGES_ID, hasText(pieceTwo + constants.HAS_WON_MESSAGE));
     }
 
     @Test
     public void shouldDisplayTheMenuWhenResetIsClicked() {
-        when(game.getWinner()).thenReturn(pieceOne);
+        when(game.getWinner()).thenReturn(constants.GAME_PIECE_ONE);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
@@ -209,7 +209,7 @@ public class TicTacToeTest extends GuiTest {
     @Test
     public void shouldRemoveMessageIfAnyWhenPlayerClicksOnEmptySpaceIsClicked() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
         doThrow(new NotVacantException()).when(game).set(1,1);
-        when(game.getWinner()).thenReturn(pieceOne);
+        when(game.getWinner()).thenReturn(constants.GAME_PIECE_ONE);
         click(twoPlayer);
         click(center);
         verifyThat(constants.MESSAGES_ID, hasText(constants.NOT_VACANT_MESSAGE));
@@ -219,11 +219,11 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldRemoveMessageWhenResetIsClicked() {
-        when(game.getWinner()).thenReturn(pieceTwo);
+        when(game.getWinner()).thenReturn(constants.GAME_PIECE_TWO);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
-        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+        verifyThat(constants.MESSAGES_ID, hasText(pieceTwo + constants.HAS_WON_MESSAGE));
         click(reset);
         verifyThat(constants.MESSAGES_ID, hasText(constants.EMPTY));
     }
@@ -231,7 +231,7 @@ public class TicTacToeTest extends GuiTest {
     @Test
     public void shouldRemoveTheGameWhenResetIsClicked() {
         exception.expect(NoNodesFoundException.class);
-        when(game.getWinner()).thenReturn(pieceOne);
+        when(game.getWinner()).thenReturn(constants.GAME_PIECE_ONE);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
@@ -241,7 +241,7 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldResetTheGameWhenReplayIsChosen() {
-        when(game.getWinner()).thenReturn(pieceOne);
+        when(game.getWinner()).thenReturn(constants.GAME_PIECE_ONE);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
@@ -251,23 +251,23 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldRemoveMessageWhenReplayIsChosen() {
-        when(game.getWinner()).thenReturn(pieceTwo);
+        when(game.getWinner()).thenReturn(constants.GAME_PIECE_ONE);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
-        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+        verifyThat(constants.MESSAGES_ID, hasText(pieceTwo + constants.HAS_WON_MESSAGE));
         click(replay);
         verifyThat(constants.MESSAGES_ID, hasText(constants.EMPTY));
     }
 
     @Test
     public void shouldNotRemoveWinMessageWhenPlayerHasWonButStillTryingToClickOnASpace() {
-        when(game.getWinner()).thenReturn(pieceTwo);
+        when(game.getWinner()).thenReturn(constants.GAME_PIECE_TWO);
         when(game.over()).thenReturn(true);
         click(twoPlayer);
         click(center);
-        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+        verifyThat(constants.MESSAGES_ID, hasText(pieceTwo + constants.HAS_WON_MESSAGE));
         click(centerLeft);
-        verifyThat(constants.MESSAGES_ID, hasText(constants.GAME_PIECE_TWO + constants.HAS_WON_MESSAGE));
+        verifyThat(constants.MESSAGES_ID, hasText(pieceTwo + constants.HAS_WON_MESSAGE));
     }
 }

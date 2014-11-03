@@ -30,7 +30,7 @@ public class GameImpl implements Game {
     }
 
     @Override
-    public void setComputer(String piece) {
+    public void setComputer(Character piece) {
         computer.setPiece(piece);
     }
 
@@ -46,16 +46,16 @@ public class GameImpl implements Game {
     }
 
     @Override
-    public String getWinner() {
+    public Character getWinner() {
         return board.getWinner();
     }
 
     @Override
-    public String[] getBoard() {
+    public Character[] getBoard() {
         return board.getBoard();
     }
 
-    private String getPiece() {
+    private Character getPiece() {
         return board.numOfPieces() % 2 == 0 ? constants.GAME_PIECE_ONE : constants.GAME_PIECE_TWO;
     }
 

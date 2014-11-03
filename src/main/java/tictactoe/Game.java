@@ -9,13 +9,13 @@ public interface Game {
 
     void reset();
 
-    void setComputer(String piece);
+    void setComputer(Character piece);
 
     boolean over();
 
     void set(int row, int column) throws OutOfBoundsException, OutOfTurnException, NotVacantException;
 
-    String getWinner();
+    Character getWinner();
 
-    String[] getBoard();
+    Character[] getBoard();
 }

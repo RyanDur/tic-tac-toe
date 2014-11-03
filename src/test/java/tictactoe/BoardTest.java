@@ -18,9 +18,9 @@ import static org.hamcrest.core.IsNull.nullValue;
 public class BoardTest {
 
     private Board board;
-    private String[] players;
-    private String pieceOne;
-    private String pieceTwo;
+    private Character[] players;
+    private Character pieceOne;
+    private Character pieceTwo;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -29,7 +29,7 @@ public class BoardTest {
     public void setup() {
         pieceOne = constants.GAME_PIECE_ONE;
         pieceTwo = constants.GAME_PIECE_TWO;
-        players = new String[constants.SIDE * constants.SIDE];
+        players = new Character[constants.SIDE * constants.SIDE];
         board = new BoardImpl();
         board.setup(constants.SIDE);
     }

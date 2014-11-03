@@ -29,10 +29,10 @@ public class MenuImpl extends Parent implements Menu {
     }
 
     @Override
-    public void setOnePlayer(Consumer<String> computer) {
+    public void setOnePlayer(Consumer<Character> computer) {
         left.setOnMouseClicked(event -> {
-            left.setText(constants.GAME_PIECE_ONE);
-            right.setText(constants.GAME_PIECE_TWO);
+            left.setText(String.valueOf(constants.GAME_PIECE_ONE));
+            right.setText(String.valueOf(constants.GAME_PIECE_TWO));
             left.setOnMouseClicked(event2 -> computer.accept(constants.GAME_PIECE_TWO));
             right.setOnMouseClicked(event2 -> computer.accept(constants.GAME_PIECE_ONE));
         });

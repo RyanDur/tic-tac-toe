@@ -18,8 +18,8 @@ import static org.mockito.Mockito.*;
 
 public class ComputerPlayerTest {
 
-    private final String X = constants.GAME_PIECE_ONE;
-    private final String O = constants.GAME_PIECE_TWO;
+    private final Character X = constants.GAME_PIECE_ONE;
+    private final Character O = constants.GAME_PIECE_TWO;
     private ComputerPlayer computer;
     private Board board;
 
@@ -43,8 +43,9 @@ public class ComputerPlayerTest {
         value.add(list);
         when(board.getVacancies()).thenReturn(value);
         when(board.copy()).thenReturn(copy);
+        when(copy.gameOver()).thenReturn(true);
+        when(copy.getWinner()).thenReturn(X);
         computer.setPiece(X);
-        computer.calculateBestMove(board);
-        verify(copy, times(3)).set(1, 2, X);
+        assertThat(computer.calculateBestMove(board), is(equalTo(copy)));
     }
 }

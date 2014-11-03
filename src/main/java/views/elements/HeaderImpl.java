@@ -55,7 +55,7 @@ public class HeaderImpl extends Parent implements Header {
     }
 
     @Override
-    public void displayWinner(String player) {
+    public void displayWinner(Character player) {
         if (player == null) setMessage(constants.DRAW_MESSAGE);
         else setMessage(player + constants.HAS_WON_MESSAGE);
     }

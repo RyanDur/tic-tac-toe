@@ -12,8 +12,8 @@ import static org.mockito.Mockito.*;
 
 public class GameTest {
 
-    private final String pieceOne = constants.GAME_PIECE_ONE;
-    private final String pieceTwo = constants.GAME_PIECE_TWO;
+    private final Character pieceOne = constants.GAME_PIECE_ONE;
+    private final Character pieceTwo = constants.GAME_PIECE_TWO;
     private Game game;
     private Board board;
     private ComputerPlayer computer;
@@ -21,7 +21,7 @@ public class GameTest {
     @Before
     public void setup() {
         board = mock(Board.class);
-        when(board.getBoard()).thenReturn(new String[constants.SIDE * constants.SIDE]);
+        when(board.getBoard()).thenReturn(new Character[constants.SIDE * constants.SIDE]);
         computer = mock(ComputerPlayer.class);
         game = new GameImpl(board, computer);
     }
@@ -38,7 +38,7 @@ public class GameTest {
         when(computer.getPiece()).thenReturn(pieceTwo);
         game.setup();
         verify(computer, never()).calculateBestMove(any(Board.class));
-        verify(board, never()).set(anyInt(), anyInt(), anyString());
+        verify(board, never()).set(anyInt(), anyInt(), anyChar());
     }
 
     @Test

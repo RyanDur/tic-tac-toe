@@ -14,13 +14,13 @@ import java.util.stream.IntStream;
 
 public class BoardImpl implements Board {
     private int side;
-    private String[] board;
-    private String winner;
+    private Character[] board;
+    private Character winner;
 
     public BoardImpl() {
     }
 
-    private BoardImpl(int side, String[] board) {
+    private BoardImpl(int side, Character[] board) {
         this.side = side;
         this.board = board;
     }
@@ -29,7 +29,7 @@ public class BoardImpl implements Board {
     public void setup(int side) {
         this.side = side;
         winner = null;
-        board = new String[side * side];
+        board = new Character[side * side];
     }
 
     @Override
@@ -38,7 +38,7 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public void set(int row, int column, String piece) throws NotVacantException, OutOfTurnException, OutOfBoundsException {
+    public void set(int row, int column, Character piece) throws NotVacantException, OutOfTurnException, OutOfBoundsException {
         if (outOfBounds(row, column)) throw new OutOfBoundsException();
         if (!validTurn(piece)) throw new OutOfTurnException();
         if (!empty(get(row, column))) throw new NotVacantException();
@@ -47,18 +47,18 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public String getWinner() {
+    public Character getWinner() {
         return winner;
     }
 
     @Override
-    public String[] getBoard() {
+    public Character[] getBoard() {
         return Arrays.copyOf(board, board.length);
     }
 
     @Override
     public Set<List<Integer>> getVacancies() {
-        String[] board = getBoard();
+        Character[] board = getBoard();
         return IntStream.range(0, board.length)
                 .filter(index -> empty(board[index])).boxed()
                 .map(num -> Arrays.asList(calcRow(num), calcColumn(num)))
@@ -77,11 +77,11 @@ public class BoardImpl implements Board {
         return new BoardImpl(side, getBoard());
     }
 
-    private String get(int row, int column) {
+    private Character get(int row, int column) {
         return board[calc(row, column)];
     }
 
-    private boolean isWinner(int row, int column, String piece) {
+    private boolean isWinner(int row, int column, Character piece) {
         return check(row(piece, row)) ||
                 check(column(piece, column)) ||
                 check(leftDiagonal(piece)) ||
@@ -93,29 +93,29 @@ public class BoardImpl implements Board {
                 .filter(vector).count();
     }
 
-    private IntPredicate rightDiagonal(String piece) {
+    private IntPredicate rightDiagonal(Character piece) {
         return index -> piece.equals(get(index, (side - 1) - index));
     }
 
-    private IntPredicate leftDiagonal(String piece) {
+    private IntPredicate leftDiagonal(Character piece) {
         return index -> piece.equals(get(index, index));
     }
 
-    private IntPredicate column(String piece, int column) {
+    private IntPredicate column(Character piece, int column) {
         return index -> piece.equals(get(index, column));
     }
 
-    private IntPredicate row(String piece, int row) {
+    private IntPredicate row(Character piece, int row) {
         return index -> piece.equals(get(row, index));
     }
 
-    private boolean validTurn(String piece) {
+    private boolean validTurn(Character piece) {
         int numOfPieces = numOfPieces();
-        return (numOfPieces % 2 == 0 && piece.equals(constants.GAME_PIECE_ONE)) ||
-                (numOfPieces % 2 != 0 && piece.equals(constants.GAME_PIECE_TWO));
+        return (numOfPieces % 2 == 0 && constants.GAME_PIECE_ONE.equals(piece)) ||
+                (numOfPieces % 2 != 0 && constants.GAME_PIECE_TWO.equals(piece));
     }
 
-    private boolean empty(String space) {
+    private boolean empty(Character space) {
         return space == null;
     }
 

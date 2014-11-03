@@ -17,18 +17,18 @@ import static org.mockito.Mockito.*;
 
 public class BoardTest extends GuiTest {
     private final String cell = "#cell";
-    private String player;
-    private String[] board;
+    private Character player;
+    private Character[] board;
     private Game gameCtrl;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
     private Board boardView;
-    private Function<MouseEvent, String[]> play;
+    private Function<MouseEvent, Character[]> play;
 
     @Override
     protected Parent getRootNode() {
-        this.board = new String[constants.SIDE * constants.SIDE];
+        this.board = new Character[constants.SIDE * constants.SIDE];
         player = constants.GAME_PIECE_ONE;
         gameCtrl = mock(Game.class);
         when(gameCtrl.getBoard()).thenReturn(this.board);
@@ -54,7 +54,7 @@ public class BoardTest extends GuiTest {
             String id = cell + i;
             board[i] = player;
             click(id);
-            verifyThat(id, hasText(constants.GAME_PIECE_ONE));
+            verifyThat(id, hasText(String.valueOf(constants.GAME_PIECE_ONE)));
         }
     }
 
@@ -64,23 +64,23 @@ public class BoardTest extends GuiTest {
         board[index] = player;
         String id = cell + index;
         click(id);
-        verifyThat(id, hasText(constants.GAME_PIECE_ONE));
+        verifyThat(id, hasText(String.valueOf(constants.GAME_PIECE_ONE)));
     }
 
     @Test
     public void shouldBeAbleToClearTheBoard() throws InterruptedException {
         int index = 2;
-        String[] board1 = new String[constants.SIDE * constants.SIDE];
+        Character[] board1 = new Character[constants.SIDE * constants.SIDE];
         board[index] = player;
         String id = cell + index;
         click(id);
-        verifyThat(id, hasText(constants.GAME_PIECE_ONE));
+        verifyThat(id, hasText(String.valueOf(constants.GAME_PIECE_ONE)));
         when(gameCtrl.getBoard()).thenReturn(board1);
         click(id);
         verifyThat(id, hasText(constants.EMPTY));
     }
 
-    private Function<MouseEvent, String[]> mockPlay() {
+    private Function<MouseEvent, Character[]> mockPlay() {
         return e -> gameCtrl.getBoard();
     }
 }

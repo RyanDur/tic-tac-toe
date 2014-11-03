@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class BoardImpl extends Parent implements Board {
-    private Function<MouseEvent, String[]> play;
+    private Function<MouseEvent, Character[]> play;
     private GridPane grid;
 
     public BoardImpl() {
@@ -23,22 +23,22 @@ public class BoardImpl extends Parent implements Board {
     }
 
     @Override
-    public void setPlay(Function<MouseEvent, String[]> play) {
+    public void setPlay(Function<MouseEvent, Character[]> play) {
         this.play = play;
     }
 
     @Override
-    public void setBoard(String[] board) {
+    public void setBoard(Character[] board) {
         grid.getChildren().stream().filter(space -> space instanceof Label)
                 .forEach(cell -> setSpace(board, (Label) cell));
     }
 
-    private void setSpace(String[] board, Label cell) {
-        String player = board[calc(getRow(cell), getColumn(cell))];
+    private void setSpace(Character[] board, Label cell) {
+        Character player = board[calc(getRow(cell), getColumn(cell))];
         if (player == null) {
             cell.setText(constants.EMPTY);
             cell.setOnMouseClicked(click -> setBoard(play.apply(click)));
-        } else cell.setText(player);
+        } else cell.setText(String.valueOf(player));
     }
 
     private int calc(int row, int column) {

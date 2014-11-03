@@ -1,8 +1,8 @@
 package lang;
 
 public interface constants {
-    String GAME_PIECE_ONE = "X";
-    String GAME_PIECE_TWO = "O";
+    Character GAME_PIECE_ONE = 'X';
+    Character GAME_PIECE_TWO = 'O';
     int SIDE = 3;
     String GAME_VIEW = "/scenes/game.fxml";
     String MESSAGES_ID = "#messages";

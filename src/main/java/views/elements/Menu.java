@@ -9,7 +9,7 @@ public interface Menu {
 
     void setTwoPlayer(EventHandler<MouseEvent> twoPlayer);
 
-    void setOnePlayer(Consumer<String> computer);
+    void setOnePlayer(Consumer<Character> computer);
 
     void reset();
 }

@@ -23,7 +23,7 @@ public class MenuTest extends GuiTest {
     @Override
     protected Parent getRootNode() {
         game = mock(Game.class);
-        Consumer<String> onePlayer = game::setComputer;
+        Consumer<Character> onePlayer = game::setComputer;
         EventHandler<MouseEvent> twoPlayer = e -> game.setup();
         menu = new MenuImpl();
         menu.setOnePlayer(onePlayer);
@@ -40,28 +40,28 @@ public class MenuTest extends GuiTest {
     @Test
     public void shouldBeAbleToChooseBetweenXAndOIfAOnePlayerGame() {
         click(constants.ONE_PLAYER);
-        verifyThat(constants.LEFT_BUTTON_ID, hasText(constants.GAME_PIECE_ONE));
-        verifyThat(constants.RIGHT_BUTTON_ID, hasText(constants.GAME_PIECE_TWO));
+        verifyThat(constants.LEFT_BUTTON_ID, hasText(String.valueOf(constants.GAME_PIECE_ONE)));
+        verifyThat(constants.RIGHT_BUTTON_ID, hasText(String.valueOf(String.valueOf(constants.GAME_PIECE_TWO))));
     }
 
     @Test
     public void shouldBeAbleToAllowAPlayerToChooseX() {
         click(constants.ONE_PLAYER);
-        click(constants.GAME_PIECE_ONE);
+        click(String.valueOf(constants.GAME_PIECE_ONE));
         verify(game).setComputer(constants.GAME_PIECE_TWO);
     }
 
     @Test
     public void shouldBeAbleToAllowAPlayerToChooseO() {
         click(constants.ONE_PLAYER);
-        click(constants.GAME_PIECE_TWO);
+        click(String.valueOf(constants.GAME_PIECE_TWO));
         verify(game).setComputer(constants.GAME_PIECE_ONE);
     }
 
     @Test
     public void shouldBeAbleToResetTheMenu() {
         click(constants.ONE_PLAYER);
-        click(constants.GAME_PIECE_TWO);
+        click(String.valueOf(constants.GAME_PIECE_TWO));
         menu.reset();
         verifyThat(constants.LEFT_BUTTON_ID, hasText(constants.ONE_PLAYER));
         verifyThat(constants.RIGHT_BUTTON_ID, hasText(constants.TWO_PLAYER));

@@ -59,14 +59,14 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
         return event -> setupBoard();
     }
 
-    private Consumer<String> setOnePlayer() {
+    private Consumer<Character> setOnePlayer() {
         return (piece) -> {
             game.setComputer(piece);
             setupBoard();
         };
     }
 
-    private Function<MouseEvent, String[]> play(Game game) {
+    private Function<MouseEvent, Character[]> play(Game game) {
         return click -> {
             try {
                 if (!game.over()) {
