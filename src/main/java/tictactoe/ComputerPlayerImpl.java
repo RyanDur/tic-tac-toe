@@ -25,17 +25,18 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     @Override
     public Board calculateBestMove(Board board) {
         String piece = getPiece();
+        int depth = constants.DEPTH;
         return getMoves(piece, board).stream().max((move1, move2) ->
-                getWeight(piece, playMove(piece, move1, board)) -
-                        getWeight(piece, playMove(piece, move2, board)))
+                getWeight(piece, playMove(piece, move1, board), depth) -
+                        getWeight(piece, playMove(piece, move2, board), depth))
                 .map(move -> playMove(piece, move, board)).get();
     }
 
-    private int getWeight(String piece, Board board) {
-        if (board.gameOver()) return score(board, piece);
+    private int getWeight(String piece, Board board, int depth) {
+        if (depth == 0 || board.gameOver()) return score(board, piece);
         IntStream weights = getMoves(getOpponent(piece), board).stream()
                 .map(move -> playMove(getOpponent(piece), move, board))
-                .mapToInt(childBoard -> getWeight(getOpponent(piece), childBoard));
+                .mapToInt(childBoard -> getWeight(getOpponent(piece), childBoard, depth - 1));
         return getPiece().equals(piece) ? weights.min().getAsInt() : weights.max().getAsInt();
     }
 
