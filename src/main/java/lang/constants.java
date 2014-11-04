@@ -11,9 +11,9 @@ public interface constants {
     String OUT_OF_BOUNDS_MESSAGE = "You chose a space out of bounds,\n HOW!!??";
     String EMPTY = "";
     String OUT_OF_TURN_MESSAGE = "It's not your turn!";
-    int WIN_WEIGHT = 1;
-    int LOSE_WEIGHT = -1;
-    int DRAW_WEIGHT = 0;
+    int WIN_SCORE = 1;
+    int LOSE_SCORE = -1;
+    int DRAW_SCORE = 0;
     String TIC_TAC_TOE_VIEW = "/scenes/tictactoe.fxml";
     String REPLAY_ID = "#replay";
     String RESET_ID = "#reset";
