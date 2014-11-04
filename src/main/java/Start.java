@@ -4,9 +4,9 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import modules.TicTacToeModule;
-import views.game.TicTacToe;
-import views.game.TicTacToeImpl;
+import tictactoe.modules.TicTacToeModule;
+import tictactoe.views.game.TicTacToe;
+import tictactoe.views.game.TicTacToeImpl;
 
 public class Start extends Application {
     public static void main(String[] args) {
