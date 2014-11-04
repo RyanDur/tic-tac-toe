@@ -41,7 +41,7 @@ public class BoardImpl implements Board {
     public void set(int row, int column, Character piece) throws NotVacantException, OutOfTurnException, OutOfBoundsException {
         if (outOfBounds(row, column)) throw new OutOfBoundsException();
         if (!validTurn(piece)) throw new OutOfTurnException();
-        if (!empty(get(row, column))) throw new NotVacantException();
+        if (!isEmpty(get(row, column))) throw new NotVacantException();
         board[calc(row, column)] = piece;
         if (isWinner(row, column, piece)) winner = piece;
     }
@@ -60,7 +60,7 @@ public class BoardImpl implements Board {
     public Set<List<Integer>> getVacancies() {
         Character[] board = getBoard();
         return IntStream.range(0, board.length)
-                .filter(index -> empty(board[index])).boxed()
+                .filter(index -> isEmpty(board[index])).boxed()
                 .map(num -> Arrays.asList(calcRow(num), calcColumn(num)))
                 .collect(Collectors.toSet());
     }
@@ -68,7 +68,7 @@ public class BoardImpl implements Board {
     @Override
     public int numOfPieces() {
         return (int) Arrays.stream(getBoard())
-                .filter(piece -> !empty(piece))
+                .filter(piece -> !isEmpty(piece))
                 .count();
     }
 
@@ -115,7 +115,7 @@ public class BoardImpl implements Board {
                 (numOfPieces % 2 != 0 && Constants.GAME_PIECE_TWO.equals(piece));
     }
 
-    private boolean empty(Character space) {
+    private boolean isEmpty(Character space) {
         return space == null;
     }
 
