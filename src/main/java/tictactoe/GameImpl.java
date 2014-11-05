@@ -1,4 +1,4 @@
-package tictactoe.game;
+package tictactoe;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

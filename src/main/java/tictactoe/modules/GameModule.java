@@ -1,10 +1,10 @@
 package tictactoe.modules;
 
 import com.google.inject.AbstractModule;
-import tictactoe.game.Board;
-import tictactoe.game.BoardImpl;
-import tictactoe.game.ComputerPlayer;
-import tictactoe.game.ComputerPlayerImpl;
+import tictactoe.Board;
+import tictactoe.BoardImpl;
+import tictactoe.ComputerPlayer;
+import tictactoe.ComputerPlayerImpl;
 
 public class GameModule extends AbstractModule {
     @Override

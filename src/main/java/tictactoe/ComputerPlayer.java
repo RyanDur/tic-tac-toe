@@ -1,4 +1,4 @@
-package tictactoe.game;
+package tictactoe;
 
 public interface ComputerPlayer {
     void setPiece(Character piece);

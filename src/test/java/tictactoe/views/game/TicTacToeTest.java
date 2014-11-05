@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.exceptions.NoNodesFoundException;
-import tictactoe.game.Game;
+import tictactoe.Game;
 import tictactoe.views.elements.*;
 
 import static org.loadui.testfx.Assertions.assertNodeExists;

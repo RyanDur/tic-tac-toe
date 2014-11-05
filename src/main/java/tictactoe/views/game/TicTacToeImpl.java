@@ -14,7 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import tictactoe.lang.Constants;
-import tictactoe.game.Game;
+import tictactoe.Game;
 import tictactoe.views.elements.Board;
 import tictactoe.views.elements.Header;
 import tictactoe.views.elements.Menu;

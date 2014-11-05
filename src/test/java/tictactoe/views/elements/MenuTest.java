@@ -5,7 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
-import tictactoe.game.Game;
+import tictactoe.Game;
 import tictactoe.lang.Constants;
 
 import java.util.function.Consumer;

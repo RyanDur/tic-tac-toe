@@ -8,7 +8,7 @@ import tictactoe.modules.TicTacToeModule;
 import tictactoe.views.game.TicTacToe;
 import tictactoe.views.game.TicTacToeImpl;
 
-public class Start extends Application {
+public class Play extends Application {
     public static void main(String[] args) {
         launch(args);
     }

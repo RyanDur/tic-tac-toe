@@ -1,5 +1,9 @@
-package tictactoe.game;
+package tictactoe;
 
+import tictactoe.Board;
+import tictactoe.ComputerPlayer;
+import tictactoe.Game;
+import tictactoe.GameImpl;
 import tictactoe.exceptions.NotVacantException;
 import tictactoe.exceptions.OutOfBoundsException;
 import tictactoe.exceptions.OutOfTurnException;

@@ -1,7 +1,7 @@
 package tictactoe.views.elements;
 
 import tictactoe.lang.Constants;
-import tictactoe.game.Game;
+import tictactoe.Game;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import org.junit.Rule;

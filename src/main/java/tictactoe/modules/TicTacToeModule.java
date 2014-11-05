@@ -1,8 +1,8 @@
 package tictactoe.modules;
 
 import com.google.inject.AbstractModule;
-import tictactoe.game.Game;
-import tictactoe.game.GameImpl;
+import tictactoe.Game;
+import tictactoe.GameImpl;
 import tictactoe.views.elements.*;
 
 public class TicTacToeModule extends AbstractModule {

@@ -1,4 +1,4 @@
-package tictactoe.game;
+package tictactoe;
 
 import tictactoe.exceptions.NotVacantException;
 import tictactoe.exceptions.OutOfBoundsException;
