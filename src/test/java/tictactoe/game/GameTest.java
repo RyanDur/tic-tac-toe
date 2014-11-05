@@ -24,47 +24,43 @@ public class GameTest {
         when(board.getBoard()).thenReturn(new Character[Constants.SIDE * Constants.SIDE]);
         computer = mock(ComputerPlayer.class);
         game = new GameImpl(board, computer);
+        game.setup(pieceOne);
     }
 
     @Test
     public void shouldBeAbleToAllowTheComputerToPlayFirstIfItIsX() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
         when(computer.getPiece()).thenReturn(pieceOne);
-        game.setup();
+        game.setup(pieceOne);
         verify(computer).calculateBestMove(any(Board.class));
     }
 
     @Test
     public void shouldNotBeAbleToAllowTheComputerToPlayFirstIfItIsO() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
         when(computer.getPiece()).thenReturn(pieceTwo);
-        game.setup();
         verify(computer, never()).calculateBestMove(any(Board.class));
         verify(board, never()).set(anyInt(), anyInt(), anyChar());
     }
 
     @Test
     public void shouldBeAbleToCheckIfGameIsOver() {
-        game.setup();
         game.over();
         verify(board).gameOver();
     }
 
     @Test
     public void shouldBeAbleToGetTheWinner() {
-        game.setup();
         game.getWinner();
         verify(board).getWinner();
     }
 
     @Test
     public void shouldBeAbleToGetTheBoard() {
-        game.setup();
         game.getBoard();
         verify(board).getBoard();
     }
 
     @Test
     public void shouldSetPlayerXOnFirstMoveForTwoPlayer() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
-        game.setup();
         int row = 1;
         int column = 2;
         game.set(row, column);
@@ -73,7 +69,6 @@ public class GameTest {
 
     @Test
     public void shouldSetPlayerOOnSecondMoveForTwoPlayer() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
-        game.setup();
         int row = 1;
         int column = 2;
         when(board.numOfPieces()).thenReturn(1);
@@ -85,8 +80,6 @@ public class GameTest {
     public void shouldSetPlayer1ThenComputerPlayer() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
         InOrder inOrder = inOrder(board, computer);
         when(computer.getPiece()).thenReturn(pieceTwo);
-        game.setComputer(pieceTwo);
-        game.setup();
         int row = 1;
         int column  = 2;
 
@@ -102,7 +95,6 @@ public class GameTest {
         InOrder inOrder = inOrder(board, computer);
         int row = 1;
         int column = 2;
-        game.setup();
 
         when(board.numOfPieces()).thenReturn(0,1);
         game.set(row, column);
@@ -116,21 +108,14 @@ public class GameTest {
         when(computer.calculateBestMove(any(Board.class))).thenReturn(board);
         when(board.getWinner()).thenReturn(pieceOne);
         when(computer.getPiece()).thenReturn(pieceOne);
-        game.setup();
-        game.setup();
+        game.setup(pieceOne);
+        game.setup(pieceOne);
         verify(computer, times(2)).calculateBestMove(any(Board.class));
     }
 
     @Test
     public void shouldBeAbleToRestTheGame() throws OutOfBoundsException, NotVacantException {
-        game.setup();
-        game.setup();
+        game.setup(pieceOne);
         verify(board, times(2)).setup(Constants.SIDE);
-    }
-
-    @Test
-    public void shouldBeAbleToResetTheGame() {
-        game.reset();
-        verify(computer).setPiece(null);
     }
 }

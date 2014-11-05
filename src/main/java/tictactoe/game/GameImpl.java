@@ -19,19 +19,10 @@ public class GameImpl implements Game {
     }
 
     @Override
-    public void setup() {
+    public void setup(Character piece) {
+        computer.setPiece(piece);
         board.setup(Constants.SIDE);
         if (computersTurn()) computerMove();
-    }
-
-    @Override
-    public void reset() {
-        setComputer(null);
-    }
-
-    @Override
-    public void setComputer(Character piece) {
-        computer.setPiece(piece);
     }
 
     @Override

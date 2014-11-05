@@ -5,11 +5,7 @@ import tictactoe.exceptions.OutOfBoundsException;
 import tictactoe.exceptions.OutOfTurnException;
 
 public interface Game {
-    void setup();
-
-    void reset();
-
-    void setComputer(Character piece);
+    void setup(Character piece);
 
     boolean over();
 

@@ -1,12 +1,12 @@
 package tictactoe.views.elements;
 
-import tictactoe.lang.Constants;
-import tictactoe.game.Game;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
+import tictactoe.game.Game;
+import tictactoe.lang.Constants;
 
 import java.util.function.Consumer;
 
@@ -19,12 +19,13 @@ import static org.mockito.Mockito.verify;
 public class MenuTest extends GuiTest {
     private Game game;
     private Menu menu;
+    private Character gamePieceOne = Constants.GAME_PIECE_ONE;
 
     @Override
     protected Parent getRootNode() {
         game = mock(Game.class);
-        Consumer<Character> onePlayer = game::setComputer;
-        EventHandler<MouseEvent> twoPlayer = e -> game.setup();
+        Consumer<Character> onePlayer = game::setup;
+        EventHandler<MouseEvent> twoPlayer = e -> game.setup(null);
         menu = new MenuImpl();
         menu.setOnePlayer(onePlayer);
         menu.setTwoPlayer(twoPlayer);
@@ -34,7 +35,7 @@ public class MenuTest extends GuiTest {
     @Test
     public void shouldBeAbleToSetATwoPlayerGame() {
         click(Constants.TWO_PLAYER);
-        verify(game).setup();
+        verify(game).setup(null);
     }
 
     @Test
@@ -48,14 +49,14 @@ public class MenuTest extends GuiTest {
     public void shouldBeAbleToAllowAPlayerToChooseX() {
         click(Constants.ONE_PLAYER);
         click(String.valueOf(Constants.GAME_PIECE_ONE));
-        verify(game).setComputer(Constants.GAME_PIECE_TWO);
+        verify(game).setup(Constants.GAME_PIECE_TWO);
     }
 
     @Test
     public void shouldBeAbleToAllowAPlayerToChooseO() {
         click(Constants.ONE_PLAYER);
         click(String.valueOf(Constants.GAME_PIECE_TWO));
-        verify(game).setComputer(Constants.GAME_PIECE_ONE);
+        verify(game).setup(Constants.GAME_PIECE_ONE);
     }
 
     @Test

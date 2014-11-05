@@ -30,6 +30,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     private final BorderPane ticTacToe;
     private Menu menu;
     private Board board;
+    private Character piece;
 
     @Inject
     public TicTacToeImpl(Game game, Header header, Menu menu, Board board) {
@@ -45,23 +46,23 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
 
     private EventHandler<MouseEvent> resetMenu() {
         return event -> {
-            game.reset();
             menu.reset();
             setupMenu();
         };
     }
 
     private EventHandler<MouseEvent> resetGame() {
-        return event -> setupBoard();
+        return event -> setOnePlayer().accept(piece);
     }
 
     private EventHandler<MouseEvent> setTwoPlayer() {
-        return event -> setupBoard();
+        return event -> setOnePlayer().accept(null);
     }
 
     private Consumer<Character> setOnePlayer() {
         return (piece) -> {
-            game.setComputer(piece);
+            this.piece = piece;
+            game.setup(piece);
             setupBoard();
         };
     }
@@ -87,7 +88,6 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
 
     private void setupBoard() {
         clearHeader(header);
-        game.setup();
         board.setPlay(play(game));
         board.setBoard(game.getBoard());
         swapCenter((Node) board);

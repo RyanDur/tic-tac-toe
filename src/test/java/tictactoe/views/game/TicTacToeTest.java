@@ -68,7 +68,7 @@ public class TicTacToeTest extends GuiTest {
     public void shouldCreateAHumanAndComputerWhenPlayerChoosesXInOnePlayerMode() {
         click(onePlayer);
         click(pieceOne);
-        verify(game).setComputer(Constants.GAME_PIECE_TWO);
+        verify(game).setup(Constants.GAME_PIECE_TWO);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class TicTacToeTest extends GuiTest {
     public void shouldCreateAComputerAndHumanWhenPlayerChoosesXInOnePlayerMode() {
         click(onePlayer);
         click(pieceTwo);
-        verify(game).setComputer(Constants.GAME_PIECE_ONE);
+        verify(game).setup(Constants.GAME_PIECE_ONE);
     }
 
     @Test
@@ -246,7 +246,7 @@ public class TicTacToeTest extends GuiTest {
         click(twoPlayer);
         click(center);
         click(replay);
-        verify(game, times(2)).setup();
+        verify(game, times(2)).setup(anyChar());
     }
 
     @Test
