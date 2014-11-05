@@ -1,7 +1,6 @@
 package tictactoe;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import tictactoe.exceptions.NotVacantException;
 import tictactoe.exceptions.OutOfBoundsException;
 import tictactoe.exceptions.OutOfTurnException;
@@ -9,7 +8,6 @@ import tictactoe.lang.Constants;
 
 import java.util.List;
 
-@Singleton
 public class GameImpl implements Game {
     private ComputerPlayer computer;
     private Board board;
