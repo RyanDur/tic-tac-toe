@@ -39,19 +39,17 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      * on the score they are given. The group of moves with the highest score will be extracted
      * and a move from the list will be randomly chosen. The reason that a move can be randomly
      * chosen is because it has the same score as any of the other moves, signifying that any move
-     * is just as good as another. Once the move is chosen, it is played on the board. Then the
-     * board is returned.
+     * is just as good as another. Once the move is chosen, it is returned.
      *
      * @param board that represents the current state of the game
-     * @return board that has the move of the computerPlayer placed on it.
+     * @return the best move
      */
     @Override
-    public Board calculateBestMove(Board board) {
+    public List<Integer> calculateBestMove(Board board) {
         List<List<Integer>> maxMoves = getMoves(true, board).parallelStream().collect(
                 groupingBy(move -> getScore(true, playMove(true, move, board)))).entrySet().stream()
                 .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();
-        List<Integer> move = maxMoves.get(random.nextInt(maxMoves.size()));
-        return playMove(true, move, board);
+        return maxMoves.get(random.nextInt(maxMoves.size()));
     }
 
     /**

@@ -7,6 +7,8 @@ import tictactoe.exceptions.OutOfBoundsException;
 import tictactoe.exceptions.OutOfTurnException;
 import tictactoe.lang.Constants;
 
+import java.util.List;
+
 @Singleton
 public class GameImpl implements Game {
     private ComputerPlayer computer;
@@ -55,6 +57,11 @@ public class GameImpl implements Game {
     }
 
     private void computerMove() {
-        board = computer.calculateBestMove(board);
+        try {
+            List<Integer> move = computer.calculateBestMove(board);
+            board.set(move.get(0), move.get(1), computer.getPiece());
+        } catch (OutOfBoundsException | NotVacantException | OutOfTurnException e) {
+            e.printStackTrace();
+        }
     }
 }

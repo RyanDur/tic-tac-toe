@@ -1,16 +1,14 @@
 package tictactoe;
 
-import tictactoe.Board;
-import tictactoe.ComputerPlayer;
-import tictactoe.Game;
-import tictactoe.GameImpl;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InOrder;
 import tictactoe.exceptions.NotVacantException;
 import tictactoe.exceptions.OutOfBoundsException;
 import tictactoe.exceptions.OutOfTurnException;
 import tictactoe.lang.Constants;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InOrder;
+
+import java.util.Arrays;
 
 import static org.mockito.Mockito.*;
 
@@ -33,6 +31,7 @@ public class GameTest {
 
     @Test
     public void shouldBeAbleToAllowTheComputerToPlayFirstIfItIsX() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
+        when(computer.calculateBestMove(any(Board.class))).thenReturn(Arrays.asList(1,2));
         when(computer.getPiece()).thenReturn(pieceOne);
         game.setup(pieceOne);
         verify(computer).calculateBestMove(any(Board.class));
@@ -82,6 +81,7 @@ public class GameTest {
 
     @Test
     public void shouldSetPlayer1ThenComputerPlayer() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
+        when(computer.calculateBestMove(any(Board.class))).thenReturn(Arrays.asList(1,2));
         InOrder inOrder = inOrder(board, computer);
         when(computer.getPiece()).thenReturn(pieceTwo);
         int row = 1;
@@ -109,7 +109,7 @@ public class GameTest {
 
     @Test
     public void shouldCheckToSeeIfTheComputerPlayerShouldGoIfGameReset() throws OutOfBoundsException, NotVacantException {
-        when(computer.calculateBestMove(any(Board.class))).thenReturn(board);
+        when(computer.calculateBestMove(any(Board.class))).thenReturn(Arrays.asList(1,2));
         when(board.getWinner()).thenReturn(pieceOne);
         when(computer.getPiece()).thenReturn(pieceOne);
         game.setup(pieceOne);

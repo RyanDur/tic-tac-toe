@@ -5,5 +5,5 @@ public interface ComputerPlayer {
 
     Character getPiece();
 
-    Board calculateBestMove(Board board);
+    java.util.List<Integer> calculateBestMove(Board board);
 }

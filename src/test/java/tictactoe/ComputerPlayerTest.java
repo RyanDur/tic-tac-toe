@@ -1,14 +1,11 @@
 package tictactoe;
 
-import tictactoe.Board;
-import tictactoe.ComputerPlayer;
-import tictactoe.ComputerPlayerImpl;
+import org.junit.Before;
+import org.junit.Test;
 import tictactoe.exceptions.NotVacantException;
 import tictactoe.exceptions.OutOfBoundsException;
 import tictactoe.exceptions.OutOfTurnException;
 import tictactoe.lang.Constants;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -17,7 +14,8 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ComputerPlayerTest {
 
@@ -49,6 +47,6 @@ public class ComputerPlayerTest {
         when(copy.gameOver()).thenReturn(true);
         when(copy.getWinner()).thenReturn(X);
         computer.setPiece(X);
-        assertThat(computer.calculateBestMove(board), is(equalTo(copy)));
+        assertThat(computer.calculateBestMove(board), is(equalTo(list)));
     }
 }
