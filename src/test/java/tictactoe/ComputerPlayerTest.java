@@ -47,6 +47,6 @@ public class ComputerPlayerTest {
         when(copy.gameOver()).thenReturn(true);
         when(copy.getWinner()).thenReturn(X);
         computer.setPiece(X);
-        assertThat(computer.calculateBestMove(board), is(equalTo(list)));
+        assertThat(computer.getMove(board), is(equalTo(list)));
     }
 }

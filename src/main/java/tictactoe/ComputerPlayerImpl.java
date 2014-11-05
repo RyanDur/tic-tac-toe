@@ -45,7 +45,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      * @return the best move
      */
     @Override
-    public List<Integer> calculateBestMove(Board board) {
+    public List<Integer> getMove(Board board) {
         List<List<Integer>> maxMoves = getMoves(true, board).parallelStream().collect(
                 groupingBy(move -> getScore(true, playMove(true, move, board)))).entrySet().stream()
                 .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();

@@ -56,7 +56,7 @@ public class GameImpl implements Game {
 
     private void computerMove() {
         try {
-            List<Integer> move = computer.calculateBestMove(board);
+            List<Integer> move = computer.getMove(board);
             board.set(move.get(0), move.get(1), computer.getPiece());
         } catch (OutOfBoundsException | NotVacantException | OutOfTurnException e) {
             e.printStackTrace();
