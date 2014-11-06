@@ -31,6 +31,7 @@ public class GameTest {
 
     @Test
     public void shouldBeAbleToAllowTheComputerToPlayFirstIfItIsX() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
+        when(board.numOfPieces()).thenReturn(0,1);
         when(computer.getMove(any(Board.class))).thenReturn(Arrays.asList(1,2));
         when(computer.getPiece()).thenReturn(pieceOne);
         game.setup(pieceOne);
@@ -87,7 +88,7 @@ public class GameTest {
         int row = 1;
         int column  = 2;
 
-        when(board.numOfPieces()).thenReturn(0,1);
+        when(board.numOfPieces()).thenReturn(0,1,2);
         game.set(row, column);
         inOrder.verify(board).set(row, column, pieceOne);
         inOrder.verify(computer).getMove(any(Board.class));
@@ -100,7 +101,7 @@ public class GameTest {
         int row = 1;
         int column = 2;
 
-        when(board.numOfPieces()).thenReturn(0,1);
+        when(board.numOfPieces()).thenReturn(0,1,2);
         game.set(row, column);
 
         inOrder.verify(board).set(row, column, pieceOne);
@@ -112,7 +113,9 @@ public class GameTest {
         when(computer.getMove(any(Board.class))).thenReturn(Arrays.asList(1,2));
         when(board.getWinner()).thenReturn(pieceOne);
         when(computer.getPiece()).thenReturn(pieceOne);
+        when(board.numOfPieces()).thenReturn(0,1);
         game.setup(pieceOne);
+        when(board.numOfPieces()).thenReturn(0, 1);
         game.setup(pieceOne);
         verify(computer, times(2)).getMove(any(Board.class));
     }
