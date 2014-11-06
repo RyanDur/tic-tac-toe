@@ -1,7 +1,7 @@
 package tictactoe.views.elements;
 
 import tictactoe.lang.Constants;
-import tictactoe.Game;
+import tictactoe.GamePlay;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import org.junit.Rule;
@@ -19,7 +19,7 @@ public class BoardTest extends GuiTest {
     private final String cell = "#cell";
     private Character player;
     private Character[] board;
-    private Game gameCtrl;
+    private GamePlay gamePlay;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -30,8 +30,8 @@ public class BoardTest extends GuiTest {
     protected Parent getRootNode() {
         this.board = new Character[Constants.SIDE * Constants.SIDE];
         player = Constants.GAME_PIECE_ONE;
-        gameCtrl = mock(Game.class);
-        when(gameCtrl.getBoard()).thenReturn(this.board);
+        gamePlay = mock(GamePlay.class);
+        when(gamePlay.getBoard()).thenReturn(this.board);
         play = mockPlay();
         boardView = new BoardImpl();
         boardView.setPlay(play);
@@ -41,14 +41,14 @@ public class BoardTest extends GuiTest {
 
     @Test
     public void shouldBeAbleToSetThePlayAction() {
-        when(gameCtrl.getBoard()).thenReturn(board);
+        when(gamePlay.getBoard()).thenReturn(board);
         click(cell + 1);
-        verify(gameCtrl).getBoard();
+        verify(gamePlay).getBoard();
     }
 
     @Test
     public void shouldBeAbleToChooseAPlaceOnTheBoard() {
-        when(gameCtrl.getBoard()).thenReturn(board);
+        when(gamePlay.getBoard()).thenReturn(board);
         boardView.setPlay(play);
         for (int i = 0; i < board.length; i++) {
             String id = cell + i;
@@ -75,12 +75,12 @@ public class BoardTest extends GuiTest {
         String id = cell + index;
         click(id);
         verifyThat(id, hasText(String.valueOf(Constants.GAME_PIECE_ONE)));
-        when(gameCtrl.getBoard()).thenReturn(board1);
+        when(gamePlay.getBoard()).thenReturn(board1);
         click(id);
         verifyThat(id, hasText(Constants.EMPTY));
     }
 
     private Function<MouseEvent, Character[]> mockPlay() {
-        return e -> gameCtrl.getBoard();
+        return e -> gamePlay.getBoard();
     }
 }

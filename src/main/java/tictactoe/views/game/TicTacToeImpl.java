@@ -14,7 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import tictactoe.lang.Constants;
-import tictactoe.Game;
+import tictactoe.GamePlay;
 import tictactoe.views.elements.Board;
 import tictactoe.views.elements.Header;
 import tictactoe.views.elements.Menu;
@@ -25,7 +25,7 @@ import java.util.function.Function;
 
 public class TicTacToeImpl extends Parent implements TicTacToe {
     private Pane centerPane;
-    private Game game;
+    private GamePlay gamePlay;
     private Header header;
     private final BorderPane ticTacToe;
     private Menu menu;
@@ -33,12 +33,12 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     private Character piece;
 
     @Inject
-    public TicTacToeImpl(Game game, Header header, Menu menu, Board board) {
+    public TicTacToeImpl(GamePlay gamePlay, Header header, Menu menu, Board board) {
         ticTacToe = getFXML();
         this.menu = menu;
         this.board = board;
         this.getChildren().add(ticTacToe);
-        this.game = game;
+        this.gamePlay = gamePlay;
         centerPane = (Pane) ticTacToe.getCenter();
         this.header = setupHeader(header);
         setupMenu();
@@ -62,34 +62,34 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     private Consumer<Character> setOnePlayer() {
         return (piece) -> {
             this.piece = piece;
-            game.setup(piece);
+            gamePlay.setup(piece);
             setupBoard();
         };
     }
 
-    private Function<MouseEvent, Character[]> play(Game game) {
+    private Function<MouseEvent, Character[]> play(GamePlay gamePlay) {
         return click -> {
             try {
-                if (!game.over()) {
+                if (!gamePlay.isOver()) {
                     header.clearMessage();
                     Label space = (Label) click.getSource();
-                    game.set(getRow(space), getColumn(space));
+                    gamePlay.set(getRow(space), getColumn(space));
                 }
-                if (game.over()) {
+                if (gamePlay.isOver()) {
                     header.setButtonsVisibility(true);
-                    header.displayWinner(game.getWinner());
+                    header.displayWinner(gamePlay.getWinner());
                 }
             } catch (OutOfBoundsException | NotVacantException | OutOfTurnException e) {
                 header.setMessage(e.getMessage());
             }
-            return game.getBoard();
+            return gamePlay.getBoard();
         };
     }
 
     private void setupBoard() {
         clearHeader(header);
-        board.setPlay(play(game));
-        board.setBoard(game.getBoard());
+        board.setPlay(play(gamePlay));
+        board.setBoard(gamePlay.getBoard());
         swapCenter((Node) board);
     }
 

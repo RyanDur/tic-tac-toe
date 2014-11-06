@@ -22,12 +22,12 @@ public class ComputerPlayerTest {
     private final Character X = Constants.GAME_PIECE_ONE;
     private final Character O = Constants.GAME_PIECE_TWO;
     private ComputerPlayer computer;
-    private Board board;
+    private Game game;
 
     @Before
     public void setup() {
         computer = new ComputerPlayerImpl();
-        board = mock(Board.class);
+        game = mock(Game.class);
     }
 
     @Test
@@ -38,15 +38,15 @@ public class ComputerPlayerTest {
 
     @Test
     public void shouldBeAbleToCalculateTheBestMove() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
-        Board copy = mock(Board.class);
+        Game copy = mock(Game.class);
         List<Integer> list = Arrays.asList(1, 2);
         HashSet<List<Integer>> value = new HashSet<>();
         value.add(list);
-        when(board.getVacancies()).thenReturn(value);
-        when(board.copy()).thenReturn(copy);
-        when(copy.gameOver()).thenReturn(true);
+        when(game.getVacancies()).thenReturn(value);
+        when(game.copy()).thenReturn(copy);
+        when(copy.isOver()).thenReturn(true);
         when(copy.getWinner()).thenReturn(X);
         computer.setPiece(X);
-        assertThat(computer.getMove(board), is(equalTo(list)));
+        assertThat(computer.getMove(game), is(equalTo(list)));
     }
 }

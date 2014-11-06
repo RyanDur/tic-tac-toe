@@ -12,117 +12,117 @@ import java.util.Arrays;
 
 import static org.mockito.Mockito.*;
 
-public class GameTest {
+public class GamePlayTest {
 
     private final Character pieceOne = Constants.GAME_PIECE_ONE;
     private final Character pieceTwo = Constants.GAME_PIECE_TWO;
+    private GamePlay gamePlay;
     private Game game;
-    private Board board;
     private ComputerPlayer computer;
 
     @Before
     public void setup() {
-        board = mock(Board.class);
-        when(board.getBoard()).thenReturn(new Character[Constants.SIDE * Constants.SIDE]);
+        game = mock(Game.class);
+        when(game.getBoard()).thenReturn(new Character[Constants.SIDE * Constants.SIDE]);
         computer = mock(ComputerPlayer.class);
-        game = new GameImpl(board, computer);
-        game.setup(pieceOne);
+        gamePlay = new GamePlayImpl(game, computer);
+        gamePlay.setup(pieceOne);
     }
 
     @Test
     public void shouldBeAbleToAllowTheComputerToPlayFirstIfItIsX() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
-        when(board.numOfPieces()).thenReturn(0,1);
-        when(computer.getMove(any(Board.class))).thenReturn(Arrays.asList(1,2));
+        when(game.numOfPieces()).thenReturn(0, 1);
+        when(computer.getMove(any(Game.class))).thenReturn(Arrays.asList(1,2));
         when(computer.getPiece()).thenReturn(pieceOne);
-        game.setup(pieceOne);
-        verify(computer).getMove(any(Board.class));
+        gamePlay.setup(pieceOne);
+        verify(computer).getMove(any(Game.class));
     }
 
     @Test
     public void shouldNotBeAbleToAllowTheComputerToPlayFirstIfItIsO() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
         when(computer.getPiece()).thenReturn(pieceTwo);
-        verify(computer, never()).getMove(any(Board.class));
-        verify(board, never()).set(anyInt(), anyInt(), anyChar());
+        verify(computer, never()).getMove(any(Game.class));
+        verify(game, never()).set(anyInt(), anyInt(), anyChar());
     }
 
     @Test
     public void shouldBeAbleToCheckIfGameIsOver() {
-        game.over();
-        verify(board).gameOver();
+        gamePlay.isOver();
+        verify(game).isOver();
     }
 
     @Test
     public void shouldBeAbleToGetTheWinner() {
-        game.getWinner();
-        verify(board).getWinner();
+        gamePlay.getWinner();
+        verify(game).getWinner();
     }
 
     @Test
     public void shouldBeAbleToGetTheBoard() {
-        game.getBoard();
-        verify(board).getBoard();
+        gamePlay.getBoard();
+        verify(game).getBoard();
     }
 
     @Test
     public void shouldSetPlayerXOnFirstMoveForTwoPlayer() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
         int row = 1;
         int column = 2;
-        game.set(row, column);
-        verify(board).set(row, column, pieceOne);
+        gamePlay.set(row, column);
+        verify(game).set(row, column, pieceOne);
     }
 
     @Test
     public void shouldSetPlayerOOnSecondMoveForTwoPlayer() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
         int row = 1;
         int column = 2;
-        when(board.numOfPieces()).thenReturn(1);
-        game.set(row, column);
-        verify(board).set(row, column, pieceTwo);
+        when(game.numOfPieces()).thenReturn(1);
+        gamePlay.set(row, column);
+        verify(game).set(row, column, pieceTwo);
     }
 
     @Test
     public void shouldSetPlayer1ThenComputerPlayer() throws OutOfBoundsException, OutOfTurnException, NotVacantException {
-        when(computer.getMove(any(Board.class))).thenReturn(Arrays.asList(1,2));
-        InOrder inOrder = inOrder(board, computer);
+        when(computer.getMove(any(Game.class))).thenReturn(Arrays.asList(1,2));
+        InOrder inOrder = inOrder(game, computer);
         when(computer.getPiece()).thenReturn(pieceTwo);
         int row = 1;
         int column  = 2;
 
-        when(board.numOfPieces()).thenReturn(0,1,2);
-        game.set(row, column);
-        inOrder.verify(board).set(row, column, pieceOne);
-        inOrder.verify(computer).getMove(any(Board.class));
+        when(game.numOfPieces()).thenReturn(0, 1, 2);
+        gamePlay.set(row, column);
+        inOrder.verify(game).set(row, column, pieceOne);
+        inOrder.verify(computer).getMove(any(Game.class));
     }
 
     @Test
     public void shouldNotCallComputerIfGameOver() throws NotVacantException, OutOfBoundsException, OutOfTurnException {
-        when(board.getWinner()).thenReturn(pieceOne);
-        InOrder inOrder = inOrder(board, computer);
+        when(game.getWinner()).thenReturn(pieceOne);
+        InOrder inOrder = inOrder(game, computer);
         int row = 1;
         int column = 2;
 
-        when(board.numOfPieces()).thenReturn(0,1,2);
-        game.set(row, column);
+        when(game.numOfPieces()).thenReturn(0, 1, 2);
+        gamePlay.set(row, column);
 
-        inOrder.verify(board).set(row, column, pieceOne);
-        inOrder.verify(computer, never()).getMove(any(Board.class));
+        inOrder.verify(game).set(row, column, pieceOne);
+        inOrder.verify(computer, never()).getMove(any(Game.class));
     }
 
     @Test
     public void shouldCheckToSeeIfTheComputerPlayerShouldGoIfGameReset() throws OutOfBoundsException, NotVacantException {
-        when(computer.getMove(any(Board.class))).thenReturn(Arrays.asList(1,2));
-        when(board.getWinner()).thenReturn(pieceOne);
+        when(computer.getMove(any(Game.class))).thenReturn(Arrays.asList(1,2));
+        when(game.getWinner()).thenReturn(pieceOne);
         when(computer.getPiece()).thenReturn(pieceOne);
-        when(board.numOfPieces()).thenReturn(0,1);
-        game.setup(pieceOne);
-        when(board.numOfPieces()).thenReturn(0, 1);
-        game.setup(pieceOne);
-        verify(computer, times(2)).getMove(any(Board.class));
+        when(game.numOfPieces()).thenReturn(0,1);
+        gamePlay.setup(pieceOne);
+        when(game.numOfPieces()).thenReturn(0, 1);
+        gamePlay.setup(pieceOne);
+        verify(computer, times(2)).getMove(any(Game.class));
     }
 
     @Test
     public void shouldBeAbleToRestTheGame() throws OutOfBoundsException, NotVacantException {
-        game.setup(pieceOne);
-        verify(board, times(2)).setup(Constants.SIDE);
+        gamePlay.setup(pieceOne);
+        verify(game, times(2)).setup(Constants.SIDE);
     }
 }

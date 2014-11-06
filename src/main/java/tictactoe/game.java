@@ -6,7 +6,7 @@ import tictactoe.exceptions.OutOfTurnException;
 
 import java.util.List;
 
-public interface Board {
+public interface Game {
 
     void set(int row, int column, Character player) throws NotVacantException, OutOfTurnException, OutOfBoundsException;
 
@@ -18,9 +18,9 @@ public interface Board {
 
     int numOfPieces();
 
-    Board copy();
+    Game copy();
 
     void setup(int side);
 
-    boolean gameOver();
+    boolean isOver();
 }

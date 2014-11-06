@@ -12,15 +12,15 @@ import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class BoardImpl implements Board {
+public class GameImpl implements Game {
     private int side;
     private Character[] board;
     private Character winner;
 
-    public BoardImpl() {
+    public GameImpl() {
     }
 
-    private BoardImpl(int side, Character[] board) {
+    private GameImpl(int side, Character[] board) {
         this.side = side;
         this.board = board;
     }
@@ -33,7 +33,7 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public boolean gameOver() {
+    public boolean isOver() {
         return getWinner() != null || numOfPieces() == getBoard().length;
     }
 
@@ -73,8 +73,8 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public Board copy() {
-        return new BoardImpl(side, getBoard());
+    public Game copy() {
+        return new GameImpl(side, getBoard());
     }
 
     private Character get(int row, int column) {
