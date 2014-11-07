@@ -8,10 +8,11 @@ import tictactoe.lang.Constants;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 public class ComputerPlayerImpl implements ComputerPlayer {
     private Character piece;
@@ -46,10 +47,16 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      */
     @Override
     public List<Integer> getMove(Game game) {
-        List<List<Integer>> maxMoves = getMoves(true, game).parallelStream().collect(
-                groupingBy(move -> getScore(true, playMove(true, move, game)))).entrySet().stream()
+        List<List<Integer>> maxMoves = getMoves(true, game).stream().collect(
+                groupingBy(getAlgo(game))).entrySet().stream()
                 .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();
         return maxMoves.get(random.nextInt(maxMoves.size()));
+    }
+
+
+    private Function<List<Integer>, Integer> getAlgo(Game game) {
+        return move -> negaMax(true, playMove(true, move, game));
+//        return move -> miniMax(true, playMove(true, move, game));
     }
 
     /**
@@ -61,15 +68,25 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      * into the method last.
      *
      * @param isComputer true if the player is computer
-     * @param game that was just played on
+     * @param game       that was just played on
      * @return score of the turn
      */
-    private int getScore(boolean isComputer, Game game) {
+    private int miniMax(boolean isComputer, Game game) {
         if (game.isOver()) return score(game);
-        IntStream scores = getMoves(!isComputer, game).stream()
-                .map(move -> playMove(!isComputer, move, game))
-                .mapToInt(childBoard -> getScore(!isComputer, childBoard));
+        IntStream scores = getScores(!isComputer, game, childBoard -> miniMax(!isComputer, childBoard));
         return isComputer ? scores.min().getAsInt() : scores.max().getAsInt();
+    }
+
+    private int negaMax(boolean isComputer, Game game) {
+        if (game.isOver()) return score(game);
+        return -getScores(!isComputer, game, childBoard -> -negaMax(!isComputer, childBoard))
+                .max().getAsInt();
+    }
+
+    private IntStream getScores(boolean isComputer, Game game, ToIntFunction<Game> children) {
+        return getMoves(isComputer, game).stream()
+                .map(move -> playMove(isComputer, move, game))
+                .mapToInt(children);
     }
 
     /**
@@ -78,7 +95,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      * moves, then retrieve all the possible moves for consideration.
      *
      * @param piece true if the player is computer
-     * @param game that was played on
+     * @param game  that was played on
      * @return the moves to be used
      */
     private Set<List<Integer>> getMoves(boolean piece, Game game) {
@@ -89,10 +106,12 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         return moves;
     }
 
-    private int score(Game Game) {
-        Character winner = Game.getWinner();
+    private int score(Game game) {
+        Character winner = game.getWinner();
         if (winner == null) return Constants.DRAW_SCORE;
-        return (winner.equals(getPiece())) ? Constants.WIN_SCORE : Constants.LOSE_SCORE;
+        return (winner.equals(getPiece())) ?
+                Constants.WIN_SCORE + findLosingMoves(false, game.getVacancies(), game).size() :
+                Constants.LOSE_SCORE + findLosingMoves(true, game.getVacancies(), game).size();
     }
 
     private Set<List<Integer>> findWinningMoves(boolean computer, Set<List<Integer>> vacancies, Game game) {
