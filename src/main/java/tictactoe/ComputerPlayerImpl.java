@@ -90,7 +90,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         Character winner = game.getWinner();
         if (winner == null) return Constants.DRAW_SCORE;
         int extraWins = findLosingMoves(game.getVacancies(), game).size();
-        return (winner.equals(getPiece())) ? Constants.WIN_SCORE + extraWins : Constants.LOSE_SCORE + extraWins;
+        return (winner.equals(getPiece())) ? Constants.WIN_SCORE + extraWins : Constants.LOSE_SCORE - extraWins;
     }
 
     private Set<List<Integer>> findWinningMoves(Set<List<Integer>> candidates, Game game) {
