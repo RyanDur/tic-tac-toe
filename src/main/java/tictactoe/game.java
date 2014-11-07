@@ -2,13 +2,12 @@ package tictactoe;
 
 import tictactoe.exceptions.NotVacantException;
 import tictactoe.exceptions.OutOfBoundsException;
-import tictactoe.exceptions.OutOfTurnException;
 
 import java.util.List;
 
 public interface Game {
 
-    void set(int row, int column, Character player) throws NotVacantException, OutOfTurnException, OutOfBoundsException;
+    void set(int row, int column) throws NotVacantException, OutOfBoundsException;
 
     Character[] getBoard();
 
@@ -16,11 +15,9 @@ public interface Game {
 
     java.util.Set<List<Integer>> getVacancies();
 
-    int numOfPieces();
-
     Game copy();
 
-    void setup(int side);
+    void setup(Character piece, int side);
 
     boolean isOver();
 }

@@ -1,8 +1,8 @@
 package tictactoe;
 
+import com.google.inject.Inject;
 import tictactoe.exceptions.NotVacantException;
 import tictactoe.exceptions.OutOfBoundsException;
-import tictactoe.exceptions.OutOfTurnException;
 import tictactoe.lang.Constants;
 
 import java.util.Arrays;
@@ -16,34 +16,43 @@ public class GameImpl implements Game {
     private int side;
     private Character[] board;
     private Character winner;
-
-    public GameImpl() {
-    }
+    private ComputerPlayer computer;
+    private Character computerPiece;
 
     private GameImpl(int side, Character[] board) {
         this.side = side;
         this.board = board;
+        computerPiece = null;
+    }
+
+    @Inject
+    public GameImpl(ComputerPlayer computer) {
+        this.computer = computer;
     }
 
     @Override
-    public void setup(int side) {
-        this.side = side;
+    public void setup(Character piece, int side) {
+        computerPiece = piece;
+        computer.setPiece(computerPiece);
         winner = null;
+        this.side = side;
         board = new Character[side * side];
+        if (computersTurn()) computerMove();
+    }
+
+    @Override
+    public void set(int row, int column) throws NotVacantException, OutOfBoundsException {
+        if (outOfBounds(row, column)) throw new OutOfBoundsException();
+        if (!isEmpty(get(row, column))) throw new NotVacantException();
+        Character piece = getPiece();
+        board[calc(row, column)] = piece;
+        if (isWinner(row, column, piece)) winner = piece;
+        if (!isOver() && computersTurn()) computerMove();
     }
 
     @Override
     public boolean isOver() {
         return getWinner() != null || numOfPieces() == getBoard().length;
-    }
-
-    @Override
-    public void set(int row, int column, Character piece) throws NotVacantException, OutOfTurnException, OutOfBoundsException {
-        if (outOfBounds(row, column)) throw new OutOfBoundsException();
-        if (!validTurn(piece)) throw new OutOfTurnException();
-        if (!isEmpty(get(row, column))) throw new NotVacantException();
-        board[calc(row, column)] = piece;
-        if (isWinner(row, column, piece)) winner = piece;
     }
 
     @Override
@@ -66,15 +75,14 @@ public class GameImpl implements Game {
     }
 
     @Override
-    public int numOfPieces() {
+    public Game copy() {
+        return new GameImpl(side, getBoard());
+    }
+
+    private int numOfPieces() {
         return (int) Arrays.stream(getBoard())
                 .filter(piece -> !isEmpty(piece))
                 .count();
-    }
-
-    @Override
-    public Game copy() {
-        return new GameImpl(side, getBoard());
     }
 
     private Character get(int row, int column) {
@@ -109,10 +117,21 @@ public class GameImpl implements Game {
         return index -> piece.equals(get(row, index));
     }
 
-    private boolean validTurn(Character piece) {
-        int numOfPieces = numOfPieces();
-        return (numOfPieces % 2 == 0 && Constants.GAME_PIECE_ONE.equals(piece)) ||
-                (numOfPieces % 2 != 0 && Constants.GAME_PIECE_TWO.equals(piece));
+    private Character getPiece() {
+        return numOfPieces() % 2 == 0 ? Constants.GAME_PIECE_ONE : Constants.GAME_PIECE_TWO;
+    }
+
+    private boolean computersTurn() {
+        return getPiece().equals(computerPiece);
+    }
+
+    private void computerMove() {
+        try {
+            List<Integer> move = computer.getMove(this);
+            set(move.get(0), move.get(1));
+        } catch (OutOfBoundsException | NotVacantException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean isEmpty(Character space) {

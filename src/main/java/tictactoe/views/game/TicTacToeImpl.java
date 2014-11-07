@@ -1,9 +1,6 @@
 package tictactoe.views.game;
 
 import com.google.inject.Inject;
-import tictactoe.exceptions.NotVacantException;
-import tictactoe.exceptions.OutOfBoundsException;
-import tictactoe.exceptions.OutOfTurnException;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -13,8 +10,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import tictactoe.Game;
+import tictactoe.exceptions.NotVacantException;
+import tictactoe.exceptions.OutOfBoundsException;
 import tictactoe.lang.Constants;
-import tictactoe.GamePlay;
 import tictactoe.views.elements.Board;
 import tictactoe.views.elements.Header;
 import tictactoe.views.elements.Menu;
@@ -25,7 +24,7 @@ import java.util.function.Function;
 
 public class TicTacToeImpl extends Parent implements TicTacToe {
     private Pane centerPane;
-    private GamePlay gamePlay;
+    private Game game;
     private Header header;
     private final BorderPane ticTacToe;
     private Menu menu;
@@ -33,12 +32,12 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     private Character piece;
 
     @Inject
-    public TicTacToeImpl(GamePlay gamePlay, Header header, Menu menu, Board board) {
+    public TicTacToeImpl(Game game, Header header, Menu menu, Board board) {
         ticTacToe = getFXML();
         this.menu = menu;
         this.board = board;
         this.getChildren().add(ticTacToe);
-        this.gamePlay = gamePlay;
+        this.game = game;
         centerPane = (Pane) ticTacToe.getCenter();
         this.header = setupHeader(header);
         setupMenu();
@@ -62,12 +61,12 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     private Consumer<Character> setOnePlayer() {
         return (piece) -> {
             this.piece = piece;
-            gamePlay.setup(piece);
+            game.setup(piece, Constants.SIDE);
             setupBoard();
         };
     }
 
-    private Function<MouseEvent, Character[]> play(GamePlay gamePlay) {
+    private Function<MouseEvent, Character[]> play(Game gamePlay) {
         return click -> {
             try {
                 if (!gamePlay.isOver()) {
@@ -79,7 +78,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
                     header.setButtonsVisibility(true);
                     header.displayWinner(gamePlay.getWinner());
                 }
-            } catch (OutOfBoundsException | NotVacantException | OutOfTurnException e) {
+            } catch (OutOfBoundsException | NotVacantException e) {
                 header.setMessage(e.getMessage());
             }
             return gamePlay.getBoard();
@@ -88,8 +87,8 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
 
     private void setupBoard() {
         clearHeader(header);
-        board.setPlay(play(gamePlay));
-        board.setBoard(gamePlay.getBoard());
+        board.setPlay(play(game));
+        board.setBoard(game.getBoard());
         swapCenter((Node) board);
     }
 
