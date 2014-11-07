@@ -47,7 +47,7 @@ public class GameImpl implements Game {
         Character piece = getPiece();
         board[calc(row, column)] = piece;
         if (isWinner(row, column, piece)) winner = piece;
-        if (!isOver() && computersTurn()) computerMove();
+        if (computersTurn() && !isOver()) computerMove();
     }
 
     @Override

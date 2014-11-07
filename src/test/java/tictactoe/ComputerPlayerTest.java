@@ -19,7 +19,6 @@ import static org.mockito.Mockito.when;
 public class ComputerPlayerTest {
 
     private final Character X = Constants.GAME_PIECE_ONE;
-    private final Character O = Constants.GAME_PIECE_TWO;
     private ComputerPlayer computer;
     private Game game;
 
@@ -27,12 +26,6 @@ public class ComputerPlayerTest {
     public void setup() {
         computer = new ComputerPlayerImpl();
         game = mock(Game.class);
-    }
-
-    @Test
-    public void shouldBeAbelToeSetThePieceOfAComputerPlayer() {
-        computer.setPiece(X);
-        assertThat(computer.getPiece(), is(equalTo(X)));
     }
 
     @Test

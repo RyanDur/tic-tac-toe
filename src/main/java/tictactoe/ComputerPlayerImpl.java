@@ -27,11 +27,6 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         this.piece = piece;
     }
 
-    @Override
-    public Character getPiece() {
-        return piece;
-    }
-
     /*
      * When given a board, it will create a list based on the vacant spaces of the board.
      * Each space will be attributed a score. Then the moves will be grouped together based
@@ -47,7 +42,6 @@ public class ComputerPlayerImpl implements ComputerPlayer {
                 .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();
         return maxMoves.get(random.nextInt(maxMoves.size()));
     }
-
 
     private Function<List<Integer>, Integer> getAlgo(Game game) {
         return move -> negaMax(playMove(move, game));
@@ -69,9 +63,8 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     }
 
     private int negaMax(Game game) {
-        if (game.isOver()) return score(game);
-        return -getScores(game, child -> -negaMax(child))
-                .max().getAsInt();
+        return game.isOver() ? score(game) :
+                -getScores(game, child -> -negaMax(child)).max().getAsInt();
     }
 
     private IntStream getScores(Game game, ToIntFunction<Game> children) {
@@ -121,5 +114,9 @@ public class ComputerPlayerImpl implements ComputerPlayer {
             e.printStackTrace();
         }
         return game;
+    }
+
+    private Character getPiece() {
+        return piece;
     }
 }

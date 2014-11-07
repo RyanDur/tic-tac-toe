@@ -1,9 +1,9 @@
 package tictactoe;
 
+import java.util.List;
+
 public interface ComputerPlayer {
     void setPiece(Character piece);
 
-    Character getPiece();
-
-    java.util.List<Integer> getMove(Game Game);
+    List<Integer> getMove(Game Game);
 }
