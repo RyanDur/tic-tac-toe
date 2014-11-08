@@ -24,4 +24,6 @@ public interface Constants {
     String RIGHT_BUTTON_ID = "#right";
     String LEFT_BUTTON_ID = "#left";
     String MENU_VIEW = "/scenes/menu.fxml";
+    int POS_INF = Integer.MAX_VALUE;
+    int NEG_INF = Integer.MIN_VALUE + 1;
 }

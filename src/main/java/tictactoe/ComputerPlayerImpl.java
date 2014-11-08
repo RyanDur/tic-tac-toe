@@ -45,8 +45,8 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     }
 
     private Function<List<Integer>, Integer> getAlgo(Game game) {
-        return move -> negaPrune(Integer.MAX_VALUE, Integer.MIN_VALUE+1, playMove(move, game), 1);
-//        return move -> miniMaxPrune(Integer.MAX_VALUE, Integer.MIN_VALUE, true, playMove(move, game));
+        return move -> negaPrune(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), 1);
+//        return move -> miniMaxPrune(Constants.POS_INF, Constants.NEG_INF, true, playMove(move, game));
 //        return move -> negaMax(playMove(move, game), 1);
 //        return move -> miniMax(true, playMove(move, game));
     }
