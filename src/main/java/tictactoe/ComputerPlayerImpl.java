@@ -45,7 +45,8 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     }
 
     private Function<List<Integer>, Integer> getAlgo(Game game) {
-        return move -> miniMaxPrune(Integer.MAX_VALUE, Integer.MIN_VALUE, true, playMove(move, game));
+        return move -> negaPrune(Integer.MAX_VALUE, Integer.MIN_VALUE+1, playMove(move, game), 1);
+//        return move -> miniMaxPrune(Integer.MAX_VALUE, Integer.MIN_VALUE, true, playMove(move, game));
 //        return move -> negaMax(playMove(move, game), 1);
 //        return move -> miniMax(true, playMove(move, game));
     }
@@ -58,6 +59,14 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      * completion of a branch, the min or max value is calculated depending on the piece that entered
      * into the method last.
      */
+    private int negaPrune(int alpha, int beta, Game game, int ply) {
+        if (game.isOver()) return ply * score(game);
+        LinkedList<Game> children = getGames(game).collect(toCollection(LinkedList::new));
+        while (alpha > beta && !children.isEmpty())
+            alpha = Math.min(alpha, -negaPrune(-beta, -alpha, children.pop(), -ply));
+        return alpha;
+    }
+
     private int miniMaxPrune(int alpha, int beta, boolean isComputer, Game game) {
         if (game.isOver()) return score(game);
         LinkedList<Game> children = getGames(game).collect(toCollection(LinkedList::new));
