@@ -8,7 +8,8 @@ import tictactoe.lang.Constants;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.function.IntPredicate;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -89,33 +90,22 @@ public class GameImpl implements Game {
         return board[calc(row, column)];
     }
 
-    private boolean isWinner(int row, int column, Character piece) {
-        return check(row(piece, row)) ||
-                check(column(piece, column)) ||
-                check(leftDiagonal(piece)) ||
-                check(rightDiagonal(piece));
+    private boolean isWinner(int x, int y, Character piece) {
+        return check(row.apply(x), piece) ||
+                check(column.apply(y), piece) ||
+                check(leftDiagonal, piece) ||
+                check(rightDiagonal, piece);
     }
 
-    private boolean check(IntPredicate vector) {
+    private boolean check(BiFunction<Integer, Character, Boolean> vector, Character piece) {
         return side == IntStream.range(0, side)
-                .filter(vector).count();
+                .filter(index -> vector.apply(index, piece)).count();
     }
 
-    private IntPredicate rightDiagonal(Character piece) {
-        return index -> piece.equals(get(index, (side - 1) - index));
-    }
-
-    private IntPredicate leftDiagonal(Character piece) {
-        return index -> piece.equals(get(index, index));
-    }
-
-    private IntPredicate column(Character piece, int column) {
-        return index -> piece.equals(get(index, column));
-    }
-
-    private IntPredicate row(Character piece, int row) {
-        return index -> piece.equals(get(row, index));
-    }
+    private BiFunction<Integer, Character, Boolean> rightDiagonal = (index, piece) -> piece.equals(get(index, (side - 1) - index));
+    private BiFunction<Integer, Character, Boolean> leftDiagonal = (index, piece) -> piece.equals(get(index, index));
+    private Function<Integer, BiFunction<Integer, Character, Boolean>> row = row -> (index, piece) -> piece.equals(get(row, index));
+    private Function<Integer, BiFunction<Integer, Character, Boolean>> column = column -> (index, piece) -> piece.equals(get(index, column));
 
     private Character getPiece() {
         return numOfPieces() % 2 == 0 ? Constants.GAME_PIECE_ONE : Constants.GAME_PIECE_TWO;
