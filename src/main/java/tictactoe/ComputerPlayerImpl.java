@@ -4,6 +4,7 @@ import tictactoe.exceptions.NotVacantException;
 import tictactoe.exceptions.OutOfBoundsException;
 import tictactoe.lang.Constants;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -44,9 +45,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     }
 
     private Function<List<Integer>, Integer> getAlgo(Game game) {
-        int alpha = Integer.MAX_VALUE;
-        int beta = Integer.MIN_VALUE;
-        return move -> miniMaxPrune(alpha, beta, true, playMove(move, game));
+        return move -> miniMaxPrune(Integer.MAX_VALUE, Integer.MIN_VALUE, true, playMove(move, game));
 //        return move -> negaMax(playMove(move, game), 1);
 //        return move -> miniMax(true, playMove(move, game));
     }
@@ -61,11 +60,10 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      */
     private int miniMaxPrune(int alpha, int beta, boolean isComputer, Game game) {
         if (game.isOver()) return score(game);
-
-        for (Game child : getGames(game).collect(toList())) {
-            if (isComputer) alpha = Math.min(alpha, miniMaxPrune(alpha, beta, false, child));
-            else beta = Math.max(beta, miniMaxPrune(alpha, beta, true, child));
-            if (alpha <= beta) break;
+        LinkedList<Game> children = getGames(game).collect(toCollection(LinkedList::new));
+        while (alpha > beta && !children.isEmpty()) {
+            if (isComputer) alpha = Math.min(alpha, miniMaxPrune(alpha, beta, false, children.pop()));
+            else beta = Math.max(beta, miniMaxPrune(alpha, beta, true, children.pop()));
         }
         return isComputer ? alpha : beta;
     }
