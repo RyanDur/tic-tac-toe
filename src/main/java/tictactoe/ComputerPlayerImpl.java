@@ -11,8 +11,7 @@ import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 public class ComputerPlayerImpl implements ComputerPlayer {
     private Character piece;
@@ -37,14 +36,17 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      */
     @Override
     public List<Integer> getMove(Game game) {
-        List<List<Integer>> maxMoves = getMoves(game).parallelStream().collect(
+        List<List<Integer>> maxMoves = game.getVacancies().parallelStream().collect(
                 groupingBy(getAlgo(game))).entrySet().stream()
                 .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();
-        return maxMoves.get(random.nextInt(maxMoves.size()));
+        return maxMoves.get(0);
     }
 
     private Function<List<Integer>, Integer> getAlgo(Game game) {
-        return move -> negaMax(playMove(move, game));
+        int alpha = Integer.MAX_VALUE;
+        int beta = Integer.MIN_VALUE;
+        return move -> miniMaxPrune(alpha, beta, true, playMove(move, game));
+//        return move -> negaMax(playMove(move, game));
 //        return move -> miniMax(true, playMove(move, game));
     }
 
@@ -56,6 +58,20 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      * completion of a branch, the min or max value is calculated depending on the piece that entered
      * into the method last.
      */
+    private int miniMaxPrune(int alpha, int beta, boolean isComputer, Game game) {
+        if (game.isOver()) return score(game);
+        List<Game> games = getMoves(game).stream()
+                .map(move -> playMove(move, game))
+                .collect(toList());
+
+        for (Game child : games) {
+            if (isComputer) alpha = Math.min(alpha, miniMaxPrune(alpha, beta, false, child));
+            else beta = Math.max(beta, miniMaxPrune(alpha, beta, true, child));
+            if (alpha <= beta) break;
+        }
+        return isComputer ? alpha : beta;
+    }
+
     private int miniMax(boolean isComputer, Game game) {
         if (game.isOver()) return score(game);
         IntStream scores = getScores(game, child -> miniMax(!isComputer, child));
