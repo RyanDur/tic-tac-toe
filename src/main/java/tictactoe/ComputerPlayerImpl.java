@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
 
@@ -46,7 +47,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         int alpha = Integer.MAX_VALUE;
         int beta = Integer.MIN_VALUE;
         return move -> miniMaxPrune(alpha, beta, true, playMove(move, game));
-//        return move -> negaMax(playMove(move, game));
+//        return move -> negaMax(playMove(move, game), 1);
 //        return move -> miniMax(true, playMove(move, game));
     }
 
@@ -60,11 +61,8 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      */
     private int miniMaxPrune(int alpha, int beta, boolean isComputer, Game game) {
         if (game.isOver()) return score(game);
-        List<Game> games = getMoves(game).stream()
-                .map(move -> playMove(move, game))
-                .collect(toList());
 
-        for (Game child : games) {
+        for (Game child : getGames(game).collect(toList())) {
             if (isComputer) alpha = Math.min(alpha, miniMaxPrune(alpha, beta, false, child));
             else beta = Math.max(beta, miniMaxPrune(alpha, beta, true, child));
             if (alpha <= beta) break;
@@ -78,14 +76,18 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         return isComputer ? scores.min().getAsInt() : scores.max().getAsInt();
     }
 
-    private int negaMax(Game game) {
-        return game.isOver() ? score(game) :
-                -getScores(game, child -> -negaMax(child)).max().getAsInt();
+    private int negaMax(Game game, int ply) {
+        return game.isOver() ? ply * score(game) :
+                -getScores(game, child -> negaMax(child, -ply)).max().getAsInt();
+    }
+
+    private Stream<Game> getGames(Game game) {
+        return getMoves(game).stream()
+                .map(move -> playMove(move, game));
     }
 
     private IntStream getScores(Game game, ToIntFunction<Game> children) {
-        return getMoves(game).stream()
-                .map(move -> playMove(move, game))
+        return getGames(game)
                 .mapToInt(children);
     }
 
