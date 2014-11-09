@@ -8,22 +8,22 @@ import tictactoe.lang.Constants;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class GameImpl implements Game {
     private int side;
     private Character[] board;
     private Character winner;
     private ComputerPlayer computer;
-    private Character computerPiece;
+    private Supplier<Boolean> isComputersTurn;
 
     private GameImpl(int side, Character[] board) {
         this.side = side;
         this.board = board;
-        computerPiece = null;
+        isComputersTurn = setComputer.apply(null);
     }
 
     @Inject
@@ -33,27 +33,27 @@ public class GameImpl implements Game {
 
     @Override
     public void setup(Character piece, int side) {
-        computerPiece = piece;
-        computer.setPiece(computerPiece);
+        isComputersTurn = setComputer.apply(piece);
+        computer.setPiece(piece);
         winner = null;
         this.side = side;
         board = new Character[side * side];
-        if (computersTurn()) computerMove();
+        if (isComputersTurn.get()) move.accept(computer);
     }
 
     @Override
     public void set(int row, int column) throws NotVacantException, OutOfBoundsException {
-        if (outOfBounds(row, column)) throw new OutOfBoundsException();
-        if (!isEmpty(get(row, column))) throw new NotVacantException();
-        Character piece = getPiece();
-        board[calc(row, column)] = piece;
+        if (outOfBounds.test(row, column)) throw new OutOfBoundsException();
+        if (!isEmpty.test(get.apply(row, column))) throw new NotVacantException();
+        Character piece = nextPiece.get();
+        board[getIndex.apply(row, column)] = piece;
         if (isWinner(row, column, piece)) winner = piece;
-        if (computersTurn() && !isOver()) computerMove();
+        if (isComputersTurn.get() && !isOver()) move.accept(computer);
     }
 
     @Override
     public boolean isOver() {
-        return getWinner() != null || numOfPieces() == getBoard().length;
+        return getWinner() != null || numOfPieces.get() == getBoard().length;
     }
 
     @Override
@@ -69,9 +69,9 @@ public class GameImpl implements Game {
     @Override
     public Set<List<Integer>> getVacancies() {
         Character[] board = getBoard();
-        return IntStream.range(0, board.length)
-                .filter(index -> isEmpty(board[index])).boxed()
-                .map(num -> Arrays.asList(calcRow(num), calcColumn(num)))
+        return IntStream.range(0, board.length).boxed()
+                .filter(index -> isEmpty.test(board[index]))
+                .map(getRowColumn::apply)
                 .collect(Collectors.toSet());
     }
 
@@ -80,72 +80,47 @@ public class GameImpl implements Game {
         return new GameImpl(side, getBoard());
     }
 
-    private int numOfPieces() {
-        return (int) Arrays.stream(getBoard())
-                .filter(piece -> !isEmpty(piece))
-                .count();
+    private boolean isWinner(int row, int column, Character piece) {
+        return getVectors.apply(row, column).parallel()
+                .filter(vector -> check.apply(vector, piece))
+                .findFirst().isPresent();
     }
 
-    private Character get(int row, int column) {
-        return board[calc(row, column)];
-    }
-
-    private boolean isWinner(int x, int y, Character piece) {
-        return check(row.apply(x), piece) ||
-                check(column.apply(y), piece) ||
-                check(leftDiagonal, piece) ||
-                check(rightDiagonal, piece);
-    }
-
-    private boolean check(BiFunction<Integer, Character, Boolean> vector, Character piece) {
-        return side == IntStream.range(0, side)
-                .filter(index -> vector.apply(index, piece)).count();
-    }
-
-    private BiFunction<Integer, Character, Boolean> rightDiagonal = (index, piece) -> piece.equals(get(index, (side - 1) - index));
-    private BiFunction<Integer, Character, Boolean> leftDiagonal = (index, piece) -> piece.equals(get(index, index));
-    private Function<Integer, BiFunction<Integer, Character, Boolean>> row = row -> (index, piece) -> piece.equals(get(row, index));
-    private Function<Integer, BiFunction<Integer, Character, Boolean>> column = column -> (index, piece) -> piece.equals(get(index, column));
-
-    private Character getPiece() {
-        return numOfPieces() % 2 == 0 ? Constants.GAME_PIECE_ONE : Constants.GAME_PIECE_TWO;
-    }
-
-    private boolean computersTurn() {
-        return getPiece().equals(computerPiece);
-    }
-
-    private void computerMove() {
+    private Consumer<ComputerPlayer> move = computer -> {
         try {
             List<Integer> move = computer.getMove(this);
             set(move.get(0), move.get(1));
         } catch (OutOfBoundsException | NotVacantException e) {
             e.printStackTrace();
         }
-    }
+    };
 
-    private boolean isEmpty(Character space) {
-        return space == null;
-    }
+    private Function<Integer, List<Integer>> getRowColumn = vacancy -> {
+        int row = Math.floorDiv(vacancy, side);
+        int column = vacancy - (row * side);
+        return Arrays.asList(row, column);
+    };
 
-    private boolean outOfBounds(int row, int column) {
-        return row > side - 1 || column > side - 1 || row < 0 || column < 0;
-    }
+    private Predicate<Character> isEmpty = space -> space == null;
 
-    private int calc(int row, int column) {
-        return (row * side) + column;
-    }
+    private BiPredicate<Integer, Integer> outOfBounds = (row, column) -> row > side - 1 || column > side - 1 || row < 0 || column < 0;
 
-    private int calcColumn(int vacancy) {
-        return vacancy - (calcRow(vacancy) * side);
-    }
+    private Supplier<Integer> numOfPieces = () -> (int) Arrays.stream(getBoard()).filter(isEmpty.negate()::test).count();
 
-    private int calcRow(int vacancy) {
-        int row = 0;
-        while (vacancy >= side) {
-            vacancy -= side;
-            row++;
-        }
-        return row;
-    }
+    private Supplier<Character> nextPiece = () -> numOfPieces.get() % 2 == 0 ? Constants.GAME_PIECE_ONE : Constants.GAME_PIECE_TWO;
+
+    private Function<Character, Supplier<Boolean>> setComputer = piece -> () -> nextPiece.get().equals(piece);
+
+    private BiFunction<Integer, Integer, Integer> getIndex = (row, column) -> (row * side) + column;
+
+    private BiFunction<Integer, Integer, Character> get = (row, column) -> board[getIndex.apply(row, column)];
+
+    private BiFunction<Function<Integer, Character>, Character, Boolean> check = (vector, piece) ->
+            IntStream.range(0, side).allMatch(index -> piece.equals(vector.apply(index)));
+
+    private BiFunction<Integer, Integer, Stream<Function<Integer, Character>>> getVectors = (row, column) ->
+            Stream.of(index -> get.apply(row, index),
+                    index -> get.apply(index, column),
+                    index -> get.apply(index, index),
+                    index -> get.apply(index, (side - 1) - index));
 }
