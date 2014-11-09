@@ -1,7 +1,6 @@
 package tictactoe;
 
-import tictactoe.exceptions.NotVacantException;
-import tictactoe.exceptions.OutOfBoundsException;
+import tictactoe.exceptions.InvalidMoveException;
 import tictactoe.lang.Constants;
 
 import java.util.LinkedList;
@@ -41,12 +40,12 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         List<List<Integer>> maxMoves = game.getVacancies().parallelStream().collect(
                 groupingBy(getAlgo(game))).entrySet().stream()
                 .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();
-        return maxMoves.get(0);
+        return maxMoves.get(random.nextInt(maxMoves.size()));
     }
 
     private Function<List<Integer>, Integer> getAlgo(Game game) {
-        return move -> negaPrune(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), 1);
-//        return move -> miniMaxPrune(Constants.POS_INF, Constants.NEG_INF, true, playMove(move, game));
+//        return move -> negaPrune(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), 1);
+        return move -> miniMaxPrune(Constants.POS_INF, Constants.NEG_INF, true, playMove(move, game));
 //        return move -> negaMax(playMove(move, game), 1);
 //        return move -> miniMax(true, playMove(move, game));
     }
@@ -135,7 +134,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         game = game.copy();
         try {
             game.set(move.get(0), move.get(1));
-        } catch (NotVacantException | OutOfBoundsException e) {
+        } catch (InvalidMoveException e) {
             e.printStackTrace();
         }
         return game;

@@ -11,8 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import tictactoe.Game;
-import tictactoe.exceptions.NotVacantException;
-import tictactoe.exceptions.OutOfBoundsException;
+import tictactoe.exceptions.InvalidMoveException;
 import tictactoe.lang.Constants;
 import tictactoe.views.elements.Board;
 import tictactoe.views.elements.Header;
@@ -78,7 +77,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
                     header.setButtonsVisibility(true);
                     header.displayWinner(gamePlay.getWinner());
                 }
-            } catch (OutOfBoundsException | NotVacantException e) {
+            } catch (InvalidMoveException e) {
                 header.setMessage(e.getMessage());
             }
             return gamePlay.getBoard();

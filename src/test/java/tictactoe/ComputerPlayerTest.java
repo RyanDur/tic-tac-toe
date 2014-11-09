@@ -2,8 +2,6 @@ package tictactoe;
 
 import org.junit.Before;
 import org.junit.Test;
-import tictactoe.exceptions.NotVacantException;
-import tictactoe.exceptions.OutOfBoundsException;
 import tictactoe.lang.Constants;
 
 import java.util.Arrays;
@@ -29,7 +27,7 @@ public class ComputerPlayerTest {
     }
 
     @Test
-    public void shouldBeAbleToCalculateTheBestMove() throws OutOfBoundsException, NotVacantException {
+    public void shouldBeAbleToCalculateTheBestMove() {
         Game copy = mock(Game.class);
         List<Integer> list = Arrays.asList(1, 2);
         HashSet<List<Integer>> value = new HashSet<>();

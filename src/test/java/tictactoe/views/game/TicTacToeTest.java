@@ -7,8 +7,7 @@ import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.exceptions.NoNodesFoundException;
 import tictactoe.Game;
-import tictactoe.exceptions.NotVacantException;
-import tictactoe.exceptions.OutOfBoundsException;
+import tictactoe.exceptions.InvalidMoveException;
 import tictactoe.lang.Constants;
 import tictactoe.views.elements.*;
 
@@ -108,7 +107,7 @@ public class TicTacToeTest extends GuiTest {
     }
 
     @Test
-    public void shouldSetThePlayerWithTheCoordinatesWhenPlayerChoosesInOnePlayerMode() throws OutOfBoundsException, NotVacantException {
+    public void shouldSetThePlayerWithTheCoordinatesWhenPlayerChoosesInOnePlayerMode() throws InvalidMoveException {
         click(onePlayer);
         click(pieceTwo);
         click(center);
@@ -206,8 +205,8 @@ public class TicTacToeTest extends GuiTest {
     }
 
     @Test
-    public void shouldRemoveMessageIfAnyWhenPlayerClicksOnEmptySpaceIsClicked() throws OutOfBoundsException, NotVacantException {
-        doThrow(new NotVacantException()).when(game).set(1,1);
+    public void shouldRemoveMessageIfAnyWhenPlayerClicksOnEmptySpaceIsClicked() throws InvalidMoveException {
+        doThrow(new InvalidMoveException()).when(game).set(1,1);
         when(game.getWinner()).thenReturn(Constants.GAME_PIECE_ONE);
         click(twoPlayer);
         click(center);

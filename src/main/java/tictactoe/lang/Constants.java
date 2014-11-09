@@ -8,9 +8,7 @@ public interface Constants {
     String MESSAGES_ID = "#messages";
     String DRAW_MESSAGE = "The Game is a Draw!";
     String NOT_VACANT_MESSAGE = "Space is occupied,\n please choose another.";
-    String OUT_OF_BOUNDS_MESSAGE = "You chose a space out of bounds,\n HOW!!??";
     String EMPTY = "";
-    String OUT_OF_TURN_MESSAGE = "It's not your turn!";
     int WIN_SCORE = 1;
     int LOSE_SCORE = -1;
     int DRAW_SCORE = 0;
@@ -26,4 +24,5 @@ public interface Constants {
     String MENU_VIEW = "/scenes/menu.fxml";
     int POS_INF = Integer.MAX_VALUE;
     int NEG_INF = Integer.MIN_VALUE + 1;
+    String INVALID_MOVE = "Sorry,\nCan't go there.";
 }

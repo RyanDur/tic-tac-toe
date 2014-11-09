@@ -1,8 +1,7 @@
 package tictactoe;
 
 import com.google.inject.Inject;
-import tictactoe.exceptions.NotVacantException;
-import tictactoe.exceptions.OutOfBoundsException;
+import tictactoe.exceptions.InvalidMoveException;
 import tictactoe.lang.Constants;
 
 import java.util.Arrays;
@@ -18,12 +17,12 @@ public class GameImpl implements Game {
     private Character[] board;
     private Character winner;
     private ComputerPlayer computer;
-    private Supplier<Boolean> isComputersTurn;
+    private Supplier<Boolean> ifComputersTurn;
 
     private GameImpl(int side, Character[] board) {
         this.side = side;
         this.board = board;
-        isComputersTurn = setComputer.apply(null);
+        ifComputersTurn = setComputer.apply(null);
     }
 
     @Inject
@@ -33,22 +32,20 @@ public class GameImpl implements Game {
 
     @Override
     public void setup(Character piece, int side) {
-        isComputersTurn = setComputer.apply(piece);
+        ifComputersTurn = setComputer.apply(piece);
         computer.setPiece(piece);
         winner = null;
         this.side = side;
         board = new Character[side * side];
-        if (isComputersTurn.get()) move.accept(computer);
+        move.apply(ifComputersTurn).accept(computer);
     }
 
     @Override
-    public void set(int row, int column) throws NotVacantException, OutOfBoundsException {
-        if (outOfBounds.test(row, column)) throw new OutOfBoundsException();
-        if (!isEmpty.test(get.apply(row, column))) throw new NotVacantException();
-        Character piece = nextPiece.get();
-        board[getIndex.apply(row, column)] = piece;
-        if (isWinner(row, column, piece)) winner = piece;
-        if (isComputersTurn.get() && !isOver()) move.accept(computer);
+    public void set(int row, int column) throws InvalidMoveException {
+        Integer index = getIndex.apply(row, column);
+        if (outOfBounds.or(isEmpty.negate()).test(index)) throw new InvalidMoveException();
+        setPiece.andThen(checkForWin).accept(index, nextPiece.get());
+        move.apply(ifComputersTurn).accept(computer);
     }
 
     @Override
@@ -68,9 +65,8 @@ public class GameImpl implements Game {
 
     @Override
     public Set<List<Integer>> getVacancies() {
-        Character[] board = getBoard();
-        return IntStream.range(0, board.length).boxed()
-                .filter(index -> isEmpty.test(board[index]))
+        return IntStream.range(0, getBoard().length).boxed()
+                .filter(isEmpty::test)
                 .map(getRowColumn::apply)
                 .collect(Collectors.toSet());
     }
@@ -80,47 +76,54 @@ public class GameImpl implements Game {
         return new GameImpl(side, getBoard());
     }
 
-    private boolean isWinner(int row, int column, Character piece) {
-        return getVectors.apply(row, column).parallel()
-                .filter(vector -> check.apply(vector, piece))
-                .findFirst().isPresent();
-    }
-
-    private Consumer<ComputerPlayer> move = computer -> {
-        try {
-            List<Integer> move = computer.getMove(this);
-            set(move.get(0), move.get(1));
-        } catch (OutOfBoundsException | NotVacantException e) {
-            e.printStackTrace();
+    private Function<Supplier<Boolean>, Consumer<ComputerPlayer>> move = isComputersTurn -> computer -> {
+        if (isComputersTurn.get() && !isOver()) {
+            try {
+                List<Integer> move = computer.getMove(this);
+                set(move.get(0), move.get(1));
+            } catch (InvalidMoveException e) {
+                e.printStackTrace();
+            }
         }
     };
 
-    private Function<Integer, List<Integer>> getRowColumn = vacancy -> {
-        int row = Math.floorDiv(vacancy, side);
-        int column = vacancy - (row * side);
+    private Function<Integer, List<Integer>> getRowColumn = position -> {
+        int row = Math.floorDiv(position, side);
+        int column = position - (row * side);
         return Arrays.asList(row, column);
     };
 
-    private Predicate<Character> isEmpty = space -> space == null;
+    private Consumer<Character> setWinner = piece -> winner = piece;
 
-    private BiPredicate<Integer, Integer> outOfBounds = (row, column) -> row > side - 1 || column > side - 1 || row < 0 || column < 0;
+    private Predicate<Integer> isEmpty = index -> board[index] == null;
 
-    private Supplier<Integer> numOfPieces = () -> (int) Arrays.stream(getBoard()).filter(isEmpty.negate()::test).count();
+    private Predicate<Integer> outOfBounds = index -> index > (side * side) || index < 0;
+
+    private BiConsumer<Integer, Character> setPiece = (index, piece) -> board[index] = piece;
+
+    private BiFunction<Integer, Integer, Integer> getIndex = (row, column) -> (row * side) + column;
+
+    private Supplier<Integer> numOfPieces = () -> (int) IntStream.range(0, getBoard().length).filter(isEmpty.negate()::test).count();
 
     private Supplier<Character> nextPiece = () -> numOfPieces.get() % 2 == 0 ? Constants.GAME_PIECE_ONE : Constants.GAME_PIECE_TWO;
 
     private Function<Character, Supplier<Boolean>> setComputer = piece -> () -> nextPiece.get().equals(piece);
 
-    private BiFunction<Integer, Integer, Integer> getIndex = (row, column) -> (row * side) + column;
-
     private BiFunction<Integer, Integer, Character> get = (row, column) -> board[getIndex.apply(row, column)];
 
-    private BiFunction<Function<Integer, Character>, Character, Boolean> check = (vector, piece) ->
+    private BiPredicate<Character, Function<Integer, Character>> isWinner = (piece, vector) ->
             IntStream.range(0, side).allMatch(index -> piece.equals(vector.apply(index)));
 
-    private BiFunction<Integer, Integer, Stream<Function<Integer, Character>>> getVectors = (row, column) ->
-            Stream.of(index -> get.apply(row, index),
-                    index -> get.apply(index, column),
-                    index -> get.apply(index, index),
-                    index -> get.apply(index, (side - 1) - index));
+    private Function<Integer, Stream<Function<Integer, Character>>> getVectors = position -> {
+        List<Integer> move = getRowColumn.apply(position);
+        return Stream.of(index -> get.apply(move.get(0), index),
+                index -> get.apply(index, move.get(1)),
+                index -> get.apply(index, index),
+                index -> get.apply(index, (side - 1) - index));
+    };
+
+    private BiConsumer<Integer, Character> checkForWin = (position, piece) ->
+            getVectors.apply(position).parallel()
+                    .filter(index -> isWinner.test(piece, index)).findFirst()
+                    .ifPresent(move -> setWinner.accept(piece));
 }

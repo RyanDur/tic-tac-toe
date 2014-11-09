@@ -5,8 +5,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import tictactoe.exceptions.NotVacantException;
-import tictactoe.exceptions.OutOfBoundsException;
+import tictactoe.exceptions.InvalidMoveException;
 import tictactoe.lang.Constants;
 
 import java.util.Arrays;
@@ -40,14 +39,14 @@ public class GameTest {
     }
 
     @Test
-    public void shouldNotBeAbleToSetAPlayerOnATakenSpot() throws NotVacantException, OutOfBoundsException {
-        exception.expect(NotVacantException.class);
+    public void shouldNotBeAbleToSetAPlayerOnATakenSpot() throws InvalidMoveException {
+        exception.expect(InvalidMoveException.class);
         game.set(1, 1);
         game.set(1, 1);
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnFirstRow() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsWinnerOnFirstRow() throws InvalidMoveException {
         game.set(0, 0);
         game.set(2, 0);
         game.set(0, 1);
@@ -57,7 +56,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstRow() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstRow() throws InvalidMoveException {
         game.set(0, 0);
         game.set(2, 0);
         game.set(0, 1);
@@ -67,7 +66,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnFirstColumn() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsWinnerOnFirstColumn() throws InvalidMoveException {
         game.set(0, 0);
         game.set(2, 2);
         game.set(1, 0);
@@ -77,7 +76,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstColumn() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstColumn() throws InvalidMoveException {
         game.set(0, 0);
         game.set(2, 2);
         game.set(1, 0);
@@ -87,7 +86,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnSecondRow() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsWinnerOnSecondRow() throws InvalidMoveException {
         game.set(1, 0);
         game.set(2, 2);
         game.set(1, 1);
@@ -97,7 +96,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondRow() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondRow() throws InvalidMoveException {
         game.set(1, 0);
         game.set(2, 2);
         game.set(1, 1);
@@ -107,7 +106,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnSecondColumn() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsWinnerOnSecondColumn() throws InvalidMoveException {
         game.set(0, 1);
         game.set(2, 2);
         game.set(1, 1);
@@ -117,7 +116,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondColumn() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondColumn() throws InvalidMoveException {
         game.set(0, 1);
         game.set(2, 2);
         game.set(1, 1);
@@ -127,27 +126,27 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnThirdRow() throws NotVacantException, OutOfBoundsException {
-        game.set(2, 0);
-        game.set(0, 2);
-        game.set(2, 1);
-        game.set(0, 1);
-        game.set(2, 2);
-        assertThat(game.getWinner(), is(equalTo(pieceOne)));
-    }
-
-    @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdRow() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsWinnerOnThirdRow() throws InvalidMoveException {
         game.set(2, 0);
         game.set(0, 2);
         game.set(2, 1);
         game.set(0, 1);
+        game.set(2, 2);
+        assertThat(game.getWinner(), is(equalTo(pieceOne)));
+    }
+
+    @Test
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdRow() throws InvalidMoveException {
+        game.set(2, 0);
+        game.set(0, 2);
+        game.set(2, 1);
+        game.set(0, 1);
         game.set(0, 0);
         assertThat(game.getWinner(), is(nullValue()));
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnThirdColumn() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsWinnerOnThirdColumn() throws InvalidMoveException {
         game.set(0, 2);
         game.set(0, 1);
         game.set(1, 2);
@@ -157,7 +156,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdColumn() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdColumn() throws InvalidMoveException {
         game.set(0, 2);
         game.set(0, 1);
         game.set(1, 2);
@@ -167,7 +166,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnTheLeftDiagonal() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsWinnerOnTheLeftDiagonal() throws InvalidMoveException {
         game.set(0, 0);
         game.set(0, 1);
         game.set(1, 1);
@@ -177,7 +176,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnTheLeftDiagonal() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnTheLeftDiagonal() throws InvalidMoveException {
         game.set(0, 0);
         game.set(0, 1);
         game.set(1, 1);
@@ -187,7 +186,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsWinnerOnTheRightDiagonal() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsWinnerOnTheRightDiagonal() throws InvalidMoveException {
         game.set(0, 2);
         game.set(0, 1);
         game.set(1, 1);
@@ -197,7 +196,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldCheckBoardIfPlayerIsNotWinnerOnTheRightDiagonal() throws NotVacantException, OutOfBoundsException {
+    public void shouldCheckBoardIfPlayerIsNotWinnerOnTheRightDiagonal() throws InvalidMoveException {
         game.set(0, 2);
         game.set(0, 1);
         game.set(1, 1);
@@ -207,14 +206,14 @@ public class GameTest {
     }
 
     @Test
-    public void shouldNotBeAbleToSetAPieceFromOutsideTheBoard() throws OutOfBoundsException, NotVacantException {
-        exception.expect(OutOfBoundsException.class);
+    public void shouldNotBeAbleToSetAPieceFromOutsideTheBoard() throws InvalidMoveException{
+        exception.expect(InvalidMoveException.class);
         game.set(5, 7);
     }
 
     @Test
-    public void shouldNotBeAbleToSetAPieceFromSmallerThanTheBoard() throws OutOfBoundsException, NotVacantException {
-        exception.expect(OutOfBoundsException.class);
+    public void shouldNotBeAbleToSetAPieceFromSmallerThanTheBoard() throws InvalidMoveException{
+        exception.expect(InvalidMoveException.class);
         game.set(-4, -7);
     }
 
@@ -224,7 +223,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldBeAbleToGetTheVacantSpacesOfABoardBoard() throws OutOfBoundsException, NotVacantException {
+    public void shouldBeAbleToGetTheVacantSpacesOfABoardBoard() throws InvalidMoveException{
         game.set(0, 0);
         game.set(0, 1);
         game.set(0, 2);
@@ -232,7 +231,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldBeAbleToMakeACopyOfTheBoard() throws OutOfBoundsException, NotVacantException {
+    public void shouldBeAbleToMakeACopyOfTheBoard() throws InvalidMoveException{
         game.set(0, 0);
         game.set(0, 1);
         game.set(0, 2);
@@ -241,7 +240,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldBeAbleToClearTheBoard() throws OutOfBoundsException, NotVacantException {
+    public void shouldBeAbleToClearTheBoard() throws InvalidMoveException{
         game.set(0, 0);
         game.set(0, 1);
         game.set(0, 2);
@@ -251,7 +250,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldResetTheWinnerWhenSettingUpTheBoard() throws OutOfBoundsException, NotVacantException {
+    public void shouldResetTheWinnerWhenSettingUpTheBoard() throws InvalidMoveException{
         when(computer.getMove(any(Game.class))).thenReturn(Arrays.asList(1, 2));
         game.set(0, 2);
         game.set(0, 1);
@@ -264,7 +263,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldBeAbleToTellIfAGameIsOverIfThereIsAWinner() throws OutOfBoundsException, NotVacantException {
+    public void shouldBeAbleToTellIfAGameIsOverIfThereIsAWinner() throws InvalidMoveException{
         game.set(0, 2);
         game.set(0, 1);
         game.set(1, 1);
@@ -274,7 +273,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldBeAbleToTellIfAGameIsOverIfTheBoardIsFull() throws OutOfBoundsException, NotVacantException {
+    public void shouldBeAbleToTellIfAGameIsOverIfTheBoardIsFull() throws InvalidMoveException{
         game.set(0, 2);
         game.set(0, 1);
         game.set(1, 1);
@@ -288,14 +287,14 @@ public class GameTest {
     }
 
     @Test
-    public void shouldBeAbleToAllowTheComputerToPlayFirstIfItIsX() throws NotVacantException, OutOfBoundsException {
+    public void shouldBeAbleToAllowTheComputerToPlayFirstIfItIsX() throws InvalidMoveException {
         when(computer.getMove(any(Game.class))).thenReturn(Arrays.asList(1, 2));
         game.setup(pieceOne, Constants.SIDE);
         verify(computer).getMove(any(Game.class));
     }
 
     @Test
-    public void shouldNotBeAbleToAllowTheComputerToPlayFirstIfItIsO() throws NotVacantException, OutOfBoundsException {
+    public void shouldNotBeAbleToAllowTheComputerToPlayFirstIfItIsO() throws InvalidMoveException {
         game.setup(pieceTwo, Constants.SIDE);
         verify(computer, never()).getMove(any(Game.class));
     }
