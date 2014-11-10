@@ -11,6 +11,8 @@ import tictactoe.exceptions.InvalidMoveException;
 import tictactoe.lang.Constants;
 import tictactoe.views.elements.*;
 
+import java.util.Arrays;
+
 import static org.loadui.testfx.Assertions.assertNodeExists;
 import static org.loadui.testfx.Assertions.verifyThat;
 import static org.loadui.testfx.controls.Commons.hasText;
@@ -111,7 +113,7 @@ public class TicTacToeTest extends GuiTest {
         click(onePlayer);
         click(pieceTwo);
         click(center);
-        verify(game).set(1, 1);
+        verify(game).set(Arrays.asList(1, 1));
     }
 
     @Test
@@ -206,7 +208,7 @@ public class TicTacToeTest extends GuiTest {
 
     @Test
     public void shouldRemoveMessageIfAnyWhenPlayerClicksOnEmptySpaceIsClicked() throws InvalidMoveException {
-        doThrow(new InvalidMoveException()).when(game).set(1,1);
+        doThrow(new InvalidMoveException()).when(game).set(Arrays.asList(1,1));
         when(game.getWinner()).thenReturn(Constants.GAME_PIECE_ONE);
         click(twoPlayer);
         click(center);

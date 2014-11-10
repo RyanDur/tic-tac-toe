@@ -9,7 +9,7 @@ public interface Game {
 
     void setup(Character piece, int side);
 
-    void set(int row, int column) throws InvalidMoveException;
+    void set(List<Integer> move) throws InvalidMoveException;
 
     boolean isOver();
 

@@ -18,6 +18,7 @@ import tictactoe.views.elements.Header;
 import tictactoe.views.elements.Menu;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -71,7 +72,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
                 if (!gamePlay.isOver()) {
                     header.clearMessage();
                     Label space = (Label) click.getSource();
-                    gamePlay.set(getRow(space), getColumn(space));
+                    gamePlay.set(Arrays.asList(getRow(space), getColumn(space)));
                 }
                 if (gamePlay.isOver()) {
                     header.setButtonsVisibility(true);

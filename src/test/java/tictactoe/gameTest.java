@@ -41,180 +41,180 @@ public class GameTest {
     @Test
     public void shouldNotBeAbleToSetAPlayerOnATakenSpot() throws InvalidMoveException {
         exception.expect(InvalidMoveException.class);
-        game.set(1, 1);
-        game.set(1, 1);
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(1, 1));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnFirstRow() throws InvalidMoveException {
-        game.set(0, 0);
-        game.set(2, 0);
-        game.set(0, 1);
-        game.set(2, 1);
-        game.set(0, 2);
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(2, 0));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(2, 1));
+        game.set(Arrays.asList(0, 2));
         assertThat(game.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstRow() throws InvalidMoveException {
-        game.set(0, 0);
-        game.set(2, 0);
-        game.set(0, 1);
-        game.set(2, 1);
-        game.set(1, 0);
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(2, 0));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(2, 1));
+        game.set(Arrays.asList(1, 0));
         assertThat(game.getWinner(), is(nullValue()));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnFirstColumn() throws InvalidMoveException {
-        game.set(0, 0);
-        game.set(2, 2);
-        game.set(1, 0);
-        game.set(2, 1);
-        game.set(2, 0);
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(2, 2));
+        game.set(Arrays.asList(1, 0));
+        game.set(Arrays.asList(2, 1));
+        game.set(Arrays.asList(2, 0));
         assertThat(game.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnFirstColumn() throws InvalidMoveException {
-        game.set(0, 0);
-        game.set(2, 2);
-        game.set(1, 0);
-        game.set(2, 1);
-        game.set(1, 1);
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(2, 2));
+        game.set(Arrays.asList(1, 0));
+        game.set(Arrays.asList(2, 1));
+        game.set(Arrays.asList(1, 1));
         assertThat(game.getWinner(), is(nullValue()));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnSecondRow() throws InvalidMoveException {
-        game.set(1, 0);
-        game.set(2, 2);
-        game.set(1, 1);
-        game.set(2, 1);
-        game.set(1, 2);
+        game.set(Arrays.asList(1, 0));
+        game.set(Arrays.asList(2, 2));
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(2, 1));
+        game.set(Arrays.asList(1, 2));
         assertThat(game.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondRow() throws InvalidMoveException {
-        game.set(1, 0);
-        game.set(2, 2);
-        game.set(1, 1);
-        game.set(2, 1);
-        game.set(0, 2);
+        game.set(Arrays.asList(1, 0));
+        game.set(Arrays.asList(2, 2));
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(2, 1));
+        game.set(Arrays.asList(0, 2));
         assertThat(game.getWinner(), is(nullValue()));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnSecondColumn() throws InvalidMoveException {
-        game.set(0, 1);
-        game.set(2, 2);
-        game.set(1, 1);
-        game.set(2, 0);
-        game.set(2, 1);
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(2, 2));
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(2, 0));
+        game.set(Arrays.asList(2, 1));
         assertThat(game.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnSecondColumn() throws InvalidMoveException {
-        game.set(0, 1);
-        game.set(2, 2);
-        game.set(1, 1);
-        game.set(2, 0);
-        game.set(1, 2);
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(2, 2));
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(2, 0));
+        game.set(Arrays.asList(1, 2));
         assertThat(game.getWinner(), is(nullValue()));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnThirdRow() throws InvalidMoveException {
-        game.set(2, 0);
-        game.set(0, 2);
-        game.set(2, 1);
-        game.set(0, 1);
-        game.set(2, 2);
+        game.set(Arrays.asList(2, 0));
+        game.set(Arrays.asList(0, 2));
+        game.set(Arrays.asList(2, 1));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(2, 2));
         assertThat(game.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdRow() throws InvalidMoveException {
-        game.set(2, 0);
-        game.set(0, 2);
-        game.set(2, 1);
-        game.set(0, 1);
-        game.set(0, 0);
+        game.set(Arrays.asList(2, 0));
+        game.set(Arrays.asList(0, 2));
+        game.set(Arrays.asList(2, 1));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(0, 0));
         assertThat(game.getWinner(), is(nullValue()));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnThirdColumn() throws InvalidMoveException {
-        game.set(0, 2);
-        game.set(0, 1);
-        game.set(1, 2);
-        game.set(0, 0);
-        game.set(2, 2);
+        game.set(Arrays.asList(0, 2));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(1, 2));
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(2, 2));
         assertThat(game.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnThirdColumn() throws InvalidMoveException {
-        game.set(0, 2);
-        game.set(0, 1);
-        game.set(1, 2);
-        game.set(0, 0);
-        game.set(1, 1);
+        game.set(Arrays.asList(0, 2));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(1, 2));
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(1, 1));
         assertThat(game.getWinner(), is(nullValue()));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnTheLeftDiagonal() throws InvalidMoveException {
-        game.set(0, 0);
-        game.set(0, 1);
-        game.set(1, 1);
-        game.set(0, 2);
-        game.set(2, 2);
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(0, 2));
+        game.set(Arrays.asList(2, 2));
         assertThat(game.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnTheLeftDiagonal() throws InvalidMoveException {
-        game.set(0, 0);
-        game.set(0, 1);
-        game.set(1, 1);
-        game.set(0, 2);
-        game.set(2, 1);
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(0, 2));
+        game.set(Arrays.asList(2, 1));
         assertThat(game.getWinner(), is(nullValue()));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsWinnerOnTheRightDiagonal() throws InvalidMoveException {
-        game.set(0, 2);
-        game.set(0, 1);
-        game.set(1, 1);
-        game.set(1, 2);
-        game.set(2, 0);
+        game.set(Arrays.asList(0, 2));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(1, 2));
+        game.set(Arrays.asList(2, 0));
         assertThat(game.getWinner(), is(equalTo(pieceOne)));
     }
 
     @Test
     public void shouldCheckBoardIfPlayerIsNotWinnerOnTheRightDiagonal() throws InvalidMoveException {
-        game.set(0, 2);
-        game.set(0, 1);
-        game.set(1, 1);
-        game.set(1, 2);
-        game.set(2, 2);
+        game.set(Arrays.asList(0, 2));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(1, 2));
+        game.set(Arrays.asList(2, 2));
         assertThat(game.getWinner(), is(nullValue()));
     }
 
     @Test
     public void shouldNotBeAbleToSetAPieceFromOutsideTheBoard() throws InvalidMoveException{
         exception.expect(InvalidMoveException.class);
-        game.set(5, 7);
+        game.set(Arrays.asList(5, 7));
     }
 
     @Test
     public void shouldNotBeAbleToSetAPieceFromSmallerThanTheBoard() throws InvalidMoveException{
         exception.expect(InvalidMoveException.class);
-        game.set(-4, -7);
+        game.set(Arrays.asList(-4, -7));
     }
 
     @Test
@@ -224,26 +224,26 @@ public class GameTest {
 
     @Test
     public void shouldBeAbleToGetTheVacantSpacesOfABoardBoard() throws InvalidMoveException{
-        game.set(0, 0);
-        game.set(0, 1);
-        game.set(0, 2);
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(0, 2));
         assertThat(game.getVacancies().size(), CoreMatchers.is(CoreMatchers.equalTo(players.length - Constants.SIDE)));
     }
 
     @Test
     public void shouldBeAbleToMakeACopyOfTheBoard() throws InvalidMoveException{
-        game.set(0, 0);
-        game.set(0, 1);
-        game.set(0, 2);
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(0, 2));
         Game copy = game.copy();
         assertThat(copy.getBoard(), is(equalTo(game.getBoard())));
     }
 
     @Test
     public void shouldBeAbleToClearTheBoard() throws InvalidMoveException{
-        game.set(0, 0);
-        game.set(0, 1);
-        game.set(0, 2);
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(0, 2));
         assertThat(game.getVacancies().size(), is(equalTo(6)));
         game.setup(null, Constants.SIDE);
         assertThat(game.getVacancies().size(), is(equalTo(9)));
@@ -252,11 +252,11 @@ public class GameTest {
     @Test
     public void shouldResetTheWinnerWhenSettingUpTheBoard() throws InvalidMoveException{
         when(computer.getMove(any(Game.class))).thenReturn(Arrays.asList(1, 2));
-        game.set(0, 2);
-        game.set(0, 1);
-        game.set(1, 1);
-        game.set(1, 2);
-        game.set(2, 0);
+        game.set(Arrays.asList(0, 2));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(1, 2));
+        game.set(Arrays.asList(2, 0));
         assertThat(game.getWinner(), is(equalTo(pieceOne)));
         game.setup(pieceOne, Constants.SIDE);
         assertThat(game.getWinner(), is(nullValue()));
@@ -264,25 +264,25 @@ public class GameTest {
 
     @Test
     public void shouldBeAbleToTellIfAGameIsOverIfThereIsAWinner() throws InvalidMoveException{
-        game.set(0, 2);
-        game.set(0, 1);
-        game.set(1, 1);
-        game.set(1, 2);
-        game.set(2, 0);
+        game.set(Arrays.asList(0, 2));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(1, 2));
+        game.set(Arrays.asList(2, 0));
         assertThat(game.isOver(), is(equalTo(true)));
     }
 
     @Test
     public void shouldBeAbleToTellIfAGameIsOverIfTheBoardIsFull() throws InvalidMoveException{
-        game.set(0, 2);
-        game.set(0, 1);
-        game.set(1, 1);
-        game.set(1, 2);
-        game.set(2, 1);
-        game.set(2, 0);
-        game.set(1, 0);
-        game.set(0, 0);
-        game.set(2, 2);
+        game.set(Arrays.asList(0, 2));
+        game.set(Arrays.asList(0, 1));
+        game.set(Arrays.asList(1, 1));
+        game.set(Arrays.asList(1, 2));
+        game.set(Arrays.asList(2, 1));
+        game.set(Arrays.asList(2, 0));
+        game.set(Arrays.asList(1, 0));
+        game.set(Arrays.asList(0, 0));
+        game.set(Arrays.asList(2, 2));
         assertThat(game.isOver(), is(equalTo(true)));
     }
 

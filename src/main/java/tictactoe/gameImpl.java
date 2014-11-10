@@ -37,15 +37,15 @@ public class GameImpl implements Game {
         winner = null;
         this.side = side;
         board = new Character[side * side];
-        move.accept(computer);
+        computerMove.accept(this);
     }
 
     @Override
-    public void set(int row, int column) throws InvalidMoveException {
-        Integer index = getIndex.apply(row, column);
+    public void set(List<Integer> move) throws InvalidMoveException {
+        Integer index = getIndex.apply(move);
         if (outOfBounds.or(isEmpty.negate()).test(index)) throw new InvalidMoveException();
         setPiece.andThen(checkForWin).accept(index, nextPiece.get());
-        move.accept(computer);
+        computerMove.accept(this);
     }
 
     @Override
@@ -76,11 +76,10 @@ public class GameImpl implements Game {
         return new GameImpl(side, getBoard());
     }
 
-    private Consumer<ComputerPlayer> move = computer -> {
+    private Consumer<Game> computerMove = game -> {
         if (isComputersTurn.get()) {
             try {
-                List<Integer> move = computer.getMove(this);
-                set(move.get(0), move.get(1));
+                set(computer.getMove(game));
             } catch (InvalidMoveException e) {
                 e.printStackTrace();
             }
@@ -99,7 +98,7 @@ public class GameImpl implements Game {
 
     private BiConsumer<Integer, Character> setPiece = (index, piece) -> board[index] = piece;
 
-    private BiFunction<Integer, Integer, Integer> getIndex = (row, column) -> (row * side) + column;
+    private Function<List<Integer>, Integer> getIndex = move -> (move.get(0) * side) + move.get(1);
 
     private Supplier<Integer> numOfPieces = () ->
             (int) IntStream.range(0, getBoard().length).filter(isEmpty.negate()::test).count();
@@ -113,11 +112,14 @@ public class GameImpl implements Game {
     private BiPredicate<Character, Function<Integer, Character>> isWinner = (piece, vector) ->
             IntStream.range(0, side).allMatch(index -> piece.equals(vector.apply(index)));
 
+    private BiFunction<Integer, Integer, Character> get = (row, column) ->
+            board[getIndex.apply(Arrays.asList(row, column))];
+
     private Function<List<Integer>, Stream<Function<Integer, Character>>> getVectors = move ->
-            Stream.of(index -> board[getIndex.apply(move.get(0), index)],
-                    index -> board[getIndex.apply(index, move.get(1))],
-                    index -> board[getIndex.apply(index, index)],
-                    index -> board[getIndex.apply(index, (side - 1) - index)]);
+            Stream.of(index -> get.apply(move.get(0), index),
+                    index -> get.apply(index, move.get(1)),
+                    index -> get.apply(index, index),
+                    index -> get.apply(index, (side - 1) - index));
 
     private BiConsumer<Integer, Character> checkForWin = (position, piece) ->
             getVectors.apply(getRowColumn.apply(position)).parallel()

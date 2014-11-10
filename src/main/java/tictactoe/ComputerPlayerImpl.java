@@ -133,7 +133,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     private Game playMove(List<Integer> move, Game game) {
         game = game.copy();
         try {
-            game.set(move.get(0), move.get(1));
+            game.set(move);
         } catch (InvalidMoveException e) {
             e.printStackTrace();
         }
