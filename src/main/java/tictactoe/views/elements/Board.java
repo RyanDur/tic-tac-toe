@@ -7,7 +7,7 @@ import java.util.function.Function;
 public interface Board {
 
 
-    void setPlay(Function<MouseEvent, Character[]> play);
+    void setup(Function<MouseEvent, Character[]> play, int side);
 
     void setBoard(Character[] board);
 }

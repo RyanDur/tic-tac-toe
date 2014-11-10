@@ -37,7 +37,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      */
     @Override
     public List<Integer> getMove(Game game) {
-        List<List<Integer>> maxMoves = game.getVacancies().parallelStream().collect(
+        List<List<Integer>> maxMoves = getMoves(game).parallelStream().collect(
                 groupingBy(getAlgo(game))).entrySet().stream()
                 .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();
         return maxMoves.get(random.nextInt(maxMoves.size()));

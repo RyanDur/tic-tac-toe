@@ -23,18 +23,16 @@ public class BoardTest extends GuiTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    private Board boardView;
-    private Function<MouseEvent, Character[]> play;
 
     @Override
     protected Parent getRootNode() {
-        this.board = new Character[Constants.SIDE * Constants.SIDE];
+        this.board = new Character[Constants.SMALL_BOARD * Constants.SMALL_BOARD];
         player = Constants.GAME_PIECE_ONE;
         game = mock(Game.class);
         when(game.getBoard()).thenReturn(this.board);
-        play = mockPlay();
-        boardView = new BoardImpl();
-        boardView.setPlay(play);
+        Function<MouseEvent, Character[]> play = mockPlay();
+        Board boardView = new BoardImpl();
+        boardView.setup(play, Constants.SMALL_BOARD);
         boardView.setBoard(board);
         return (Parent) boardView;
     }
@@ -49,7 +47,6 @@ public class BoardTest extends GuiTest {
     @Test
     public void shouldBeAbleToChooseAPlaceOnTheBoard() {
         when(game.getBoard()).thenReturn(board);
-        boardView.setPlay(play);
         for (int i = 0; i < board.length; i++) {
             String id = cell + i;
             board[i] = player;
@@ -70,7 +67,7 @@ public class BoardTest extends GuiTest {
     @Test
     public void shouldBeAbleToClearTheBoard() throws InterruptedException {
         int index = 2;
-        Character[] board1 = new Character[Constants.SIDE * Constants.SIDE];
+        Character[] board1 = new Character[Constants.SMALL_BOARD * Constants.SMALL_BOARD];
         board[index] = player;
         String id = cell + index;
         click(id);

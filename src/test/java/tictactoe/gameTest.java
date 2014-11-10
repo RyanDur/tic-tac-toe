@@ -33,9 +33,9 @@ public class GameTest {
         computer = mock(ComputerPlayer.class);
         pieceOne = Constants.GAME_PIECE_ONE;
         pieceTwo = Constants.GAME_PIECE_TWO;
-        players = new Character[Constants.SIDE * Constants.SIDE];
+        players = new Character[Constants.SMALL_BOARD * Constants.SMALL_BOARD];
         game = new GameImpl(computer);
-        game.setup(null, Constants.SIDE);
+        game.setup(null, Constants.SMALL_BOARD);
     }
 
     @Test
@@ -227,7 +227,7 @@ public class GameTest {
         game.set(Arrays.asList(0, 0));
         game.set(Arrays.asList(0, 1));
         game.set(Arrays.asList(0, 2));
-        assertThat(game.getVacancies().size(), CoreMatchers.is(CoreMatchers.equalTo(players.length - Constants.SIDE)));
+        assertThat(game.getVacancies().size(), CoreMatchers.is(CoreMatchers.equalTo(players.length - Constants.SMALL_BOARD)));
     }
 
     @Test
@@ -245,7 +245,7 @@ public class GameTest {
         game.set(Arrays.asList(0, 1));
         game.set(Arrays.asList(0, 2));
         assertThat(game.getVacancies().size(), is(equalTo(6)));
-        game.setup(null, Constants.SIDE);
+        game.setup(null, Constants.SMALL_BOARD);
         assertThat(game.getVacancies().size(), is(equalTo(9)));
     }
 
@@ -258,7 +258,7 @@ public class GameTest {
         game.set(Arrays.asList(1, 2));
         game.set(Arrays.asList(2, 0));
         assertThat(game.getWinner(), is(equalTo(pieceOne)));
-        game.setup(pieceOne, Constants.SIDE);
+        game.setup(pieceOne, Constants.SMALL_BOARD);
         assertThat(game.getWinner(), is(nullValue()));
     }
 
@@ -289,13 +289,13 @@ public class GameTest {
     @Test
     public void shouldBeAbleToAllowTheComputerToPlayFirstIfItIsX() throws InvalidMoveException {
         when(computer.getMove(any(Game.class))).thenReturn(Arrays.asList(1, 2));
-        game.setup(pieceOne, Constants.SIDE);
+        game.setup(pieceOne, Constants.SMALL_BOARD);
         verify(computer).getMove(any(Game.class));
     }
 
     @Test
     public void shouldNotBeAbleToAllowTheComputerToPlayFirstIfItIsO() throws InvalidMoveException {
-        game.setup(pieceTwo, Constants.SIDE);
+        game.setup(pieceTwo, Constants.SMALL_BOARD);
         verify(computer, never()).getMove(any(Game.class));
     }
 }

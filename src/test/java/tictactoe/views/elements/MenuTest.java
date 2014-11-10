@@ -23,8 +23,8 @@ public class MenuTest extends GuiTest {
     @Override
     protected Parent getRootNode() {
         game = mock(Game.class);
-        Consumer<Character> onePlayer = e -> game.setup(null, Constants.SIDE);
-        EventHandler<MouseEvent> twoPlayer = e -> game.setup(null, Constants.SIDE);
+        Consumer<Character> onePlayer = e -> game.setup(null, Constants.SMALL_BOARD);
+        EventHandler<MouseEvent> twoPlayer = e -> game.setup(null, Constants.SMALL_BOARD);
         menu = new MenuImpl();
         menu.setOnePlayer(onePlayer);
         menu.setTwoPlayer(twoPlayer);
@@ -34,7 +34,7 @@ public class MenuTest extends GuiTest {
     @Test
     public void shouldBeAbleToSetATwoPlayerGame() {
         click(Constants.TWO_PLAYER);
-        verify(game).setup(null, Constants.SIDE);
+        verify(game).setup(null, Constants.SMALL_BOARD);
     }
 
     @Test

@@ -24,7 +24,7 @@ public class TicTacToeTest extends GuiTest {
     private final String gameId = "#tictactoe.game";
     private String twoPlayer = "2 Player";
     private Game game;
-    private Character[] board = new Character[Constants.SIDE * Constants.SIDE];
+    private Character[] board = new Character[Constants.SMALL_BOARD * Constants.SMALL_BOARD];
     private String center = "#cell4";
     private String reset = "Reset";
 

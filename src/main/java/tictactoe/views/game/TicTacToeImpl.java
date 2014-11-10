@@ -23,12 +23,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class TicTacToeImpl extends Parent implements TicTacToe {
+    private Board board;
     private Pane centerPane;
     private Game game;
     private Header header;
     private final BorderPane ticTacToe;
     private Menu menu;
-    private Board board;
     private Character piece;
 
     @Inject
@@ -61,7 +61,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     private Consumer<Character> setOnePlayer() {
         return (piece) -> {
             this.piece = piece;
-            game.setup(piece, Constants.SIDE);
+            game.setup(piece, Constants.LARGE_BOARD);
             setupBoard();
         };
     }
@@ -87,7 +87,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
 
     private void setupBoard() {
         clearHeader(header);
-        board.setPlay(play(game));
+        board.setup(play(game), Constants.LARGE_BOARD);
         board.setBoard(game.getBoard());
         swapCenter((Node) board);
     }

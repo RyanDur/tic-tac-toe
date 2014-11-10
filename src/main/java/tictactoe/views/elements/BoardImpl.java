@@ -1,6 +1,7 @@
 package tictactoe.views.elements;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -11,26 +12,48 @@ import tictactoe.lang.Constants;
 
 import java.io.IOException;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 public class BoardImpl extends Parent implements Board {
     private Function<MouseEvent, Character[]> play;
     private GridPane grid;
+    private int side;
+    private final BorderPane borderPane;
 
     public BoardImpl() {
-        BorderPane borderPane = getFXML();
-        grid = (GridPane) borderPane.getCenter();
+        borderPane = getFXML();
         this.getChildren().add(borderPane);
     }
 
     @Override
-    public void setPlay(Function<MouseEvent, Character[]> play) {
+    public void setup(Function<MouseEvent, Character[]> play, int side) {
+        this.side = side;
         this.play = play;
+        buildGrid(side);
+        borderPane.setCenter(grid);
     }
 
     @Override
     public void setBoard(Character[] board) {
         grid.getChildren().stream().filter(space -> space instanceof Label)
                 .forEach(cell -> setSpace(board, (Label) cell));
+    }
+
+    private void buildGrid(int side) {
+        grid = new GridPane();
+        grid.setGridLinesVisible(true);
+        grid.setId("grid");
+        IntStream.range(0, side).forEach(x -> {
+            IntStream.range(0, side).forEach(y -> {
+                Label cell = new Label();
+                cell.alignmentProperty().setValue(Pos.CENTER);
+                cell.setStyle("-fx-font-size:80;");
+                cell.setPrefHeight(200);
+                cell.setPrefWidth(200);
+                cell.setId("cell" + ((x * side) + y));
+                grid.add(cell, y, x);
+            });
+        });
     }
 
     private void setSpace(Character[] board, Label cell) {
@@ -42,7 +65,7 @@ public class BoardImpl extends Parent implements Board {
     }
 
     private int calc(int row, int column) {
-        return (row * Constants.SIDE) + column;
+        return (row * side) + column;
     }
 
     private int getColumn(Node node) {

@@ -3,7 +3,8 @@ package tictactoe.lang;
 public interface Constants {
     Character GAME_PIECE_ONE = 'X';
     Character GAME_PIECE_TWO = 'O';
-    int SIDE = 3;
+    int SMALL_BOARD = 3;
+    int LARGE_BOARD = 4;
     String GAME_VIEW = "/scenes/game.fxml";
     String MESSAGES_ID = "#messages";
     String DRAW_MESSAGE = "The Game is a Draw!";
