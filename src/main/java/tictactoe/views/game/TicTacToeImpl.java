@@ -61,7 +61,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     private Consumer<Character> setOnePlayer() {
         return (piece) -> {
             this.piece = piece;
-            game.setup(piece, Constants.LARGE_BOARD);
+            game.setup(piece, Constants.SMALL_BOARD);
             setupBoard();
         };
     }
@@ -87,7 +87,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
 
     private void setupBoard() {
         clearHeader(header);
-        board.setup(play(game), Constants.LARGE_BOARD);
+        board.setup(play(game), Constants.SMALL_BOARD);
         board.setBoard(game.getBoard());
         swapCenter((Node) board);
     }
