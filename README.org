@@ -1,11 +1,11 @@
 * tic-tac-toe
   To Play type gradle play into the console from the source directory. If you do not have gradle installed, type ./gradlew play into the console.
-** Empty Board
-   |   |   |   |
-   |---+---+---|
-   |   |   |   |
-   |---+---+---|
-   |   |   |   |
+* Empty Board
+**  |   |   |   |
+    |---+---+---|
+    |   |   |   |
+    |---+---+---|
+    |   |   |   |
 
 *** Minimax
     | move   | score | #nodes |
@@ -79,12 +79,12 @@
      | [1, 0], 0, 933 | [1, 1], 0, 511  | [1, 2], 0, 1432 |
      |----------------+-----------------+-----------------|
      | [2, 0], 0, 755 | [2, 1], 0, 972  | [2, 2], 0, 1163 |
-** [0, 0]
-   | x |   |   |
-   |---+---+---|
-   |   |   |   |
-   |---+---+---|
-   |   |   |   |
+* [0, 0]
+**  | x |   |   |
+    |---+---+---|
+    |   |   |   |
+    |---+---+---|
+    |   |   |   |
 *** Minimax
     | move   | score | #nodes |
     |--------+-------+--------|
