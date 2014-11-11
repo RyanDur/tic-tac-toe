@@ -17,6 +17,11 @@ import static java.util.stream.Collectors.*;
 public class ComputerPlayerImpl implements ComputerPlayer {
     private Character piece;
     private final Random random;
+    private static int count;
+
+    private static void nodeCount() {
+        count++;
+    }
 
     public ComputerPlayerImpl() {
         random = new Random();
@@ -37,17 +42,24 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      */
     @Override
     public List<Integer> getMove(Game game) {
-        List<List<Integer>> maxMoves = getMoves(game).parallelStream().collect(
+        List<List<Integer>> maxMoves = game.getVacancies().stream().collect(
                 groupingBy(getAlgo(game))).entrySet().stream()
                 .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();
-        return maxMoves.get(random.nextInt(maxMoves.size()));
+        System.out.println();
+        return maxMoves.get(0);
     }
 
     private Function<List<Integer>, Integer> getAlgo(Game game) {
-//        return move -> negaPrune(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), 1);
-        return move -> miniMaxPrune(Constants.POS_INF, Constants.NEG_INF, true, playMove(move, game));
-//        return move -> negaMax(playMove(move, game), 1);
-//        return move -> miniMax(true, playMove(move, game));
+        return move -> print(move, negaPrune(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), 1));
+//        return move -> print(move, miniMaxPrune(Constants.POS_INF, Constants.NEG_INF, true, playMove(move, game)));
+//        return move -> print(move, negaMax(playMove(move, game), 1));
+//        return move -> print(move, miniMax(true, playMove(move, game)));
+    }
+
+    private int print(List<Integer> move, int score) {
+        System.out.println(move + ", " + score + ", " + ComputerPlayerImpl.count);
+        ComputerPlayerImpl.count = 0;
+        return score;
     }
 
     /*
@@ -58,7 +70,9 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      * completion of a branch, the min or max value is calculated depending on the piece that entered
      * into the method last.
      */
+
     private int negaPrune(int alpha, int beta, Game game, int ply) {
+        ComputerPlayerImpl.nodeCount();
         if (game.isOver()) return ply * score(game);
         LinkedList<Game> children = getGames(game).collect(toCollection(LinkedList::new));
         while (alpha > beta && !children.isEmpty())
@@ -67,6 +81,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     }
 
     private int miniMaxPrune(int alpha, int beta, boolean isComputer, Game game) {
+        ComputerPlayerImpl.nodeCount();
         if (game.isOver()) return score(game);
         LinkedList<Game> children = getGames(game).collect(toCollection(LinkedList::new));
         while (alpha > beta && !children.isEmpty()) {
@@ -76,15 +91,17 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         return isComputer ? alpha : beta;
     }
 
+    private int negaMax(Game game, int ply) {
+        ComputerPlayerImpl.nodeCount();
+        return game.isOver() ? ply * score(game) :
+                -getScores(game, child -> negaMax(child, -ply)).max().getAsInt();
+    }
+
     private int miniMax(boolean isComputer, Game game) {
+        ComputerPlayerImpl.nodeCount();
         if (game.isOver()) return score(game);
         IntStream scores = getScores(game, child -> miniMax(!isComputer, child));
         return isComputer ? scores.min().getAsInt() : scores.max().getAsInt();
-    }
-
-    private int negaMax(Game game, int ply) {
-        return game.isOver() ? ply * score(game) :
-                -getScores(game, child -> negaMax(child, -ply)).max().getAsInt();
     }
 
     private Stream<Game> getGames(Game game) {
