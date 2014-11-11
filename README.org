@@ -1,8 +1,9 @@
-tic-tac-toe
-===========
+* tic-tac-toe
+=====
 To Play type gradle play into the console from the source directory. If you do not have gradle installed, type ./gradlew play into the console.
 
 ** Empty Board
+#+BEGIN_SRC
 *** Minimax
     | move   | score | #nodes |
     |--------+-------+--------|
@@ -15,13 +16,13 @@ To Play type gradle play into the console from the source directory. If you do n
     | [1, 2] |     0 |  10337 |
     | [0, 2] |     0 |   7653 |
     | [2, 0] |     0 |   7653 |
-**** Borad
+**** Board
      | [0, 0], 0, 7653  | [0, 1], 0, 10337 | [0, 2], 0, 7653  |
      |------------------+------------------+------------------|
      | [1, 0], 0, 10337 | [1, 1], 0, 3621  | [1, 2], 0, 10337 |
      |------------------+------------------+------------------|
      | [2, 0], 0, 7653  | [2, 1], 0, 10337 | [2, 2], 0, 7653  |
-
+#+END_SRC
 
 *** Negamax
     | move   | score | #nodes |
@@ -55,7 +56,7 @@ To Play type gradle play into the console from the source directory. If you do n
     | [1, 2] |     0 |   1432 |
     | [0, 2] |     0 |   1026 |
     | [2, 0] |     0 |    755 |
-**** Borad
+**** Board
      | [0, 0], 0, 755 | [0, 1], 0, 1271 | [0, 2], 0, 1026 |
      |----------------+-----------------+-----------------|
      | [1, 0], 0, 933 | [1, 1], 0, 511  | [1, 2], 0, 1432 |
@@ -75,7 +76,7 @@ To Play type gradle play into the console from the source directory. If you do n
     | [1, 2] |     0 |   1432 |
     | [0, 2] |     0 |   1026 |
     | [2, 0] |     0 |    755 |
-**** Borad
+**** Board
      | [0, 0], 0, 755 | [0, 1], 0, 1271 | [0, 2], 0, 1026 |
      |----------------+-----------------+-----------------|
      | [1, 0], 0, 933 | [1, 1], 0, 511  | [1, 2], 0, 1432 |
