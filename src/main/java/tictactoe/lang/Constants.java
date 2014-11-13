@@ -26,4 +26,5 @@ public interface Constants {
     int POS_INF = Integer.MAX_VALUE;
     int NEG_INF = Integer.MIN_VALUE + 1;
     String INVALID_MOVE = "Sorry,\nCan't go there.";
+    int PLY = 1;
 }
