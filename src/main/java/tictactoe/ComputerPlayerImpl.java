@@ -42,15 +42,15 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      */
     @Override
     public List<Integer> getMove(Game game) {
-        List<List<Integer>> maxMoves = game.getVacancies().stream().collect(
+        List<List<Integer>> maxMoves = getMoves(game).parallelStream().collect(
                 groupingBy(getAlgo(game))).entrySet().stream()
                 .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();
-        System.out.println();
-        return maxMoves.get(0);
+        return maxMoves.get(random.nextInt(maxMoves.size()));
     }
 
     private Function<List<Integer>, Integer> getAlgo(Game game) {
-        return move -> print(move, negaPrune(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), 1));
+        return move -> negaPruneDepth(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), 1, 5);
+//        return move -> print(move, negaPrune(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), 1));
 //        return move -> print(move, miniMaxPrune(Constants.POS_INF, Constants.NEG_INF, true, playMove(move, game)));
 //        return move -> print(move, negaMax(playMove(move, game), 1));
 //        return move -> print(move, miniMax(true, playMove(move, game)));
@@ -70,6 +70,14 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      * completion of a branch, the min or max value is calculated depending on the piece that entered
      * into the method last.
      */
+
+    private int negaPruneDepth(int alpha, int beta, Game game, int ply, int depth) {
+        if (depth <= 0 || game.isOver()) return ply * score(game);
+        LinkedList<Game> children = getGames(game).collect(toCollection(LinkedList::new));
+        while (alpha > beta && !children.isEmpty())
+            alpha = Math.min(alpha, -negaPruneDepth(-beta, -alpha, children.pop(), -ply, depth - 1));
+        return alpha;
+    }
 
     private int negaPrune(int alpha, int beta, Game game, int ply) {
         ComputerPlayerImpl.nodeCount();
