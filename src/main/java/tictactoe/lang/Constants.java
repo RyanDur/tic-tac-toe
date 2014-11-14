@@ -28,4 +28,5 @@ public interface Constants {
     String INVALID_MOVE = "Sorry,\nCan't go there.";
     String SMALL_BOARD_BUTTON = "3 X 3";
     String LARGE_BOARD_BUTTON = "4 X 4";
+    int DEPTH = 5;
 }
