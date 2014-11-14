@@ -1,15 +1,8 @@
 package tictactoe.views.elements;
 
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
-
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public interface Menu {
 
-    void setTwoPlayer(EventHandler<MouseEvent> twoPlayer);
-
-    void setOnePlayer(Consumer<Character> computer);
-
-    void reset();
+    void setUpMenu(BiConsumer<Integer, Character> computer);
 }

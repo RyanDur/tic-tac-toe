@@ -73,7 +73,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
 
     private int negaPruneDepth(int alpha, int beta, Game game, int ply, int depth) {
         if (depth <= 0 || game.isOver()) return ply * score(game);
-        LinkedList<Game> children = getGames(game).collect(toCollection(LinkedList::new));
+        LinkedList<Game> children = collectChildren(game);
         while (alpha > beta && !children.isEmpty())
             alpha = Math.min(alpha, -negaPruneDepth(-beta, -alpha, children.pop(), -ply, depth - 1));
         return alpha;
@@ -82,7 +82,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     private int negaPrune(int alpha, int beta, Game game, int ply) {
         ComputerPlayerImpl.nodeCount();
         if (game.isOver()) return ply * score(game);
-        LinkedList<Game> children = getGames(game).collect(toCollection(LinkedList::new));
+        LinkedList<Game> children = collectChildren(game);
         while (alpha > beta && !children.isEmpty())
             alpha = Math.min(alpha, -negaPrune(-beta, -alpha, children.pop(), -ply));
         return alpha;
@@ -91,7 +91,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     private int miniMaxPrune(int alpha, int beta, boolean isComputer, Game game) {
         ComputerPlayerImpl.nodeCount();
         if (game.isOver()) return score(game);
-        LinkedList<Game> children = getGames(game).collect(toCollection(LinkedList::new));
+        LinkedList<Game> children = collectChildren(game);
         while (alpha > beta && !children.isEmpty()) {
             if (isComputer) alpha = Math.min(alpha, miniMaxPrune(alpha, beta, false, children.pop()));
             else beta = Math.max(beta, miniMaxPrune(alpha, beta, true, children.pop()));
@@ -110,6 +110,10 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         if (game.isOver()) return score(game);
         IntStream scores = getScores(game, child -> miniMax(!isComputer, child));
         return isComputer ? scores.min().getAsInt() : scores.max().getAsInt();
+    }
+
+    private LinkedList<Game> collectChildren(Game game) {
+        return getGames(game).collect(toCollection(LinkedList::new));
     }
 
     private Stream<Game> getGames(Game game) {

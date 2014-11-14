@@ -19,11 +19,11 @@ import tictactoe.views.elements.Menu;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class TicTacToeImpl extends Parent implements TicTacToe {
-    private final int size;
+    private int size;
     private Board board;
     private Pane centerPane;
     private Game game;
@@ -46,23 +46,17 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
     }
 
     private EventHandler<MouseEvent> resetMenu() {
-        return event -> {
-            menu.reset();
-            setupMenu();
-        };
+        return event -> setupMenu();
     }
 
     private EventHandler<MouseEvent> resetGame() {
-        return event -> setOnePlayer().accept(piece);
+        return event -> setupGame().accept(size, piece);
     }
 
-    private EventHandler<MouseEvent> setTwoPlayer() {
-        return event -> setOnePlayer().accept(null);
-    }
-
-    private Consumer<Character> setOnePlayer() {
-        return (piece) -> {
+    private BiConsumer<Integer, Character> setupGame() {
+        return (size, piece) -> {
             this.piece = piece;
+            this.size = size;
             game.setup(piece, size);
             setupBoard();
         };
@@ -96,8 +90,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
 
     private void setupMenu() {
         clearHeader(header);
-        menu.setOnePlayer(setOnePlayer());
-        menu.setTwoPlayer(setTwoPlayer());
+        menu.setUpMenu(setupGame());
         swapCenter((Node) menu);
     }
 
