@@ -3,10 +3,7 @@ package tictactoe;
 import tictactoe.exceptions.InvalidMoveException;
 import tictactoe.lang.Constants;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
@@ -42,14 +39,19 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      */
     @Override
     public List<Integer> getMove(Game game) {
-        List<List<Integer>> maxMoves = getMoves(game).parallelStream().collect(
+        List<List<Integer>> maxMoves = game.getVacancies().stream().collect(
                 groupingBy(getAlgo(game))).entrySet().stream()
                 .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();
-        return maxMoves.get(random.nextInt(maxMoves.size()));
+        System.out.println();
+        return maxMoves.get(0);
     }
 
     private Function<List<Integer>, Integer> getAlgo(Game game) {
-        return move -> print(move, negaPruneDepth(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), Constants.PLY, Constants.DEPTH));
+        return move -> print(move, miniMaxPruneDynamicDepth(
+                new int[]{Constants.POS_INF, Constants.POS_INF},
+                new int[]{Constants.NEG_INF, Constants.POS_INF},
+                true, playMove(move, game), 0)[0]);
+//        return move -> print(move, negaPruneDepth(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), Constants.PLY, Constants.DEPTH));
 //        return move -> print(move, miniMaxPruneDepth(Constants.POS_INF, Constants.NEG_INF, true, playMove(move, game), Constants.DEPTH));
 //        return move -> print(move, negaPrune(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), Constants.PLY));
 //        return move -> print(move, miniMaxPrune(Constants.POS_INF, Constants.NEG_INF, true, playMove(move, game)));
@@ -71,6 +73,26 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      * completion of a branch, the min or max value is calculated depending on the piece that entered
      * into the method last.
      */
+
+    private int[] miniMaxPruneDynamicDepth(int[] alpha, int beta[], boolean isComputer, Game game, int depth) {
+        ComputerPlayerImpl.nodeCount();
+        if (depth >= alpha[1] || depth >= beta[1] || game.isOver()) return score(game, depth);
+        LinkedList<Game> children = collectChildren(game);
+        while (alpha[0] > beta[0] && !children.isEmpty()) {
+            int[] temp = miniMaxPruneDynamicDepth(alpha, beta, !isComputer, children.pop(), depth + 1);
+            if (isComputer) alpha = alpha[0] < temp[0] ? alpha : temp;
+            else beta = beta[0] > temp[0] ? beta : temp;
+        }
+        return isComputer ? alpha : beta;
+    }
+
+    private int[] score(Game game, int depth) {
+        Character winner = game.getWinner();
+        if (winner == null) return new int[]{Constants.DRAW_SCORE, depth};
+        int extraWins = findLosingMoves(game.getVacancies(), game).size();
+        if (winner.equals(getPiece())) return new int[]{Constants.WIN_SCORE + extraWins, depth};
+        else return new int[]{Constants.LOSE_SCORE - extraWins, depth};
+    }
 
     private int negaPruneDepth(int alpha, int beta, Game game, int ply, int depth) {
         if (depth <= 0 || game.isOver()) return ply * score(game);
@@ -99,16 +121,16 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         return alpha;
     }
 
-    private int miniMaxPrune(int alpha, int beta, boolean isComputer, Game game) {
-        ComputerPlayerImpl.nodeCount();
-        if (game.isOver()) return score(game);
-        LinkedList<Game> children = collectChildren(game);
-        while (alpha > beta && !children.isEmpty()) {
-            if (isComputer) alpha = Math.min(alpha, miniMaxPrune(alpha, beta, false, children.pop()));
-            else beta = Math.max(beta, miniMaxPrune(alpha, beta, true, children.pop()));
-        }
-        return isComputer ? alpha : beta;
-    }
+//    private int miniMaxPrune(int alpha, int beta, boolean isComputer, Game game) {
+//        ComputerPlayerImpl.nodeCount();
+//        if (game.isOver()) return score(game);
+//        LinkedList<Game> children = collectChildren(game);
+//        while (alpha > beta && !children.isEmpty()) {
+//            if (isComputer) alpha = Math.min(alpha, miniMaxPrune(alpha, beta, false, children.pop()));
+//            else beta = Math.max(beta, miniMaxPrune(alpha, beta, true, children.pop()));
+//        }
+//        return isComputer ? alpha : beta;
+//    }
 
     private int negaMax(Game game, int ply) {
         ComputerPlayerImpl.nodeCount();
