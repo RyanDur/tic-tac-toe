@@ -90,7 +90,7 @@ public class TicTacToeImpl extends Parent implements TicTacToe {
 
     private void setupMenu() {
         clearHeader(header);
-        menu.setUpMenu(setupGame());
+        menu.setup(setupGame());
         swapCenter((Node) menu);
     }
 

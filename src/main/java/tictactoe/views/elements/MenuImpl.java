@@ -9,53 +9,46 @@ import javafx.scene.layout.GridPane;
 import tictactoe.lang.Constants;
 
 import java.io.IOException;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.function.*;
 
 public class MenuImpl extends Parent implements Menu {
-    private final Button right;
-    private final Button left;
+    private final BiConsumer<String, EventHandler<MouseEvent>> leftButton;
+    private final BiConsumer<String, EventHandler<MouseEvent>> rightButton;
+    private GridPane menu;
 
     public MenuImpl() {
-        GridPane nav = getFXML();
-        left = (Button) nav.lookup(Constants.LEFT_BUTTON_ID);
-        right = (Button) nav.lookup(Constants.RIGHT_BUTTON_ID);
-        this.getChildren().add(nav);
+        menu = getFXML();
+        leftButton = getButton(Constants.LEFT_BUTTON_ID);
+        rightButton = getButton(Constants.RIGHT_BUTTON_ID);
+        this.getChildren().add(menu);
     }
 
     @Override
-    public void setUpMenu(BiConsumer<Integer, Character> game) {
-        setButtons(event -> setupPlayer(game, Constants.SMALL_BOARD),
-                event -> setupPlayer(game, Constants.LARGE_BOARD),
-                Constants.SMALL_BOARD_BUTTON, Constants.LARGE_BOARD_BUTTON);
+    public void setup(BiConsumer<Integer, Character> game) {
+        leftButton.accept(Constants.SMALL_BOARD_BUTTON, event -> setupPlayer(game, Constants.SMALL_BOARD));
+        rightButton.accept(Constants.LARGE_BOARD_BUTTON, event -> setupPlayer(game, Constants.LARGE_BOARD));
     }
 
     private void setupPlayer(BiConsumer<Integer, Character> game, int size) {
-        setButtons(setupOnePlayer.apply(size, game), setupTwoPlayer.apply(size, game),
-                Constants.ONE_PLAYER, Constants.TWO_PLAYER);
+        leftButton.accept(Constants.ONE_PLAYER, event -> setupGame(setGame.apply(size, game)));
+        rightButton.accept(Constants.TWO_PLAYER, event -> game.accept(size, null));
     }
 
-    private void setupGame(Function<Character, EventHandler<MouseEvent>> setup) {
-        setButtons(setup.apply(Constants.GAME_PIECE_TWO), setup.apply(Constants.GAME_PIECE_ONE),
-                String.valueOf(Constants.GAME_PIECE_ONE), String.valueOf(Constants.GAME_PIECE_TWO));
+    private void setupGame(Function<Character, EventHandler<MouseEvent>> game) {
+        leftButton.accept(String.valueOf(Constants.GAME_PIECE_ONE), game.apply(Constants.GAME_PIECE_TWO));
+        rightButton.accept(String.valueOf(Constants.GAME_PIECE_TWO), game.apply(Constants.GAME_PIECE_ONE));
     }
 
-    private void setButtons(EventHandler<MouseEvent> event1, EventHandler<MouseEvent> event2, String label1, String label2) {
-        left.setText(label1);
-        right.setText(label2);
-        left.setOnMouseClicked(event1);
-        right.setOnMouseClicked(event2);
+    private BiConsumer<String, EventHandler<MouseEvent>> getButton(String buttonId) {
+        Button button = (Button) menu.lookup(buttonId);
+        return (label, event) -> {
+            button.setText(label);
+            button.setOnMouseClicked(event);
+        };
     }
 
     private BiFunction<Integer, BiConsumer<Integer, Character>, Function<Character, EventHandler<MouseEvent>>> setGame =
             (size, game) -> piece -> event -> game.accept(size, piece);
-
-    private BiFunction<Integer, BiConsumer<Integer, Character>, EventHandler<MouseEvent>> setupTwoPlayer =
-            (size, game) -> event -> game.accept(size, null);
-
-    private BiFunction<Integer, BiConsumer<Integer, Character>, EventHandler<MouseEvent>> setupOnePlayer =
-            (size, game) -> event -> setupGame(setGame.apply(size, game));
 
     private GridPane getFXML() {
         try {

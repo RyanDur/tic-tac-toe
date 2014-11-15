@@ -26,7 +26,7 @@ public class MenuTest extends GuiTest {
         game = mock(Game.class);
         BiConsumer<Integer, Character> game = (size, piece) -> this.game.setup(piece, size);
         Menu menu = new MenuImpl();
-        menu.setUpMenu(game);
+        menu.setup(game);
         return (Parent) menu;
     }
 
