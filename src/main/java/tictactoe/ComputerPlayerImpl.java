@@ -34,13 +34,14 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     }
 
     private Function<List<Integer>, Integer> getAlgo(Game game) {
-        return move -> miniMaxPruneDynamicDepth(Constants.ALPHA_DEPTH, Constants.BETA_DEPTH, true, playMove(move, game), 0)[0];
+        return Math.floor(Math.sqrt(game.getBoard().length)) == Constants.SMALL_BOARD ?
+                move -> miniMaxPruneDynamicDepth(Constants.ALPHA_DEPTH, Constants.BETA_DEPTH, true, playMove(move, game), 0)[0] :
+                move -> negaPruneDepth(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), Constants.PLY, Constants.DEPTH);
     }
 
     private int[] miniMaxPruneDynamicDepth(int[] alpha, int beta[], boolean isComputer, Game game, int depth) {
         if (depth >= alpha[1] || depth >= beta[1] || game.isOver()) return score(game, depth);
-        LinkedList<Game> children = getCandidates(game).stream()
-                .map(move -> playMove(move, game)).collect(toCollection(LinkedList::new));
+        LinkedList<Game> children = collectChildren(game);
         while (alpha[0] > beta[0] && !children.isEmpty()) {
             int[] temp = miniMaxPruneDynamicDepth(alpha, beta, !isComputer, children.pop(), depth + 1);
             if (isComputer) alpha = alpha[0] < temp[0] ? alpha : temp;
@@ -49,12 +50,23 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         return isComputer ? alpha : beta;
     }
 
+    private int negaPruneDepth(int alpha, int beta, Game game, int ply, int depth) {
+        if (depth <= 0 || game.isOver()) return ply * score(game);
+        LinkedList<Game> children = collectChildren(game);
+        while (alpha > beta && !children.isEmpty())
+            alpha = Math.min(alpha, -negaPruneDepth(-beta, -alpha, children.pop(), -ply, depth - 1));
+        return alpha;
+    }
+
     private int[] score(Game game, int depth) {
+        return new int[]{score(game), depth};
+    }
+
+    private int score(Game game) {
         Character winner = game.getWinner();
-        if (winner == null) return new int[]{Constants.DRAW_SCORE, depth};
+        if (winner == null) return Constants.DRAW_SCORE;
         int extraWins = findWinningMoves(game, 1).size();
-        if (winner.equals(getPiece())) return new int[]{Constants.WIN_SCORE + extraWins, depth};
-        else return new int[]{Constants.LOSE_SCORE - extraWins, depth};
+        return (winner.equals(getPiece())) ? Constants.WIN_SCORE + extraWins : Constants.LOSE_SCORE - extraWins;
     }
 
     private Set<List<Integer>> getCandidates(Game game) {
@@ -69,6 +81,11 @@ public class ComputerPlayerImpl implements ComputerPlayer {
                 .filter(move -> playMove(move, game).getWinner() != null).collect(toSet());
         return game.getVacancies().stream().map(move -> playMove(move, game))
                 .flatMap(child -> findWinningMoves(child, depth - 1).stream()).collect(toSet());
+    }
+
+    private LinkedList<Game> collectChildren(Game game) {
+        return getCandidates(game).stream()
+                .map(move -> playMove(move, game)).collect(toCollection(LinkedList::new));
     }
 
     private Game playMove(List<Integer> move, Game game) {
