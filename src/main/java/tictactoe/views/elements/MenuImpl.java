@@ -25,13 +25,8 @@ public class MenuImpl extends Parent implements Menu {
 
     @Override
     public void setup(BiConsumer<Integer, Character> game) {
-        leftButton.accept(Constants.SMALL_BOARD_BUTTON, event -> setupPlayer(game, Constants.SMALL_BOARD));
-        rightButton.accept(Constants.LARGE_BOARD_BUTTON, event -> setupPlayer(game, Constants.LARGE_BOARD));
-    }
-
-    private void setupPlayer(BiConsumer<Integer, Character> game, int size) {
-        leftButton.accept(Constants.ONE_PLAYER, event -> setupGame(setGame.apply(size, game)));
-        rightButton.accept(Constants.TWO_PLAYER, event -> game.accept(size, null));
+        leftButton.accept(Constants.ONE_PLAYER, event -> setupGame(setGame.apply(Constants.SMALL_BOARD, game)));
+        rightButton.accept(Constants.TWO_PLAYER, event -> game.accept(Constants.SMALL_BOARD, null));
     }
 
     private void setupGame(Function<Character, EventHandler<MouseEvent>> game) {
