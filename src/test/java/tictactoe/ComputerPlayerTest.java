@@ -45,7 +45,7 @@ public class ComputerPlayerTest {
     public void should() throws InvalidMoveException {
         Game game1 = new GameImpl(computer);
         game1.setup(null, Constants.SMALL_BOARD);
-        computer.setPiece(Constants.GAME_PIECE_TWO);
+        computer.setPiece(Constants.GAME_PIECE_ONE);
 //        game1.set(Arrays.asList(2,2));
 //        game1.set(Arrays.asList(1,1));
 //        game1.set(Arrays.asList(2,0));
