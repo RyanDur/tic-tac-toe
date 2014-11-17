@@ -2,7 +2,6 @@ package tictactoe;
 
 import org.junit.Before;
 import org.junit.Test;
-import tictactoe.exceptions.InvalidMoveException;
 import tictactoe.lang.Constants;
 
 import java.util.Arrays;
@@ -17,12 +16,13 @@ import static org.mockito.Mockito.when;
 
 public class ComputerPlayerTest {
 
-    private final Character X = Constants.GAME_PIECE_ONE;
+    private Character X;
     private ComputerPlayer computer;
     private Game game;
 
     @Before
     public void setup() {
+        X = Constants.GAME_PIECE_ONE;
         computer = new ComputerPlayerImpl();
         game = mock(Game.class);
     }
@@ -39,21 +39,5 @@ public class ComputerPlayerTest {
         when(copy.getWinner()).thenReturn(X);
         computer.setPiece(X);
         assertThat(computer.getMove(game), is(equalTo(list)));
-    }
-
-    @Test
-    public void should() throws InvalidMoveException {
-        Game game1 = new GameImpl(computer);
-        game1.setup(null, Constants.SMALL_BOARD);
-        computer.setPiece(Constants.GAME_PIECE_TWO);
-//        game1.set(Arrays.asList(0,0));
-//        game1.set(Arrays.asList(1,1));
-//        game1.set(Arrays.asList(2,0));
-//        game1.set(Arrays.asList(1,0));
-//        game1.set(Arrays.asList(1,2));
-//        game1.set(Arrays.asList(0,1));
-//        game1.set(Arrays.asList(2,1));
-//        game1.set(Arrays.asList(2,2));
-        computer.getMove(game1);
     }
 }

@@ -32,4 +32,5 @@ public interface Constants {
     int PLY = 1;
     int[] ALPHA_DEPTH = new int[]{Constants.POS_INF, Constants.POS_INF};
     int[] BETA_DEPTH = new int[]{Constants.NEG_INF, Constants.POS_INF};
+    int ROOT_PLY = 0;
 }

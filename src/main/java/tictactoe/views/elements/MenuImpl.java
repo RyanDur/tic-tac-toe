@@ -14,10 +14,12 @@ import java.util.function.*;
 public class MenuImpl extends Parent implements Menu {
     private final BiConsumer<String, EventHandler<MouseEvent>> leftButton;
     private final BiConsumer<String, EventHandler<MouseEvent>> rightButton;
+    private final int size;
     private GridPane menu;
 
     public MenuImpl() {
         menu = getFXML();
+        size = Constants.SMALL_BOARD;
         leftButton = getButton(Constants.LEFT_BUTTON_ID);
         rightButton = getButton(Constants.RIGHT_BUTTON_ID);
         this.getChildren().add(menu);
