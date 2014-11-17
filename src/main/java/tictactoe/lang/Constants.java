@@ -30,4 +30,6 @@ public interface Constants {
     String LARGE_BOARD_BUTTON = "4 X 4";
     int DEPTH = 5;
     int PLY = 1;
+    int[] ALPHA_DEPTH = new int[]{Constants.POS_INF, Constants.POS_INF};
+    int[] BETA_DEPTH = new int[]{Constants.NEG_INF, Constants.POS_INF};
 }

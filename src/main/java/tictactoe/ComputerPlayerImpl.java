@@ -47,10 +47,8 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     }
 
     private Function<List<Integer>, Integer> getAlgo(Game game) {
-        return move -> print(move, miniMaxPruneDynamicDepth(
-                new int[]{Constants.POS_INF, Constants.POS_INF},
-                new int[]{Constants.NEG_INF, Constants.POS_INF},
-                true, playMove(move, game), 0)[0]);
+        return move -> print(move, negaPruneDynamicDepth(Constants.ALPHA_DEPTH, Constants.BETA_DEPTH, playMove(move, game), Constants.PLY, 0)[0]);
+//        return move -> print(move, miniMaxPruneDynamicDepth(Constants.ALPHA_DEPTH, Constants.BETA_DEPTH, true, playMove(move, game), 0)[0]);
 //        return move -> print(move, negaPruneDepth(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), Constants.PLY, Constants.DEPTH));
 //        return move -> print(move, miniMaxPruneDepth(Constants.POS_INF, Constants.NEG_INF, true, playMove(move, game), Constants.DEPTH));
 //        return move -> print(move, negaPrune(Constants.POS_INF, Constants.NEG_INF, playMove(move, game), Constants.PLY));
@@ -74,10 +72,21 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      * into the method last.
      */
 
+    private int[] negaPruneDynamicDepth(int[] alpha, int[] beta, Game game, int ply, int depth) {
+        ComputerPlayerImpl.nodeCount();
+        if (depth >= alpha[1] || depth >= beta[1] || game.isOver()) return product(score(game, depth), ply);
+        LinkedList<Game> children = getChildren(game);
+        while (alpha[0] > beta[0] && !children.isEmpty()) {
+            int[] temp = negate(negaPruneDynamicDepth(negate(beta), negate(alpha), children.pop(), -ply, depth + 1));
+            alpha = alpha[0] < temp[0] ? alpha : temp;
+        }
+        return alpha;
+    }
+
     private int[] miniMaxPruneDynamicDepth(int[] alpha, int beta[], boolean isComputer, Game game, int depth) {
         ComputerPlayerImpl.nodeCount();
         if (depth >= alpha[1] || depth >= beta[1] || game.isOver()) return score(game, depth);
-        LinkedList<Game> children = collectChildren(game);
+        LinkedList<Game> children = getChildren(game);
         while (alpha[0] > beta[0] && !children.isEmpty()) {
             int[] temp = miniMaxPruneDynamicDepth(alpha, beta, !isComputer, children.pop(), depth + 1);
             if (isComputer) alpha = alpha[0] < temp[0] ? alpha : temp;
@@ -86,17 +95,9 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         return isComputer ? alpha : beta;
     }
 
-    private int[] score(Game game, int depth) {
-        Character winner = game.getWinner();
-        if (winner == null) return new int[]{Constants.DRAW_SCORE, depth};
-        int extraWins = findWinningMoves(game, 1).size();
-        if (winner.equals(getPiece())) return new int[]{Constants.WIN_SCORE + extraWins, depth};
-        else return new int[]{Constants.LOSE_SCORE - extraWins, depth};
-    }
-
     private int negaPruneDepth(int alpha, int beta, Game game, int ply, int depth) {
         if (depth <= 0 || game.isOver()) return ply * score(game);
-        LinkedList<Game> children = collectChildren(game);
+        LinkedList<Game> children = getChildren(game);
         while (alpha > beta && !children.isEmpty())
             alpha = Math.min(alpha, -negaPruneDepth(-beta, -alpha, children.pop(), -ply, depth - 1));
         return alpha;
@@ -104,7 +105,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
 
     private int miniMaxPruneDepth(int alpha, int beta, boolean isComputer, Game game, int depth) {
         if (depth <= 0 || game.isOver()) return score(game);
-        LinkedList<Game> children = collectChildren(game);
+        LinkedList<Game> children = getChildren(game);
         while (alpha > beta && !children.isEmpty()) {
             if (isComputer) alpha = Math.min(alpha, miniMaxPruneDepth(alpha, beta, false, children.pop(), depth - 1));
             else beta = Math.max(beta, miniMaxPruneDepth(alpha, beta, true, children.pop(), depth - 1));
@@ -115,7 +116,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     private int negaPrune(int alpha, int beta, Game game, int ply) {
         ComputerPlayerImpl.nodeCount();
         if (game.isOver()) return ply * score(game);
-        LinkedList<Game> children = collectChildren(game);
+        LinkedList<Game> children = getChildren(game);
         while (alpha > beta && !children.isEmpty())
             alpha = Math.min(alpha, -negaPrune(-beta, -alpha, children.pop(), -ply));
         return alpha;
@@ -124,7 +125,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     private int miniMaxPrune(int alpha, int beta, boolean isComputer, Game game) {
         ComputerPlayerImpl.nodeCount();
         if (game.isOver()) return score(game);
-        LinkedList<Game> children = collectChildren(game);
+        LinkedList<Game> children = getChildren(game);
         while (alpha > beta && !children.isEmpty()) {
             if (isComputer) alpha = Math.min(alpha, miniMaxPrune(alpha, beta, false, children.pop()));
             else beta = Math.max(beta, miniMaxPrune(alpha, beta, true, children.pop()));
@@ -145,7 +146,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         return isComputer ? scores.min().getAsInt() : scores.max().getAsInt();
     }
 
-    private LinkedList<Game> collectChildren(Game game) {
+    private LinkedList<Game> getChildren(Game game) {
         return getGames(game).collect(toCollection(LinkedList::new));
     }
 
@@ -193,6 +194,18 @@ public class ComputerPlayerImpl implements ComputerPlayer {
             e.printStackTrace();
         }
         return game;
+    }
+
+    private int[] product(int[] src, int ply) {
+        return new int[]{ply * src[0], src[1]};
+    }
+
+    private int[] negate(int[] src) {
+        return new int[]{-src[0], src[1]};
+    }
+
+    private int[] score(Game game, int depth) {
+        return new int[]{score(game), depth};
     }
 
     private Character getPiece() {
