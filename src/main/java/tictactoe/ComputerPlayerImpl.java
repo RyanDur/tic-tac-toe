@@ -89,7 +89,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     private int[] score(Game game, int depth) {
         Character winner = game.getWinner();
         if (winner == null) return new int[]{Constants.DRAW_SCORE, depth};
-        int extraWins = findLosingMoves(game.getVacancies(), game).size();
+        int extraWins = findWinningMoves(game, 1).size();
         if (winner.equals(getPiece())) return new int[]{Constants.WIN_SCORE + extraWins, depth};
         else return new int[]{Constants.LOSE_SCORE - extraWins, depth};
     }
@@ -121,16 +121,16 @@ public class ComputerPlayerImpl implements ComputerPlayer {
         return alpha;
     }
 
-//    private int miniMaxPrune(int alpha, int beta, boolean isComputer, Game game) {
-//        ComputerPlayerImpl.nodeCount();
-//        if (game.isOver()) return score(game);
-//        LinkedList<Game> children = collectChildren(game);
-//        while (alpha > beta && !children.isEmpty()) {
-//            if (isComputer) alpha = Math.min(alpha, miniMaxPrune(alpha, beta, false, children.pop()));
-//            else beta = Math.max(beta, miniMaxPrune(alpha, beta, true, children.pop()));
-//        }
-//        return isComputer ? alpha : beta;
-//    }
+    private int miniMaxPrune(int alpha, int beta, boolean isComputer, Game game) {
+        ComputerPlayerImpl.nodeCount();
+        if (game.isOver()) return score(game);
+        LinkedList<Game> children = collectChildren(game);
+        while (alpha > beta && !children.isEmpty()) {
+            if (isComputer) alpha = Math.min(alpha, miniMaxPrune(alpha, beta, false, children.pop()));
+            else beta = Math.max(beta, miniMaxPrune(alpha, beta, true, children.pop()));
+        }
+        return isComputer ? alpha : beta;
+    }
 
     private int negaMax(Game game, int ply) {
         ComputerPlayerImpl.nodeCount();
@@ -150,7 +150,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     }
 
     private Stream<Game> getGames(Game game) {
-        return getMoves(game).stream()
+        return getCandidates(game).stream()
                 .map(move -> playMove(move, game));
     }
 
@@ -164,32 +164,25 @@ public class ComputerPlayerImpl implements ComputerPlayer {
      * that can win a game, then search for a move that will make player lose. If there are no losing
      * moves, then retrieve all the possible moves for consideration.
      */
-    private Set<List<Integer>> getMoves(Game game) {
-        Set<List<Integer>> candidates = game.getVacancies();
-        Set<List<Integer>> moves = findWinningMoves(candidates, game);
-        if (moves.isEmpty()) moves = findLosingMoves(candidates, game);
-        if (moves.isEmpty()) moves = candidates;
-        return moves;
+    private Set<List<Integer>> getCandidates(Game game) {
+        Set<List<Integer>> candidates = findWinningMoves(game, 0);
+        if (candidates.isEmpty()) candidates = findWinningMoves(game, 1);
+        if (candidates.isEmpty()) candidates = game.getVacancies();
+        return candidates;
     }
 
     private int score(Game game) {
         Character winner = game.getWinner();
         if (winner == null) return Constants.DRAW_SCORE;
-        int extraWins = findLosingMoves(game.getVacancies(), game).size();
+        int extraWins = findWinningMoves(game, 1).size();
         return (winner.equals(getPiece())) ? Constants.WIN_SCORE + extraWins : Constants.LOSE_SCORE - extraWins;
     }
 
-    private Set<List<Integer>> findWinningMoves(Set<List<Integer>> candidates, Game game) {
-        return candidates.stream()
-                .filter(move -> playMove(move, game).getWinner() != null)
-                .collect(toSet());
-    }
-
-    private Set<List<Integer>> findLosingMoves(Set<List<Integer>> candidates, Game game) {
-        return candidates.stream()
-                .map(move -> playMove(move, game))
-                .flatMap(child -> findWinningMoves(child.getVacancies(), child).stream())
-                .collect(toSet());
+    private Set<List<Integer>> findWinningMoves(Game game, int depth) {
+        if (depth <= 0) return game.getVacancies().stream()
+                .filter(move -> playMove(move, game).getWinner() != null).collect(toSet());
+        return game.getVacancies().stream().map(move -> playMove(move, game))
+                .flatMap(child -> findWinningMoves(child, depth - 1).stream()).collect(toSet());
     }
 
     private Game playMove(List<Integer> move, Game game) {
