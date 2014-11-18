@@ -26,7 +26,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
 
     @Override
     public List<Integer> getMove(Game game) {
-        List<List<Integer>> maxMoves = getCandidates(game).stream().collect(
+        List<List<Integer>> maxMoves = getCandidates(game).parallelStream().collect(
                 groupingBy(move -> negaPruneDepth(Constants.POS_INF, Constants.NEG_INF,
                         playMove(move, game), Constants.PLY, Constants.DEPTH))).entrySet().stream()
                 .max((score1, score2) -> score1.getKey() - score2.getKey()).get().getValue();
