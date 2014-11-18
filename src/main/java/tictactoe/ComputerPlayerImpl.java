@@ -35,6 +35,7 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     private int negaPruneDepth(int alpha, int beta, Game game, int ply, int depth) {
         if (depth <= 0 || game.isOver()) return ply * score(game);
         LinkedList<Game> candidates = getCandidates(game).stream()
+                .sorted((move1, move2) -> move1.get(0) - move2.get(0))
                 .map(move -> play(move, game)).collect(toCollection(LinkedList::new));
         while (alpha > beta && !candidates.isEmpty())
             alpha = Math.min(alpha, -negaPruneDepth(-beta, -alpha, candidates.pop(), -ply, depth - 1));
@@ -50,14 +51,14 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     private int score(Game game) {
         Character winner = game.getWinner();
         if (winner == null) return DRAW_SCORE;
-        int extraWins = (int) findWinMoves(game, ROOT_PLY + 1).distinct().count();
+        int extraWins = (int) findWinMoves(game, ROOT_PLY + 1).count();
         return piece.equals(winner) ? WIN_SCORE + extraWins : LOSE_SCORE - extraWins;
     }
 
     private Stream<List<Integer>> findWinMoves(Game game, int depth) {
         Stream<List<Integer>> candidates = game.getVacancies().stream();
         if (depth <= 0) return candidates.filter(move -> play(move, game).getWinner() != null);
-        return candidates.map(move -> play(move, game)).flatMap(child -> findWinMoves(child, depth - 1));
+        return candidates.map(move -> play(move, game)).flatMap(child -> findWinMoves(child, depth - 1)).distinct();
     }
 
     private Game play(List<Integer> move, Game game) {

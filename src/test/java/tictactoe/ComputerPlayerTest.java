@@ -40,4 +40,12 @@ public class ComputerPlayerTest {
         computer.setPiece(X);
         assertThat(computer.getMove(game), is(equalTo(list)));
     }
+
+    @Test
+    public void should() {
+        Game game1 = new GameImpl(computer);
+        game1.setup(null, 3);
+        computer.setPiece(X);
+        computer.getMove(game1);
+    }
 }
