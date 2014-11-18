@@ -35,7 +35,6 @@ public class ComputerPlayerImpl implements ComputerPlayer {
     private int negaPruneDepth(int alpha, int beta, Game game, int ply, int depth) {
         if (depth <= 0 || game.isOver()) return ply * score(game);
         LinkedList<Game> candidates = getCandidates(game).stream()
-                .sorted((move1, move2) -> move1.get(0) - move2.get(0))
                 .map(move -> play(move, game)).collect(toCollection(LinkedList::new));
         while (alpha > beta && !candidates.isEmpty())
             alpha = Math.min(alpha, -negaPruneDepth(-beta, -alpha, candidates.pop(), -ply, depth - 1));
